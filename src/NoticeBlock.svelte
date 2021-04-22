@@ -164,7 +164,7 @@
                     font-size: 1.3rem;
                     line-height: initial;
                     min-width: 2rem;
-                    background-color: rgb(157, 191, 255);
+                    background-color: $primary;
                 }
             }
         }
