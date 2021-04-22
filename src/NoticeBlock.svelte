@@ -1,12 +1,13 @@
 <script lang="ts">
     import Datepicker from "svelte-calendar";
+    import LoadingAnimation from "./LoadingAnimation.svelte";
 
     const API_ROUTE = "https://hctools.jmw.nz/api/";
     const formatDate = (date) => date.toISOString().split("T")[0];
 
     let noticeText = "";
     let isSchoolDay;
-    let noticeDate = new Date("2021-04-9");
+    let noticeDate = new Date();
 
     function getNoticeText(noticeDate) {
         isSchoolDay = undefined;
@@ -36,6 +37,14 @@
             return "N/A";
         }
     }
+    function changeDayBackward() {
+        noticeDate.setDate(noticeDate.getDate()-1);
+        noticeDate = noticeDate
+    }
+    function changeDayForward() {
+        noticeDate.setDate(noticeDate.getDate()+1);
+        noticeDate = noticeDate
+    }
 
     $: noticeText = getNoticeText(noticeDate);
 </script>
@@ -46,13 +55,39 @@
             <div class="dayInfo">
                 Time table day: {#await getTimeTableDay(noticeDate) then day}{day}{/await}
             </div>
+
             <div class="datePickerWrapper">
+                <button on:click={changeDayBackward} type="button" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+                      </svg>
+                </button>
                 <Datepicker bind:selected={noticeDate}>
-                    <button class="dateTimeChooserButton">
+
+                    <button class="dateTimeChooserButton" type="button">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-calendar-week"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M11 6.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z"
+                            />
+                            <path
+                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"
+                            />
+                        </svg>
                         {formatDate(noticeDate)}
                     </button>
-                    
                 </Datepicker>
+                <button on:click={changeDayForward} type="button" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                </button>
             </div>
         </div>
         {#if isSchoolDay}
@@ -60,9 +95,17 @@
                 {@html noticeText}
             </div>
         {:else if isSchoolDay === false}
-            <h2>No notices available on {formatDate(noticeDate)}.</h2>
+            <div class="flexWHCenter">
+                <h2>No notices available on {formatDate(noticeDate)}.</h2>
+                <p>
+                    Click on the "{formatDate(noticeDate)}" button to view
+                    another date
+                </p>
+            </div>
         {:else}
-            <h2>Loading animation here or some shit...</h2>
+            <div class="flexWHCenter">
+                <LoadingAnimation />
+            </div>
         {/if}
     </div>
 </main>
@@ -78,9 +121,9 @@
         .header {
             flex-grow: none;
             display: flex;
-            
+
             flex-direction: row;
-            align-items: flex-start;
+            align-items: flex-end;
             justify-content: space-between;
 
             height: 4em;
@@ -94,20 +137,24 @@
 
             .dayInfo {
                 align-self: flex-start;
-                padding:1rem;
+                padding: 1rem;
                 height: calc(100% - 2rem);
             }
+
             .datePickerWrapper {
-                align-self: flex-end;
-                
-                .dateTimeChooserButton {
-                    height: 100%;
+                display:flex;
+                justify-content: space-evenly;
+                align-items: center;
+                button {
+                    height: auto;
+                    margin: auto 0.5rem;
+                    align-self: flex-end;
+                    cursor: pointer;
                     padding: 0.5rem;
                     font-size: 1.3rem;
                     line-height: initial;
-                    margin: 0.8rem;
-                    background-color: rgb(157, 191, 255)
-                    
+                    min-width: 2rem;
+                    background-color: rgb(157, 191, 255);
                 }
             }
         }
@@ -115,6 +162,14 @@
             flex-grow: flex;
             text-align: left;
             padding: 1em;
+            font-size: 1.1;
+        }
+        .flexWHCenter {
+            min-height: 50vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     }
     @media (max-width: 640px) {
@@ -124,7 +179,6 @@
             height: unset;
             & > * {
                 align-self: flex-start !important;
-                
             }
             .dayInfo {
                 font-size: 1.2rem;
@@ -134,8 +188,8 @@
             .dateTimeChooserButton {
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                width: 100vw
-            } 
-        } 
+                width: 100vw;
+            }
+        }
     }
 </style>

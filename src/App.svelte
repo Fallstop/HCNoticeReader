@@ -4,8 +4,8 @@
 </script>
 
 <main>
-	<h1>Huanui Collage Notices</h1>
-	<h3>Unofficial notices reader, beacuase your eyes matter.</h3>
+	<h1>Huanui College Notices</h1>
+	<h3>Unofficial notices reader, because your eyes matter.</h3>
 	<div class="PrimaryContent">
 		<NoticeBlock/>
 	</div>
@@ -16,11 +16,9 @@
 
 	main {
 		max-width: none;
-		height: 100vh;
-		width: 100vw;
-		
-		padding: 1em;
-		margin: 0 auto;
+		height: 100%;
+		// overflow-x: hidden;
+		margin: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -45,7 +43,6 @@
 
 	@media (max-width: 640px) {
 		main {
-			width: 100vw ;
 			padding: 0;
 			h1 {
 				font-size: 2rem;
