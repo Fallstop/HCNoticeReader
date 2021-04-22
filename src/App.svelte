@@ -17,9 +17,9 @@
 	main {
 		max-width: none;
 		height: 100vh;
+		width: 100vw;
 		
 		padding: 1em;
-		max-width: 240px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;

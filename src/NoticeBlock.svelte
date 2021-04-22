@@ -9,6 +9,7 @@
     let noticeDate = new Date("2021-04-9");
 
     function getNoticeText(noticeDate) {
+        isSchoolDay = undefined;
         fetch(
             new Request(API_ROUTE + "getdailynotice/" + formatDate(noticeDate))
         )
