@@ -5,7 +5,7 @@
 
 <main>
 	<h1>Huanui Collage Notices</h1>
-	<h3>Unoffical notices reader, beacuase your eyes matter.</h3>
+	<h3>Unofficial notices reader, beacuase your eyes matter.</h3>
 	<div class="PrimaryContent">
 		<NoticeBlock/>
 	</div>
