@@ -18,7 +18,6 @@
             .then((data) => {
                 isSchoolDay = data["isSchoolDay"];
                 noticeText = data["noticeText"];
-                console.log(noticeText);
             })
             .catch((error) => {
                 console.error("Error:", error);
@@ -30,7 +29,6 @@
             new Request(API_ROUTE + "gettimetableday/" + formatDate(noticeDate))
         );
         const data = await resonse.json();
-        console.log(data);
         if (data["isSchoolDay"]) {
             return data["currentDay"];
         } else {
@@ -56,7 +54,12 @@
                 Time table day: {#await getTimeTableDay(noticeDate) then day}{day}{/await}
             </div>
 
-            <div class="datePickerWrapper">
+            <div
+            class="
+            datePickerWrapper
+            { isSchoolDay===false ? "highlightedDatePicker" : "" }
+            "
+            >
                 <button on:click={changeDayBackward} type="button" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
@@ -140,11 +143,18 @@
                 padding: 1rem;
                 height: calc(100% - 2rem);
             }
+            .highlightedDatePicker {
+                border-radius: 5px;
+                border: 2px solid $grey300;
+                box-sizing: border-box;
+                box-shadow: 1px 1px 4px $drop-down-shadow;
+            }
 
             .datePickerWrapper {
                 display:flex;
                 justify-content: space-evenly;
                 align-items: center;
+
                 button {
                     height: auto;
                     margin: auto 0.5rem;
@@ -183,12 +193,12 @@
             .dayInfo {
                 font-size: 1.2rem;
                 padding: 0.5rem;
-                padding-bottom: 0;
             }
-            .dateTimeChooserButton {
+            .datePickerWrapper {
+                width: 100vw;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                width: 100vw;
+                
             }
         }
     }
