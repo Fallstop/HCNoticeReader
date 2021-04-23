@@ -1,14 +1,17 @@
 <script lang="ts">
 	import NoticeBlock from "./NoticeBlock.svelte";
 	import FloatingActionButton from "./FloatingActionButton.svelte";
+	import DarkLightSwitch from "./DarkLightSwitch.svelte";
 </script>
 
 <main>
+	<DarkLightSwitch/>
 	<h1>Huanui College Notices</h1>
 	<h3>Unofficial notices reader, because your eyes matter.</h3>
 	<div class="PrimaryContent">
 		<NoticeBlock />
 	</div>
+	
 	<div class="floatingActionButtonContainer">
 		<FloatingActionButton externalLink="https://github.com/Fallstop/HCNoticeReader">
 			<svg
@@ -55,8 +58,9 @@
 	#githubLogo {
 		transform: scale(2);
 	}
-
 	main {
+		transition: all 0.3s ease;
+		color: var(--text-color);
 		max-width: none;
 		height: 100%;
 		// overflow-x: hidden;
@@ -64,6 +68,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		background-color: var(--primary-background);
+
 		h1 {
 			text-align: center;
 			text-transform: uppercase;
@@ -77,8 +83,8 @@
 		}
 		.PrimaryContent {
 			margin-top: 2em;
-			background-color: rgb(230, 230, 230);
-			box-shadow: 1px 1px 8px $drop-down-shadow;
+			background-color: var(--secondary-background);
+			box-shadow: 1px 1px 8px var(--drop-down-shadow) 1px;
 			width: 80%;
 		}
 	}

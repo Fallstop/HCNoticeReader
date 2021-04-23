@@ -63,7 +63,7 @@
                     : ''}
             "
             >
-                <button on:click={changeDayBackward} type="button">
+                <button on:click={changeDayBackward} type="button" >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -78,7 +78,7 @@
                         />
                     </svg>
                 </button>
-                <Datepicker bind:selected={noticeDate}>
+                <Datepicker bind:selected={noticeDate} style="background: var(--primary-background) !important; color: var(--text-color);">
                     <button class="dateTimeChooserButton" type="button">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@
             justify-content: space-between;
 
             height: 4em;
-            border-bottom: 1px solid $grey300;
+            border-bottom: 1px solid var(--grey300);
             * {
                 height: 100%;
                 line-height: 1.5em;
@@ -167,9 +167,9 @@
             }
             .highlightedDatePicker {
                 border-radius: 5px;
-                border: 2px solid $grey300;
+                border: 2px solid var(--grey300);
                 box-sizing: border-box;
-                box-shadow: 0 0 0 0, 0 6px 12px $drop-down-shadow;
+                box-shadow: 0 0 0 0, 0 6px 12px var(--drop-down-shadow);
                 transition: all 0.3s ease;
                         transform: translate3D(0, -2px, 0);
             }
@@ -188,16 +188,16 @@
                     font-size: 1.3rem;
                     line-height: initial;
                     min-width: 2rem;
-                    background-color: $primary;
+                    background-color: var(--primary);
                     &:hover {
-                        box-shadow: 0 0 0 0, 0 6px 12px $drop-down-shadow;
+                        box-shadow: 0 0 0 0, 0 6px 12px var(--drop-down-shadow);
                         transition: all 0.3s ease;
                         transform: translate3D(0, -2px, 0);
-                        background-color: $primary-lighter;
+                        background-color: var(--primary-lighter);
                     }
                     &:active {
                         transform: translate3D(0, 2px, 0);
-                        background-color: $primary-darker;
+                        background-color: var(--primary-darker);
                     }
                 }
             }

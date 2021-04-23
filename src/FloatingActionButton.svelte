@@ -16,7 +16,7 @@
         width: 60px;
         height: 60px;
 
-        background-color: $primary;
+        background-color: var(--primary);
         color: #fff;
         border-radius: 50px;
         text-align: center;

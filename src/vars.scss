@@ -1,18 +1,32 @@
-$primary-background: #fff;
-$secondary-background: rgb(230, 230, 230);
+:root {
+    --text-color: #333;
+    --primary-background: #fff;
+    --secondary-background: rgb(230, 230, 230);
+    
+    --drop-down-shadow: rgba(212, 212, 212, 0.8);
+    
+    --grey100: #ECECED;
+    --grey200: #CFCFD1;
+    --grey300: #B2B3B5;
+    --grey400: #78797E;
+    --grey500: #3E4047;
+    --grey600: #383A40;
+    --grey700: #25262B;
+    --grey800: #1C1D20;
+    --grey900: #131315;
+    
+    --primary: rgb(157, 191, 255);
+    --primary-lighter: rgb(176, 204, 255);
+    --primary-darker: rgb(136, 177, 255);
+}
 
-$drop-down-shadow: rgba(212, 212, 212, 0.8);
 
-$grey100: #ECECED;
-$grey200: #CFCFD1;
-$grey300: #B2B3B5;
-$grey400: #78797E;
-$grey500: #3E4047;
-$grey600: #383A40;
-$grey700: #25262B;
-$grey800: #1C1D20;
-$grey900: #131315;
-
-$primary: rgb(157, 191, 255);
-$primary-lighter: rgb(176, 204, 255);
-$primary-darker: rgb(136, 177, 255);
+:global(body.dark-mode) {
+    --text-color: #D6D8DA;
+    --primary-background: #181A1F;
+    --secondary-background: #24292E;
+    --drop-down-shadow: rgb(93, 97, 104);
+    --primary: rgb(53, 124, 255);
+    --primary-lighter: rgb(93, 150, 255);
+    --primary-darker: rgb(19, 101, 255);
+}
