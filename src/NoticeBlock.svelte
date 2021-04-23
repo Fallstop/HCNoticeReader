@@ -36,12 +36,12 @@
         }
     }
     function changeDayBackward() {
-        noticeDate.setDate(noticeDate.getDate()-1);
-        noticeDate = noticeDate
+        noticeDate.setDate(noticeDate.getDate() - 1);
+        noticeDate = noticeDate;
     }
     function changeDayForward() {
-        noticeDate.setDate(noticeDate.getDate()+1);
-        noticeDate = noticeDate
+        noticeDate.setDate(noticeDate.getDate() + 1);
+        noticeDate = noticeDate;
     }
 
     $: noticeText = getNoticeText(noticeDate);
@@ -55,18 +55,30 @@
             </div>
 
             <div
-            class="
+                class="
             datePickerWrapper
-            { isSchoolDay===false ? "highlightedDatePicker" : "" }
+            {isSchoolDay ===
+                false
+                    ? 'highlightedDatePicker'
+                    : ''}
             "
             >
-                <button on:click={changeDayBackward} type="button" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-                      </svg>
+                <button on:click={changeDayBackward} type="button">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-chevron-left"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                        />
+                    </svg>
                 </button>
                 <Datepicker bind:selected={noticeDate}>
-
                     <button class="dateTimeChooserButton" type="button">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -86,10 +98,20 @@
                         {formatDate(noticeDate)}
                     </button>
                 </Datepicker>
-                <button on:click={changeDayForward} type="button" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
-                      </svg>
+                <button on:click={changeDayForward} type="button">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        fill="currentColor"
+                        class="bi bi-chevron-right"
+                        viewBox="0 0 16 16"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                        />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -147,11 +169,13 @@
                 border-radius: 5px;
                 border: 2px solid $grey300;
                 box-sizing: border-box;
-                box-shadow: 1px 1px 4px $drop-down-shadow;
+                box-shadow: 0 0 0 0, 0 6px 12px $drop-down-shadow;
+                transition: all 0.3s ease;
+                        transform: translate3D(0, -2px, 0);
             }
 
             .datePickerWrapper {
-                display:flex;
+                display: flex;
                 justify-content: space-evenly;
                 align-items: center;
 
@@ -165,6 +189,16 @@
                     line-height: initial;
                     min-width: 2rem;
                     background-color: $primary;
+                    &:hover {
+                        box-shadow: 0 0 0 0, 0 6px 12px $drop-down-shadow;
+                        transition: all 0.3s ease;
+                        transform: translate3D(0, -2px, 0);
+                        background-color: $primary-lighter;
+                    }
+                    &:active {
+                        transform: translate3D(0, 2px, 0);
+                        background-color: $primary-darker;
+                    }
                 }
             }
         }
@@ -198,7 +232,6 @@
                 width: 100vw;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
-                
             }
         }
     }
