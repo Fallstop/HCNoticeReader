@@ -1,7 +1,9 @@
 :root {
     --text-color: #333;
-    --primary-background: #fff;
-    --secondary-background: rgb(230, 230, 230);
+    --primary-background: #e0e0e0;
+    --secondary-background: #f0f0f0;
+    --primary-background-darker: #bebebe;
+    --primary-background-lighter: #ffffff;
     
     --drop-down-shadow: rgba(212, 212, 212, 0.8);
     
@@ -15,18 +17,24 @@
     --grey800: #1C1D20;
     --grey900: #131315;
     
-    --primary: rgb(157, 191, 255);
-    --primary-lighter: rgb(176, 204, 255);
+    --primary: rgb(132, 175, 253);
+    --primary-darkish: rgb(157, 191, 255);
+    --primary-secondary: rgb(176, 204, 255);
     --primary-darker: rgb(136, 177, 255);
+    --highlight-border: rgb(53, 66, 92);
 }
 
 
 :global(body.dark-mode) {
-    --text-color: #D6D8DA;
-    --primary-background: #181A1F;
+    --text-color: #f1f1f1;
+    --primary-background: #373e46;
     --secondary-background: #24292E;
+    --primary-background-darker: #181A1F;
+    --primary-background-lighter:  #3a3f44;
     --drop-down-shadow: rgb(93, 97, 104);
     --primary: rgb(40, 99, 209);
-    --primary-lighter: rgb(90, 137, 224);
+    --primary-lighter: rgb(61, 112, 207);
+    --primary-secondary: rgb(117, 163, 250);
     --primary-darker: rgb(21, 59, 129);
+    --highlight-border: rgb(123, 157, 221);
 }

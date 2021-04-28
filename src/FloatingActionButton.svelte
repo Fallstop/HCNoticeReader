@@ -15,11 +15,14 @@
 
         width: 60px;
         height: 60px;
+        flex-grow: none;
 
         background-color: var(--primary);
         border-radius: 50px;
         text-align: center;
-        box-shadow: 2px 2px 3px #999;
+        box-shadow:  3px 3px 7px var(--primary-darker),
+                    -3px -3px 7px var(--primary-lighter);
+        border: solid 1px var(--primary-secondary);
         &:hover {
             box-shadow: 0 0 0 0, 0 6px 12px rgb(126, 126, 126);
             transition: all 0.3s ease;
@@ -28,6 +31,7 @@
     }
     @media (min-width: 700px) {
         .float {
+            
             margin: 0;
             position: fixed;
             bottom: 40px;

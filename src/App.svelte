@@ -5,14 +5,15 @@
 </script>
 
 <main>
-	<DarkLightSwitch/>
+	
 	<h1>Huanui College Notices</h1>
 	<h3>Unofficial notices reader, because your eyes matter.</h3>
 	<div class="PrimaryContent">
 		<NoticeBlock />
 	</div>
-	
+	<DarkLightSwitch/>
 	<div class="floatingActionButtonContainer">
+		
 		<FloatingActionButton externalLink="https://github.com/Fallstop/HCNoticeReader">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -83,8 +84,12 @@
 		}
 		.PrimaryContent {
 			margin-top: 2em;
-			background-color: var(--secondary-background);
-			box-shadow: 1px 1px 8px var(--drop-down-shadow) 1px;
+			background-color: var(--primary-background);
+			// box-shadow: 1px 1px 8px var(--drop-down-shadow) 1px;
+			border-radius: 1em;
+			// background: #e0e0e0;
+			box-shadow:  20px 20px 60px var(--primary-background-darker),
+						-20px -20px 60px var(--primary-background-lighter);
 			width: 80%;
 		}
 	}
@@ -105,6 +110,10 @@
 			flex-direction: row;
 			align-items: center;
 			justify-content: space-evenly;
+			@media (max-width: 640px) {
+				flex-wrap: wrap;
+				width: 50vw;
+			}
 		}
 	}
 </style>

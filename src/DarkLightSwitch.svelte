@@ -1,23 +1,39 @@
 <script lang="ts">
-    let darkMode: boolean = false;
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        darkMode = true
-        window.document.body.classList.add("dark-mode");
-    }
-
+    let localStorage = window.localStorage;
+    let isDarkMode;
 
     function makeDarkMode() {
-        darkMode = true;
+        localStorage.setItem("colourScheme", "dark");
+        console.log(localStorage.getItem("colourScheme"));
         window.document.body.classList.add("dark-mode");
+        isDarkMode = true;
     }
     function makeLightMode() {
-        darkMode = false;
+        localStorage.setItem("colourScheme", "light");
+        console.log(localStorage.getItem("colourScheme"));
         window.document.body.classList.remove("dark-mode");
+        isDarkMode = false;
+    }
+
+    if (window.matchMedia) {
+        // Initalize localstore with user varibles
+        if (
+            window.matchMedia &&
+            (window.matchMedia("(prefers-color-scheme: dark)").matches ||
+                localStorage.getItem("colourScheme") !== "light")
+        ) {
+            makeDarkMode();
+        } else if (
+            window.matchMedia &&
+            localStorage.getItem("colourScheme") !== "dark"
+        ) {
+            makeLightMode();
+        }
     }
 </script>
 
 <div class="lightDarkContainer">
-    {#if darkMode}
+    {#if isDarkMode}
         <button on:click={makeLightMode}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -58,12 +74,36 @@
         right: 50px;
 
         button {
-            background-color: var(--secondary-background);
-            
-            border: none;
+            background: linear-gradient(
+                145deg,
+                var(--primary),
+                var(--primary-secondary)
+            );
+            box-shadow: 3px 3px 7px var(--primary-darker),
+                -3px -3px 7px var(--primary-lighter);
+            border: 1px solid var(--highlight-border);
             border-radius: 32px;
             padding: 0.5rem;
-
+            transition: all 0.3s ease;
+            height: 60px;
+            width: 60px;
+            &:hover {
+                transform: translate3D(0, -2px, 0);
+            }
+            &:active {
+                background: var(--primary);
+                box-shadow: inset 3px 3px 7px var(--primary-darker),
+                    inset -3px -3px 7px var(--primary-lighter);
+            }
+        }
+    }
+    @media (max-width: 640px) {
+        .lightDarkContainer {
+            flex-grow: 2;
+        margin: 1em;
+        position: inherit;
+        width: 60px;
+        height: 60px;
         }
     }
 </style>
