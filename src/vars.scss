@@ -1,5 +1,7 @@
 :root {
     --text-color: #333;
+    --link-color: rgb(0,100,200);
+
     --primary-background: #e0e0e0;
     --secondary-background: #f0f0f0;
     --primary-background-darker: #bebebe;
@@ -27,12 +29,14 @@
 
 :global(body.dark-mode) {
     --text-color: #f1f1f1;
+    --link-color: rgb(75 165 255);
+
     --primary-background: #373e46;
     --secondary-background: #24292E;
     --primary-background-darker: #181A1F;
     --primary-background-lighter:  #3a3f44;
     --drop-down-shadow: rgb(93, 97, 104);
-    --primary: rgb(40, 99, 209);
+    --primary: rgb(71, 120, 209);
     --primary-lighter: rgb(61, 112, 207);
     --primary-secondary: rgb(117, 163, 250);
     --primary-darker: rgb(21, 59, 129);

@@ -3,7 +3,6 @@
     import LoadingAnimation from "./LoadingAnimation.svelte";
 
     const API_ROUTE = "https://hctools.jmw.nz/api/";
-    // const formatDate = (date) => date.toISOString().split("T")[0];
     const formatDate = (date: Date) => date.toLocaleString('sv',{ timeZone: 'Pacific/Auckland' }).split(" ")[0]
 
 
