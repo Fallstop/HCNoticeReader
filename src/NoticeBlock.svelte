@@ -241,6 +241,12 @@
                 width: 100vw;
                 margin-left: 0 !important;
                 margin-right: 0 !important;
+                button {
+                    box-shadow: none;
+                    &:active {
+                        box-shadow: none;
+                    }
+                }
             }
         }
     }

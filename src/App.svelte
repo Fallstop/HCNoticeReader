@@ -63,14 +63,13 @@
 		transition: all 0.3s ease;
 		color: var(--text-color);
 		max-width: none;
-		height: 100%;
+		
 		// overflow-x: hidden;
 		margin: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		background-color: var(--primary-background);
-
+		
 		h1 {
 			text-align: center;
 			text-transform: uppercase;
@@ -83,7 +82,7 @@
 			font-weight: bold;
 		}
 		.PrimaryContent {
-			margin-top: 2em;
+			margin: 2em 0;
 			background-color: var(--primary-background);
 			// box-shadow: 1px 1px 8px var(--drop-down-shadow) 1px;
 			border-radius: 1em;
