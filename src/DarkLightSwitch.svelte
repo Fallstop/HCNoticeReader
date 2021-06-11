@@ -106,4 +106,9 @@
         height: 60px;
         }
     }
+    @media print {
+		* :not(.PrimaryContent) {
+			display: none !important;
+		}
+	}
 </style>

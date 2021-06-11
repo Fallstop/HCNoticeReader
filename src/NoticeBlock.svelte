@@ -3,8 +3,10 @@
     import LoadingAnimation from "./LoadingAnimation.svelte";
 
     const API_ROUTE = "https://hctools.jmw.nz/api/";
-    const formatDate = (date: Date) => date.toLocaleString('sv',{ timeZone: 'Pacific/Auckland' }).split(" ")[0]
-
+    const formatDate = (date: Date) =>
+        date
+            .toLocaleString("sv", { timeZone: "Pacific/Auckland" })
+            .split(" ")[0];
 
     let noticeText = "";
     let isSchoolDay;
@@ -52,16 +54,17 @@
     <div class="container">
         <div class="header">
             <div class="dayInfo">
+                <div class="printDate">
+                    {formatDate(noticeDate)} | 
+                </div>
                 Time table day: {#await getTimeTableDay(noticeDate) then day}{day}{/await}
             </div>
+            
 
             <div
                 class="
             datePickerWrapper
-            {isSchoolDay ===
-                false
-                    ? 'highlightedDatePicker'
-                    : ''}
+            {isSchoolDay === false ? 'highlightedDatePicker' : ''}
             "
             >
                 <button on:click={changeDayBackward} type="button">
@@ -169,11 +172,19 @@
                 align-self: flex-start;
                 padding: 1rem;
                 height: calc(100% - 2rem);
+                .printDate {
+                display: none;
             }
+            }
+            
             .highlightedDatePicker {
-                background: linear-gradient(145deg, var(--primary-background), var(--secondary-background));
-                box-shadow: 3px 3px 7px var(--primary-background-darker), -3px -3px 7px var(--primary-background-lighter);
-
+                background: linear-gradient(
+                    145deg,
+                    var(--primary-background),
+                    var(--secondary-background)
+                );
+                box-shadow: 3px 3px 7px var(--primary-background-darker),
+                    -3px -3px 7px var(--primary-background-lighter);
             }
 
             .datePickerWrapper {
@@ -196,9 +207,13 @@
                     font-size: 1.3rem;
                     line-height: initial;
                     min-width: 1.5rem;
-                    background: linear-gradient(145deg, var(--primary), var(--primary-secondary));
-                    box-shadow:  2px 2px 4px var(--primary-lighter),
-                                -2px -2px 4px var(--primary-darker);
+                    background: linear-gradient(
+                        145deg,
+                        var(--primary),
+                        var(--primary-secondary)
+                    );
+                    box-shadow: 2px 2px 4px var(--primary-lighter),
+                        -2px -2px 4px var(--primary-darker);
                     transition: all 0.3s ease;
                     &:hover {
                         transform: translate3D(0, -2px, 0);
@@ -206,7 +221,7 @@
                     &:active {
                         background: var(--primary);
                         box-shadow: inset 3px 3px 7px var(--primary-darker),
-                                    inset -3px -3px 7px  var(--primary-lighter);
+                            inset -3px -3px 7px var(--primary-lighter);
                     }
                 }
             }
@@ -245,6 +260,27 @@
                     box-shadow: none;
                     &:active {
                         box-shadow: none;
+                    }
+                }
+            }
+        }
+    }
+    @media print {
+        .container {
+           
+            .header {
+                .dayInfo .printDate {
+                    display: inline;
+                }
+                .datePickerWrapper {
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                    button {
+                        display: none;
+                        box-shadow: none;
+                        &:active {
+                            box-shadow: none;
+                        }
                     }
                 }
             }

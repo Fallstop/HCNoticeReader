@@ -26,7 +26,36 @@
     --highlight-border: rgb(53, 66, 92);
 }
 
+@media print {
+    :global(body.dark-mode) {
+        --text-color: #333 !important;
+        --link-color: rgb(0,100,200) !important;
+    
+        --primary-background: #e0e0e0 !important;
+        --secondary-background: #f0f0f0 !important;
+        --primary-background-darker: #bebebe !important;
+        --primary-background-lighter: #ffffff !important;
+        
+        --drop-down-shadow: rgba(212, 212, 212, 0.8) !important;
+        
+        --grey100: #ECECED !important;
+        --grey200: #CFCFD1 !important;
+        --grey300: #B2B3B5 !important;
+        --grey400: #78797E !important;
+        --grey500: #3E4047 !important;
+        --grey600: #383A40 !important;
+        --grey700: #25262B !important;
+        --grey800: #1C1D20 !important;
+        --grey900: #131315 !important;
+        
+        --primary: rgb(132, 175, 253) !important;
+        --primary-darkish: rgb(157, 191, 255) !important;
+        --primary-secondary: rgb(176, 204, 255) !important;
+        --primary-darker: rgb(136, 177, 255) !important;
+        --highlight-border: rgb(53, 66, 92) !important;
+    }
 
+}
 :global(body.dark-mode) {
     --text-color: #f1f1f1;
     --link-color: rgb(75 165 255);

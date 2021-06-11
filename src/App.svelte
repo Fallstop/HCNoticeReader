@@ -115,4 +115,20 @@
 			}
 		}
 	}
+	
+	@media print {
+		main {
+			padding: 0;
+			.PrimaryContent {
+				width: 100vw;
+				margin: 0;
+				border: none !important;
+            	border-radius: 0 !important;
+				box-shadow: none;
+			}
+		}
+		* :not(.PrimaryContent) {
+			display: none !important;
+		}
+	}
 </style>
