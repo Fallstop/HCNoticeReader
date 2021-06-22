@@ -46,3 +46,9 @@ button {
 	outline: none;
 	color: var(--text-color)
 }
+
+@media print {
+	:root {
+		overflow-y: visible !important;
+	}
+}
