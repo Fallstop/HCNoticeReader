@@ -14,6 +14,10 @@
         window.document.body.classList.remove("dark-mode");
         isDarkMode = false;
     }
+    function printPage() {
+        console.log("Print Pop");
+        window.print();
+    }
 
     if (window.matchMedia) {
         // Initalize localstore with user varibles
@@ -32,7 +36,7 @@
     }
 </script>
 
-<div class="lightDarkContainer">
+<div class="topActionButtonsContainer">
     {#if isDarkMode}
         <button on:click={makeLightMode}>
             <svg
@@ -64,11 +68,26 @@
             </svg>
         </button>
     {/if}
+    <button on:click={printPage}>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="32"
+            height="32"
+            fill="currentColor"
+            class="bi bi-printer"
+            viewBox="0 0 16 16"
+        >
+            <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+            <path
+                d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"
+            />
+        </svg>
+    </button>
 </div>
 
 <style lang="scss">
     @import "vars.scss";
-    .lightDarkContainer {
+    .topActionButtonsContainer {
         position: fixed;
         top: 50px;
         right: 50px;
@@ -100,15 +119,15 @@
     @media (max-width: 640px) {
         .lightDarkContainer {
             flex-grow: 2;
-        margin: 1em;
-        position: inherit;
-        width: 60px;
-        height: 60px;
+            margin: 1em;
+            position: inherit;
+            width: 60px;
+            height: 60px;
         }
     }
     @media print {
-		* :not(.PrimaryContent) {
-			display: none !important;
-		}
-	}
+        * :not(.PrimaryContent) {
+            display: none !important;
+        }
+    }
 </style>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import NoticeBlock from "./NoticeBlock.svelte";
 	import FloatingActionButton from "./FloatingActionButton.svelte";
-	import DarkLightSwitch from "./DarkLightSwitch.svelte";
+	import TopActionButtons from "./TopActionButtons.svelte";
 </script>
 
 <main>
@@ -11,7 +11,7 @@
 	<div class="PrimaryContent">
 		<NoticeBlock />
 	</div>
-	<DarkLightSwitch/>
+	<TopActionButtons/>
 	<div class="floatingActionButtonContainer">
 		
 		<FloatingActionButton externalLink="https://github.com/Fallstop/HCNoticeReader">
