@@ -9,17 +9,19 @@
             .split(" ")[0];
 
     let noticeText = "";
-    let isSchoolDay;
+    let dayHasNotices: Boolean;
+    let isSchoolDay: Boolean;
+    let timeTableDayText: String;
     let noticeDate = new Date();
 
     function getNoticeText(noticeDate) {
-        isSchoolDay = undefined;
+        dayHasNotices = undefined;
         fetch(
             new Request(API_ROUTE + "getdailynotice/" + formatDate(noticeDate))
         )
             .then((response) => response.json())
             .then((data) => {
-                isSchoolDay = data["isSchoolDay"];
+                dayHasNotices = data["isSchoolDay"];
                 noticeText = data["noticeText"];
             })
             .catch((error) => {
@@ -27,16 +29,22 @@
             });
         return noticeText || "";
     }
-    async function getTimeTableDay(noticeDate) {
-        const resonse = await fetch(
+    function getTimeTableDay(noticeDate) {
+        console.log("getting timeTableDayText");
+        timeTableDayText = undefined;
+        fetch(
             new Request(API_ROUTE + "gettimetableday/" + formatDate(noticeDate))
-        );
-        const data = await resonse.json();
-        if (data["isSchoolDay"]) {
-            return data["currentDay"];
-        } else {
-            return "N/A";
-        }
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                isSchoolDay = data["isSchoolDay"];
+                timeTableDayText = data["currentDay"] || "N/A";
+                console.log(timeTableDayText);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+        return timeTableDayText || "";
     }
     function changeDayBackward() {
         noticeDate.setDate(noticeDate.getDate() - 1);
@@ -48,6 +56,7 @@
     }
 
     $: noticeText = getNoticeText(noticeDate);
+    $: timeTableDayText = getTimeTableDay(noticeDate);
 </script>
 
 <main>
@@ -55,16 +64,15 @@
         <div class="header">
             <div class="dayInfo">
                 <div class="printDate">
-                    {formatDate(noticeDate)} | 
+                    {formatDate(noticeDate)} |
                 </div>
-                Time table day: {#await getTimeTableDay(noticeDate) then day}{day}{/await}
+                Time table day: {timeTableDayText}
             </div>
-            
 
             <div
                 class="
             datePickerWrapper
-            {isSchoolDay === false ? 'highlightedDatePicker' : ''}
+            {dayHasNotices === false ? 'highlightedDatePicker' : ''}
             "
             >
                 <button on:click={changeDayBackward} type="button">
@@ -122,12 +130,17 @@
                 </button>
             </div>
         </div>
-        {#if isSchoolDay}
+        {#if dayHasNotices}
             <div class="noticeText">
                 {@html noticeText}
             </div>
-        {:else if isSchoolDay === false}
+        {:else if dayHasNotices === false}
             <div class="flexWHCenter">
+                {#if isSchoolDay}
+                    <h1>That is a school day.</h1>
+                {:else if isSchoolDay === false}
+                    <h1>Not a school day.</h1>
+                {/if}
                 <h2>No notices available on {formatDate(noticeDate)}.</h2>
                 <p>
                     Click on the "{formatDate(noticeDate)}" button to view
@@ -173,10 +186,10 @@
                 padding: 1rem;
                 height: calc(100% - 2rem);
                 .printDate {
-                display: none;
+                    display: none;
+                }
             }
-            }
-            
+
             .highlightedDatePicker {
                 background: linear-gradient(
                     145deg,
@@ -238,36 +251,50 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            h1 {
+                font-size: 4rem;
+            }
         }
     }
     @media (max-width: 640px) {
-        .container .header {
-            flex-grow: grow;
-            flex-direction: column;
-            height: unset;
-            & > * {
-                align-self: flex-start !important;
-            }
-            .dayInfo {
-                font-size: 1.2rem;
-                padding: 0.5rem;
-            }
-            .datePickerWrapper {
-                width: 100vw;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                button {
-                    box-shadow: none;
-                    &:active {
+        .container {
+            .header {
+                flex-grow: grow;
+                flex-direction: column;
+                height: unset;
+                & > * {
+                    align-self: flex-start !important;
+                }
+                .dayInfo {
+                    font-size: 1.2rem;
+                    padding: 0.5rem;
+                }
+                .datePickerWrapper {
+                    width: 100vw;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                    button {
                         box-shadow: none;
+                        &:active {
+                            box-shadow: none;
+                        }
                     }
+                }
+            }
+            .flexWHCenter {
+                margin: 0 1em;
+                h1 {
+                    font-size: 2rem;
+                }
+                h2 {
+                    font-size: 1.2rem;
                 }
             }
         }
     }
     @media print {
         .container {
-           
             .header {
                 .dayInfo .printDate {
                     display: inline;
