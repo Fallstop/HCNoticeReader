@@ -28,7 +28,7 @@
 
 @media print {
     :global(body.dark-mode) {
-        --text-color: #333 !important;
+        --text-color: rgb(0, 0, 0) !important;
         --link-color: rgb(0,100,200) !important;
     
         --primary-background: #e0e0e0 !important;

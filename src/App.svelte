@@ -119,8 +119,9 @@
 	@media print {
 		main {
 			padding: 0;
+			margin: 1cm;
 			.PrimaryContent {
-				width: 100vw;
+				width: 95vw;
 				margin: 0;
 				border: none !important;
             	border-radius: 0 !important;
