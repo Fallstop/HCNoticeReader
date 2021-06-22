@@ -54,6 +54,7 @@
 </main>
 
 <style lang="scss">
+	@import "global.css";
 	@import "vars.scss";
 
 	#githubLogo {
@@ -118,10 +119,12 @@
 	
 	@media print {
 		main {
+			display: block;
 			padding: 0;
 			margin: 1cm;
 			.PrimaryContent {
-				width: 95vw;
+				max-width: 100vw;
+				width: auto;
 				margin: 0;
 				border: none !important;
             	border-radius: 0 !important;

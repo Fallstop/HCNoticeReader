@@ -8,7 +8,7 @@
 </a>
 
 <style lang="scss">
-    @import "vars.scss";
+    
 
     .float {
         margin: 1em;

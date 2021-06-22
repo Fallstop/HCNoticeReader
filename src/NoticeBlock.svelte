@@ -156,7 +156,7 @@
 </main>
 
 <style lang="scss">
-    @import "vars.scss";
+    
     .container {
         min-height: 50vh;
         display: flex;
@@ -295,6 +295,7 @@
     }
     @media print {
         .container {
+
             .header {
                 .dayInfo .printDate {
                     display: inline;

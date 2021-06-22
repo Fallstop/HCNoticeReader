@@ -86,13 +86,14 @@
 </div>
 
 <style lang="scss">
-    @import "vars.scss";
+    
     .topActionButtonsContainer {
         position: fixed;
         top: 50px;
         right: 50px;
 
         button {
+            margin: 0 0.5em;
             background: linear-gradient(
                 145deg,
                 var(--primary),
@@ -117,9 +118,9 @@
         }
     }
     @media (max-width: 640px) {
-        .lightDarkContainer {
+        .topActionButtonsContainer {
             flex-grow: 2;
-            margin: 1em;
+            margin: 0.5em;
             position: inherit;
             width: 60px;
             height: 60px;

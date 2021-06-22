@@ -6,6 +6,11 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
+import htmlTemplate from 'rollup-plugin-generate-html-template';
+import copy from 'rollup-plugin-copy'
+
+
+
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -36,7 +41,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: 'public/build/bundle.js'
+		file: `public/bundle.${Date.now()}.js`
 	},
 	plugins: [
 		svelte({
@@ -46,9 +51,10 @@ export default {
 				dev: !production
 			}
 		}),
+		// scss(),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
-		css({ output: 'bundle.css' }),
+		css({ output: `bundle.${Date.now()}.css`, }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -64,6 +70,18 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production
 		}),
+		htmlTemplate({
+			template: 'src/static/index.html',
+			target: 'index.html',
+			
+		}),
+		copy({
+			targets: [
+			  { src: 'src/static/favicon.ico', dest: 'public/' },
+
+			]
+		  }),
+	  
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
