@@ -11,6 +11,8 @@
     
 
     .float {
+        transition: all 0.3s ease;
+
         margin: 1em;
 
         width: 60px;
@@ -24,8 +26,7 @@
                     -3px -3px 7px var(--primary-lighter);
         border: solid 1px var(--primary-secondary);
         &:hover {
-            box-shadow: 0 0 0 0, 0 6px 12px rgb(126, 126, 126);
-            transition: all 0.3s ease;
+            box-shadow: 0 0 0 0, 0 6px 12px var(--primary-background-darker);
             transform: translate3D(0, -2px, 0);
         }
     }

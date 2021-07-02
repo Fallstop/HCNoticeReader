@@ -229,6 +229,7 @@
                         -2px -2px 4px var(--primary-darker);
                     transition: all 0.3s ease;
                     &:hover {
+                        box-shadow: 0 0 0 0, 0 6px 12px var(--primary-background-darker);
                         transform: translate3D(0, -2px, 0);
                     }
                     &:active {
