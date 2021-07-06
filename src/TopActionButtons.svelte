@@ -20,7 +20,7 @@
     }
 
     if (window.matchMedia) {
-        // Initalize localstore with user varibles
+        // Initialize localstore with user variables
         if (
             window.matchMedia &&
             (window.matchMedia("(prefers-color-scheme: dark)").matches ||
