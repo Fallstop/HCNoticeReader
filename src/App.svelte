@@ -78,7 +78,7 @@
 			font-weight: 100;
 			margin-bottom: 0;
 		}
-		h3 {
+		h2 {
 			text-align: center;
 			font-weight: bold;
 		}
