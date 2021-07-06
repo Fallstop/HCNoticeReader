@@ -52,7 +52,6 @@ export default {
 				dev: !production
 			}
 		}),
-		// scss(),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
 		css({ output: `bundle.${git_commit}.css`, }),
@@ -71,19 +70,19 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production
 		}),
-		// htmlTemplate({
-		// 	template: 'src/static/index.html',
-		// 	target: 'index.html',
-
-		// }),
 		html({
 			title: "HC Notices",
-			meta: [{ charset: 'utf-8' }, { name: "viewport", content: "width=device-width, initial-scale=1" }]
+			meta: [
+					{ charset: 'utf-8' },
+					{ name: "viewport", content: "width=device-width, initial-scale=1" },
+					{ name: "description", content: "HC Notice Reader is a tool to read Huanui Collage Daily Notices"}
+
+				]
 		}),
 		copy({
 			targets: [
 				{ src: 'src/static/favicon.ico', dest: 'public/' },
-
+				{ src: 'src/static/robots.txt', dest: 'public/' },
 			]
 		}),
 

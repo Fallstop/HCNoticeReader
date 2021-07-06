@@ -4,7 +4,7 @@
     export let description;
 </script>
 
-<a href={externalLink} target="_blank" class="float" style="right: {rightPos}" aria-label={description}>
+<a href={externalLink} target="_blank" class="float" style="right: {rightPos}" aria-label={description} rel="noopener">
     <slot />
 </a>
 
