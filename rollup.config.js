@@ -7,12 +7,12 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 // import htmlTemplate from 'rollup-plugin-generate-html-template';
-import copy from 'rollup-plugin-copy'
-import html from "@rollup/plugin-html"
+import copy from 'rollup-plugin-copy';
+import html from "@rollup/plugin-html";
 
 
 
-const git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim()
+const git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim();
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -74,18 +74,19 @@ export default {
 		// htmlTemplate({
 		// 	template: 'src/static/index.html',
 		// 	target: 'index.html',
-			
+
 		// }),
 		html({
-			title: "HC Notices", 
+			title: "HC Notices",
+			meta: [{ charset: 'utf-8' }, { name: "viewport", content: "width=device-width, initial-scale=1" }]
 		}),
 		copy({
 			targets: [
-			  { src: 'src/static/favicon.ico', dest: 'public/' },
+				{ src: 'src/static/favicon.ico', dest: 'public/' },
 
 			]
-		  }),
-	  
+		}),
+
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
