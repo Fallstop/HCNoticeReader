@@ -1,6 +1,7 @@
 :root {
     --text-color: #333;
     --link-color: rgb(0,100,200);
+    --warning-color: #FBE122;
 
     --primary-background: #e0e0e0;
     --secondary-background: #f0f0f0;
@@ -24,6 +25,9 @@
     --primary-secondary: rgb(176, 204, 255);
     --primary-darker: rgb(136, 177, 255);
     --highlight-border: rgb(53, 66, 92);
+
+    --warning-background: rgb(63, 63, 63);
+    --warning-border: #f0f0f0;
 }
 
 @media print {
@@ -60,6 +64,8 @@
 :global(body.dark-mode) {
     --text-color: #f1f1f1;
     --link-color: rgb(75 165 255);
+    --warning-color: rgb(214, 211, 12);
+
 
     --primary-background: #373e46;
     --secondary-background: #24292E;
@@ -71,4 +77,7 @@
     --primary-secondary: rgb(117, 163, 250);
     --primary-darker: rgb(21, 59, 129);
     --highlight-border: rgb(123, 157, 221);
+
+    --warning-background: #3a3f44;
+    --warning-border: #3a3f44;
 }

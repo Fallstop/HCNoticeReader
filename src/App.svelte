@@ -1,6 +1,6 @@
 <script lang="ts">
 	import NoticeBlock from "./NoticeBlock.svelte";
-	import FloatingActionButton from "./FloatingActionButton.svelte";
+	import FloatingActionButton from "./BottomActionButton.svelte";
 	import TopActionButtons from "./TopActionButtons.svelte";
 </script>
 

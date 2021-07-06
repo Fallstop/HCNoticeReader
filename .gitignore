@@ -68,3 +68,4 @@ typings/
 public/build/
 
 public/
+.vscode
