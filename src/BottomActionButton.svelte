@@ -1,9 +1,10 @@
 <script lang="ts">
     export let rightPos = "40px";
     export let externalLink;
+    export let description;
 </script>
 
-<a href={externalLink} target="_blank" class="float" style="right: {rightPos}">
+<a href={externalLink} target="_blank" class="float" style="right: {rightPos}" aria-label={description}>
     <slot />
 </a>
 

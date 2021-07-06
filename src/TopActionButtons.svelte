@@ -38,7 +38,7 @@
 
 <div class="topActionButtonsContainer">
     {#if isDarkMode}
-        <button on:click={makeLightMode}>
+        <button on:click={makeLightMode} aria-label="Switch to light mode">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -53,7 +53,7 @@
             </svg>
         </button>
     {:else}
-        <button on:click={makeDarkMode}>
+        <button on:click={makeDarkMode} aria-label="Switch to dark mode">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="32"
@@ -68,7 +68,7 @@
             </svg>
         </button>
     {/if}
-    <button on:click={printPage}>
+    <button on:click={printPage} aria-label="Print Current Page">
         <svg
             xmlns="http://www.w3.org/2000/svg"
             width="32"

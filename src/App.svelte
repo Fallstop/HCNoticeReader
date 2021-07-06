@@ -7,14 +7,14 @@
 <main>
 	
 	<h1>Huanui College Notices</h1>
-	<h3>Unofficial notices reader, because your eyes matter.</h3>
+	<h2>Unofficial notices reader, because your eyes matter.</h2>
 	<div class="PrimaryContent">
 		<NoticeBlock />
 	</div>
 	<TopActionButtons/>
 	<div class="floatingActionButtonContainer">
 		
-		<FloatingActionButton externalLink="https://github.com/Fallstop/HCNoticeReader">
+		<FloatingActionButton externalLink="https://github.com/Fallstop/HCNoticeReader" description="Github Repo">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="16"
@@ -30,7 +30,7 @@
 				/>
 			</svg>
 		</FloatingActionButton>
-		<FloatingActionButton rightPos="120px" externalLink="https://jmw.nz/">
+		<FloatingActionButton rightPos="120px" externalLink="https://jmw.nz/" description="Developer's Website">
 			<svg stroke="var(--text-color)" viewBox="0 0 199 188" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: 2px;margin-left:1px;">
 				<path id="FallstopLogoBW-Octagon" d="M104.519 181.102C101.638 182.294 96.924 182.294 94.043 181.102L41.015 159.138C38.134 157.946 34.801 154.612 33.608 151.732L11.641 98.7C10.448 95.819 10.448 91.105 11.641 88.224L33.607 35.195C34.8 32.314 38.133 28.981 41.014 27.788L94.044 5.821C96.925 4.628 101.639 4.628 104.52 5.821L157.548 27.787C160.429 28.98 163.762 32.313 164.955 35.194L186.922 88.224C188.115 91.105 188.115 95.819 186.922 98.7L164.956 151.731C163.763 154.611 160.43 157.945 157.549 159.137L104.519 181.102Z" stroke-width="8.2"/>
 				

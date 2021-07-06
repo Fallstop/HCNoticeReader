@@ -93,7 +93,7 @@
             {dayHasNotices === false ? 'highlightedDatePicker' : ''}
             "
             >
-                <button on:click={changeDayBackward} type="button">
+                <button on:click={changeDayBackward} type="button" aria-label="View Previous Day's Notice">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -131,7 +131,7 @@
                         {formatDate(noticeDate)}
                     </button>
                 </Datepicker>
-                <button on:click={changeDayForward} type="button">
+                <button on:click={changeDayForward} type="button" aria-label="View Tomorrow's Notice">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -279,6 +279,9 @@
                 border: var(--warning-border) solid 4px;
                 padding: 1rem;
                 border-radius: 1rem;
+                svg {
+                    vertical-align: bottom;
+                }
             }
         }
         .flexWHCenter {
