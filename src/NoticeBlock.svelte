@@ -9,6 +9,7 @@
             .split(" ")[0];
 
     let noticeText = "";
+    let noticeTextBroken = false;
     let dayHasNotices: Boolean;
     let isSchoolDay: Boolean;
     let timeTableDayText: String;
@@ -22,7 +23,7 @@
             .then((response) => response.json())
             .then((data) => {
                 dayHasNotices = data["isSchoolDay"];
-                noticeText = data["noticeText"];
+                noticeText = processNoticeText(data["noticeText"] || "");
             })
             .catch((error) => {
                 console.error("Error:", error);
@@ -53,6 +54,23 @@
     function changeDayForward() {
         noticeDate.setDate(noticeDate.getDate() + 1);
         noticeDate = noticeDate;
+    }
+
+    function processNoticeText(text: string): string {
+        let text_fixed = text.replaceAll(/--+-/g,"<hr>")
+
+        if (text.includes("<br>") == false && text.length > 24) {
+            noticeTextBroken = true
+            // Contains no line breaks, so we should do it ourselves
+            console.log("Artificially adding line breaks",text.length);
+            // Punctuation outside of quotes
+            text_fixed = text_fixed.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>")
+            text_fixed = text_fixed.replaceAll(/" +(?=[A-Z])/g,"<br>")
+        } else {
+            noticeTextBroken = false
+        }
+
+        return text_fixed
     }
 
     $: noticeText = getNoticeText(noticeDate);
@@ -132,6 +150,15 @@
         </div>
         {#if dayHasNotices}
             <div class="noticeText">
+                {#if noticeTextBroken}
+                <div class="noticeTextBroken">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                    </svg>
+                    Notice has no formatting, automatically guessed line breaks.
+                </div>
+                {/if}
                 {@html noticeText}
             </div>
         {:else if dayHasNotices === false}
@@ -245,6 +272,14 @@
             text-align: left;
             padding: 1em;
             font-size: 1.1;
+            .noticeTextBroken {
+                color: var(--warning-color);
+                font-weight: 500;
+                background-color: var(--warning-background);
+                border: var(--warning-border) solid 4px;
+                padding: 1rem;
+                border-radius: 1rem;
+            }
         }
         .flexWHCenter {
             min-height: 50vh;
@@ -312,6 +347,9 @@
                         }
                     }
                 }
+            }
+            .noticeTextBroken {
+                display: none;
             }
         }
     }

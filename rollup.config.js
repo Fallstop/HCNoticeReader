@@ -6,12 +6,13 @@ import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
-import htmlTemplate from 'rollup-plugin-generate-html-template';
+// import htmlTemplate from 'rollup-plugin-generate-html-template';
 import copy from 'rollup-plugin-copy'
+import html from "@rollup/plugin-html"
 
 
 
-
+const git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim()
 const production = !process.env.ROLLUP_WATCH;
 
 function serve() {
@@ -24,7 +25,7 @@ function serve() {
 	return {
 		writeBundle() {
 			if (server) return;
-			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
+			server = require('child_process').spawn('yarn', ['start'], {
 				stdio: ['ignore', 'inherit', 'inherit'],
 				shell: true
 			});
@@ -41,7 +42,7 @@ export default {
 		sourcemap: true,
 		format: 'iife',
 		name: 'app',
-		file: `public/bundle.${Date.now()}.js`
+		file: `public/bundle.${git_commit}.js`
 	},
 	plugins: [
 		svelte({
@@ -54,7 +55,7 @@ export default {
 		// scss(),
 		// we'll extract any component CSS out into
 		// a separate file - better for performance
-		css({ output: `bundle.${Date.now()}.css`, }),
+		css({ output: `bundle.${git_commit}.css`, }),
 
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
@@ -70,10 +71,13 @@ export default {
 			sourceMap: !production,
 			inlineSources: !production
 		}),
-		htmlTemplate({
-			template: 'src/static/index.html',
-			target: 'index.html',
+		// htmlTemplate({
+		// 	template: 'src/static/index.html',
+		// 	target: 'index.html',
 			
+		// }),
+		html({
+			title: "HC Notices", 
 		}),
 		copy({
 			targets: [

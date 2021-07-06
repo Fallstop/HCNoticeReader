@@ -4,13 +4,15 @@
   "license": "MIT",
   "scripts": {
     "build": "rollup -c",
-    "clean": "rimraf public/",
+    "clean": "rimraf public/*.*.*",
     "dev": "yarn clean && rollup -c -w",
+    "dev:nowatch": "yarn build && yarn start",
     "start": "sirv public --single",
     "validate": "svelte-check"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-html": "^0.2.3",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tsconfig/svelte": "^1.0.0",
