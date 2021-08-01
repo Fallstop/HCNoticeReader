@@ -75,7 +75,7 @@ export default {
 			meta: [
 					{ charset: 'utf-8' },
 					{ name: "viewport", content: "width=device-width, initial-scale=1" },
-					{ name: "description", content: "HC Notice Reader is a tool to read Huanui Collage Daily Notices"}
+					{ name: "description", content: "HC Notice Reader is a tool to read Huanui Collage Daily Notices."}
 
 				]
 		}),
