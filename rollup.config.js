@@ -10,10 +10,15 @@ import css from 'rollup-plugin-css-only';
 import copy from 'rollup-plugin-copy';
 import html from "@rollup/plugin-html";
 
-
-
-const git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim();
 const production = !process.env.ROLLUP_WATCH;
+
+let git_commit = "";
+
+if (production) {
+	git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim();
+} else {
+	git_commit = "dev"
+}
 
 function serve() {
 	let server;
@@ -35,6 +40,8 @@ function serve() {
 		}
 	};
 }
+
+
 
 export default {
 	input: 'src/main.ts',

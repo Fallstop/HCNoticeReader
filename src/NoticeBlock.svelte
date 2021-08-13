@@ -23,7 +23,14 @@
             .then((response) => response.json())
             .then((data) => {
                 dayHasNotices = data["isSchoolDay"];
+                if (dayHasNotices) {
+                    dayHasNotices = (data["noticeText"] || "").trim()!=="";
+                    console.log("dayHasNotices",dayHasNotices, "aa",data["noticeText"],"a",data["isSchoolDay"])
+
+
+                }
                 noticeText = processNoticeText(data["noticeText"] || "");
+
             })
             .catch((error) => {
                 console.error("Error:", error);
