@@ -65,7 +65,7 @@
 		color: var(--text-color);
 		max-width: none;
 		
-		// overflow-x: hidden;
+		//overflow-x: hidden;
 		margin: 0;
 		display: flex;
 		flex-direction: column;

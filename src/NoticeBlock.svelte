@@ -47,7 +47,7 @@
             .then((data) => {
                 isSchoolDay = data["isSchoolDay"];
                 timeTableDayText = data["currentDay"] || "N/A";
-                console.log(timeTableDayText);
+                console.log("Time table day: ",data["currentDay"] || "N/A");
             })
             .catch((error) => {
                 console.error("Error:", error);

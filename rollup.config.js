@@ -1,112 +1,73 @@
-import svelte from 'rollup-plugin-svelte';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
-import sveltePreprocess from 'svelte-preprocess';
-import typescript from '@rollup/plugin-typescript';
+import svelte from "rollup-plugin-svelte";
+import resolve from "@rollup/plugin-node-resolve";
+import { terser } from "rollup-plugin-terser";
+import livereload from "rollup-plugin-livereload";
+import serve from "rollup-plugin-serve";
+import copy from "rollup-plugin-copy";
 import css from 'rollup-plugin-css-only';
-// import htmlTemplate from 'rollup-plugin-generate-html-template';
-import copy from 'rollup-plugin-copy';
-import html from "@rollup/plugin-html";
+import fs from "fs";
+import posthtml from "posthtml";
+import { hash } from "posthtml-hash";
+import htmlnano from "htmlnano";
+import rimraf from "rimraf";
+import typescript from "@rollup/plugin-typescript";
+import sveltePreprocess from 'svelte-preprocess';
 
-const production = !process.env.ROLLUP_WATCH;
+const PROD = !process.env.ROLLUP_WATCH;
+const OUT_DIR = "public";
 
-let git_commit = "";
-
-if (production) {
-	git_commit = require('child_process').execSync('git rev-parse HEAD').toString().trim();
-} else {
-	git_commit = "dev"
-}
-
-function serve() {
-	let server;
-
-	function toExit() {
-		if (server) server.kill(0);
-	}
-
+function hashStatic() {
 	return {
+		name: "hash-static",
+		buildStart() {
+			rimraf.sync(OUT_DIR);
+		},
 		writeBundle() {
-			if (server) return;
-			server = require('child_process').spawn('yarn', ['start'], {
-				stdio: ['ignore', 'inherit', 'inherit'],
-				shell: true
-			});
+			posthtml([
+				// hashes `bundle.[hash].css` and `bundle.[hash].js`
+				hash({ path: OUT_DIR }),
 
-			process.on('SIGTERM', toExit);
-			process.on('exit', toExit);
-		}
+				// minifies `build/index.html`
+				// https://github.com/posthtml/htmlnano
+				htmlnano(),
+			])
+				.process(fs.readFileSync(`${OUT_DIR}/index.html`, 'utf-8'))
+				.then((result) =>
+					fs.writeFileSync(`${OUT_DIR}/index.html`, result.html)
+				);
+		},
 	};
 }
 
-
-
 export default {
-	input: 'src/main.ts',
+	input: "src/main.ts",
 	output: {
-		sourcemap: true,
-		format: 'iife',
-		name: 'app',
-		file: `public/bundle.${git_commit}.js`
+		sourcemap: !PROD,
+		format: "iife",
+		name: "app",
+		file: `${OUT_DIR}/bundle.[hash].js`,
 	},
 	plugins: [
+		copy({ targets: [{ src: "src/static/*", dest: OUT_DIR }] }),
 		svelte({
-			preprocess: sveltePreprocess({ sourceMap: !production }),
+			preprocess: sveltePreprocess(),
 			compilerOptions: {
-				// enable run-time checks when not in production
-				dev: !production
+				dev: !PROD,
 			}
 		}),
-		// we'll extract any component CSS out into
-		// a separate file - better for performance
-		css({ output: `bundle.${git_commit}.css`, }),
-
-		// If you have external dependencies installed from
-		// npm, you'll most likely need these plugins. In
-		// some cases you'll need additional configuration -
-		// consult the documentation for details:
-		// https://github.com/rollup/plugins/tree/master/packages/commonjs
-		resolve({
-			browser: true,
-			dedupe: ['svelte']
-		}),
-		commonjs(),
+		css({ output: 'bundle.[hash].css' }),
+		resolve(),
 		typescript({
-			sourceMap: !production,
-			inlineSources: !production
+			sourceMap: !PROD,
+			inlineSources: !PROD
 		}),
-		html({
-			title: "HC Notices",
-			meta: [
-					{ charset: 'utf-8' },
-					{ name: "viewport", content: "width=device-width, initial-scale=1" },
-					{ name: "description", content: "HC Notice Reader is a tool to read Huanui Collage Daily Notices."}
-
-				]
+		!PROD &&
+		serve({
+			contentBase: [OUT_DIR],
+			port: 3000,
 		}),
-		copy({
-			targets: [
-				{ src: 'src/static/favicon.ico', dest: 'public/' },
-				{ src: 'src/static/robots.txt', dest: 'public/' },
-			]
-		}),
-
-
-		// In dev mode, call `npm run start` once
-		// the bundle has been generated
-		!production && serve(),
-
-		// Watch the `public` directory and refresh the
-		// browser on changes when not in production
-		!production && livereload('public'),
-
-		// If we're building for production (npm run build
-		// instead of npm run dev), minify
-		production && terser()
+		!PROD && livereload({ watch: OUT_DIR }),
+		PROD && terser(),
+		PROD && hashStatic(),
 	],
-	watch: {
-		clearScreen: false
-	}
 };
