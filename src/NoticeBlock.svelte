@@ -65,6 +65,7 @@
 
     function processNoticeText(text: string): string {
         let text_fixed = text.replaceAll(/--+-/g,"<hr>")
+        text_fixed = text_fixed.replaceAll(/(?:\r\n|\r|\n)/g, '<br>');
 
         if (text.includes("<br>") == false && text.length > 24) {
             noticeTextBroken = true
