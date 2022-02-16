@@ -15,21 +15,23 @@
     let timeTableDayText: String;
     let noticeDate = new Date();
 
-    function getNoticeText(noticeDate) {
+    function getNoticeText(noticeDateToGet: Date) {
         dayHasNotices = undefined;
         fetch(
-            new Request(API_ROUTE + "getdailynotice/" + formatDate(noticeDate))
+            new Request(API_ROUTE + "getdailynotice/" + formatDate(noticeDateToGet))
         )
             .then((response) => response.json())
             .then((data) => {
-                dayHasNotices = data["isSchoolDay"];
-                if (dayHasNotices) {
-                    dayHasNotices = (data["noticeText"] || "").trim()!=="";
-                    console.log("dayHasNotices",dayHasNotices, "aa",data["noticeText"],"a",data["isSchoolDay"])
-
-
+                console.log(formatDate(noticeDate),formatDate(noticeDateToGet))
+                if (formatDate(noticeDate)===formatDate(noticeDateToGet)) {
+                    dayHasNotices = data["isSchoolDay"];
+                    if (dayHasNotices) {
+                        dayHasNotices = (data["noticeText"] || "").trim()!=="";
+                    }
+                    noticeText = processNoticeText(data["noticeText"] || "");
+                } else {
+                    console.warn("Got notice, but it changed by the time it was received")
                 }
-                noticeText = processNoticeText(data["noticeText"] || "");
 
             })
             .catch((error) => {
@@ -37,17 +39,24 @@
             });
         return noticeText || "";
     }
-    function getTimeTableDay(noticeDate) {
-        console.log("getting timeTableDayText");
+    function getTimeTableDay(noticeDateToGet: Date) {
         timeTableDayText = undefined;
         fetch(
-            new Request(API_ROUTE + "gettimetableday/" + formatDate(noticeDate))
+            new Request(API_ROUTE + "gettimetableday/" + formatDate(noticeDateToGet))
         )
             .then((response) => response.json())
             .then((data) => {
-                isSchoolDay = data["isSchoolDay"];
-                timeTableDayText = data["currentDay"] || "N/A";
-                console.log("Time table day: ",data["currentDay"] || "N/A");
+                console.log(formatDate(noticeDate),formatDate(noticeDateToGet))
+
+                if (formatDate(noticeDate)===formatDate(noticeDateToGet)) {
+                    isSchoolDay = data["isSchoolDay"];
+                    timeTableDayText = data["currentDay"] || "N/A";
+                    console.log("Time table day: ",data["currentDay"] || "N/A");
+
+                } else {
+                    console.warn("Got time-table day, but it changed by the time it was received")
+                }
+
             })
             .catch((error) => {
                 console.error("Error:", error);
@@ -65,24 +74,24 @@
 
     function processNoticeText(text: string): string {
         let text_fixed = text.replaceAll(/--+-/g,"<hr>")
-        text_fixed = text_fixed.replaceAll(/(?:\r\n|\r|\n)/g, '<br>');
+        text_fixed = text_fixed.replaceAll(/(?:\r\n|\r|\n)/g, '</p><br><p>');
 
         if (text.includes("<br>") == false && text.length > 24) {
             noticeTextBroken = true
             // Contains no line breaks, so we should do it ourselves
-            console.log("Artificially adding line breaks",text.length);
             // Punctuation outside of quotes
             text_fixed = text_fixed.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>")
             text_fixed = text_fixed.replaceAll(/" +(?=[A-Z])/g,"<br>")
         } else {
             noticeTextBroken = false
         }
+        text_fixed = `<p>${text_fixed}</p>`
 
         return text_fixed
     }
 
-    $: noticeText = getNoticeText(noticeDate);
-    $: timeTableDayText = getTimeTableDay(noticeDate);
+    $: noticeText = getNoticeText(new Date(noticeDate));
+    $: timeTableDayText = getTimeTableDay(new Date(noticeDate));
 </script>
 
 <main>
@@ -92,7 +101,7 @@
                 <div class="printDate">
                     {formatDate(noticeDate)} |
                 </div>
-                Time table day: {timeTableDayText}
+                Time table day: {timeTableDayText || "Loading..."}
             </div>
 
             <div
