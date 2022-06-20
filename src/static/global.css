@@ -2,10 +2,12 @@ html, body {
 	height: 100%;
 	/* overflow-x: hidden; */
 	background-color: var(--primary-background);
-
+	min-height: 100vh;
 }
 
-
+main {
+	background-color: var(--primary-background);
+}
 
 body {
 	/* color: #333; */
