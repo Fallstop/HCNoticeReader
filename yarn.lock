@@ -1414,6 +1414,11 @@ svelte-check@^2.9.2:
     svelte-preprocess "^4.0.0"
     typescript "*"
 
+svelte-content-loader@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/svelte-content-loader/-/svelte-content-loader-1.1.3.tgz#58c049e4a2e60a93e1225d7d8727434a19237dcc"
+  integrity sha512-hXkwyAXiZ+2uNvWUHPj9U7M+8PGqgZVFNxyOHjLUF1ng4W9P9+9wlyT/bNx5BjuqoJsfjv1IZP1/5T1LfRKtYA==
+
 svelte-hmr@^0.15.1:
   version "0.15.1"
   resolved "https://registry.yarnpkg.com/svelte-hmr/-/svelte-hmr-0.15.1.tgz#d11d878a0bbb12ec1cba030f580cd2049f4ec86b"

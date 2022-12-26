@@ -28,7 +28,9 @@
             <h2 class="school-day">
                 <SchoolDay date={selectedDate} />
             </h2>
-            <SchoolNotice date={selectedDate} />
+            <div class="notice-block">
+                <SchoolNotice date={selectedDate} />
+            </div>
         {/key}
     </div>
 </div>
@@ -81,6 +83,14 @@
             flex: 1 1 auto;
             .school-day {
                 font-size: 2rem;
+            }
+            .notice-block {
+                text-align: left;
+                padding: 1em 2em;
+                width: 100%;
+                flex: 1 1 auto;
+                display:flex;
+                box-sizing: border-box;
             }
         }
     }

@@ -38,6 +38,7 @@ function processNoticeText(text: string): NoticeText {
 
 	text = text.replaceAll(/(?:\r\n|\r|\n)/g, '</p><br><p>');
 	
+	
 	let noticeTextBroken = false;
 
 	if (text.includes("<br>") == false && text.length > 24) {
@@ -47,6 +48,11 @@ function processNoticeText(text: string): NoticeText {
 		text = text.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>")
 		text = text.replaceAll(/" +(?=[A-Z])/g,"<br>")
 	}
+
+	// Render select markdown
+	text = text.replaceAll(/(\*\*|__)([^<>]*?)\1/g,"<b>$2</b>")
+	text = text.replaceAll(/(\*|_)([^<>]*?)\1/g,"<i>$2</i>")
+	text = text.replaceAll(/(\~\~|\*\*\*)([^<>]*?)\1/g,"<s>$2</s>")
 
 	return {
 		html: text,

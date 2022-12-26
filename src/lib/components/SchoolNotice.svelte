@@ -1,6 +1,9 @@
 <script lang="ts">
     import { getNoticeText } from "$lib/api";
     import { onMount } from "svelte";
+    import { fade } from "svelte/transition";
+    import NoticeContentLoader from "./NoticeContentLoader.svelte";
+
 
 
     export let date: Date;
@@ -13,21 +16,33 @@
         noticeText = data.html;
         brokenWarning = data.isBroken;
     })
-</script>
-{#if noticeText === null}
-Loading...
-{:else}
-    {#if noticeText}
-        {#if brokenWarning}
-        <div class="warning">
-            <p>Warning: This notice is broken. It may not be accurate.</p>
-        </div>
-        {/if}
 
-        <div class="notice">
-            {@html noticeText}
-        </div>
+    $: outerContainerWidth = 0;
+    $: outerContainerHeight = 0;
+</script>
+<div class="outer-container" bind:clientHeight={outerContainerHeight} bind:clientWidth={outerContainerWidth}>
+    {#if noticeText === null}
+    <NoticeContentLoader width={outerContainerWidth} height={outerContainerHeight} />
+
     {:else}
-        Nothing here?
+        {#if noticeText}
+            {#if brokenWarning}
+            <div class="warning">
+                <p>Warning: This notice is broken. It may not be accurate.</p>
+            </div>
+            {/if}
+    
+            <div class="notice">
+                {@html noticeText}
+            </div>
+        {:else}
+            Nothing here?
+        {/if}
     {/if}
-{/if}
+    
+</div>
+<style lang="scss">
+    .outer-container {
+    width: 100%;
+    }
+</style>
