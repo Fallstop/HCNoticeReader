@@ -1,35 +1,109 @@
 <script lang="ts">
-    import SchoolDay from '$lib/components/SchoolDay.svelte';
-    import SchoolNotice from '$lib/components/SchoolNotice.svelte';
-    import dayjs from 'dayjs';
-	import { Datepicker, themes } from 'svelte-calendar';
-	const { dark: theme } = themes;
+    import { dev } from "$app/environment";
+    import SchoolDay from "$lib/components/SchoolDay.svelte";
+    import SchoolNotice from "$lib/components/SchoolNotice.svelte";
+    import { formatDate } from "$lib/date";
+    import ArrowBack from "$lib/icons/ArrowBack.svelte";
+    import ArrowForward from "$lib/icons/ArrowForward.svelte";
+    import dayjs from "dayjs";
+    import { onMount } from "svelte";
+    import { Datepicker, themes } from "svelte-calendar";
+    import { writable } from "svelte/store";
+    import { fade, fly } from "svelte/transition";
+    const { dark: theme } = themes;
 
-    const defaultDate = dayjs();
+    const defaultDate = dayjs(dev ? "2021-07-05" : undefined);
 
     let datepickerStore: Datepicker["store"];
 
-    $: selectedDate = $datepickerStore?.selected || defaultDate; 
+    // Fancy transition logic
+    let directionForward = true;
+    let pastDate = defaultDate;
+    $: transitionX = directionForward ? 1000 : -1000;
+    $: if (pastDate !== $selectedDate) {
+        directionForward = dayjs(pastDate).isBefore($selectedDate);
+        pastDate = $selectedDate;
+    }
 
+    let selectedDate = writable(defaultDate);
+
+    onMount(() => {
+        datepickerStore.subscribe(
+            (value: {
+                open: boolean;
+                hasChosen: boolean;
+                selected: Date;
+                start: Date;
+                end: Date;
+                shouldEnlargeDay: boolean;
+                enlargeDay: boolean;
+                year: any;
+                month: any;
+                day: any;
+                activeView: string;
+                activeViewDirection: number;
+                startOfWeekIndex: number;
+            }) => {
+                console.log("Updating selected date")
+                let calendarDate = dayjs(value.selected);
+                if (formatDate($selectedDate) !== formatDate(calendarDate)) {
+                    console.log($selectedDate,"asd", calendarDate)
+                    selectedDate.set(calendarDate);
+                }
+            }
+        );
+    });
 </script>
 
 <div class="container">
     <header>
-        <button on:click={()=>{datepickerStore.add(-1, 'day')}}>Previous</button>
-        <Datepicker theme={theme} bind:store={datepickerStore} let:key let:send let:receive>
-            <button in:receive|local={{ key }} out:send|local={{ key }}>
-                {dayjs(selectedDate).format('YYYY-MM-DD')}
+        <button
+            on:click={() => {
+                datepickerStore.add(-1, "day");
+            }}
+        >
+            <ArrowBack />
+            <span class="desktop-only"> Previous </span>
+        </button>
+        <Datepicker
+            {theme}
+            bind:store={datepickerStore}
+            let:key
+            let:send
+            let:receive
+            selected={defaultDate.toDate()}
+        >
+            <button
+                in:receive|local={{ key }}
+                out:send|local={{ key }}
+                class="calendar"
+            >
+                {dayjs($selectedDate).format("YYYY-MM-DD")}
             </button>
         </Datepicker>
-        <button on:click={()=>{datepickerStore.add(1, 'day')}}>Next</button>
+        <button
+            on:click={() => {
+                datepickerStore.add(1, "day");
+            }}
+        >
+            <span class="desktop-only"> Next </span>
+            <ArrowForward />
+        </button>
     </header>
-    <div class="data-container">
-        {#key selectedDate}
-            <h2 class="school-day">
-                <SchoolDay date={selectedDate} />
-            </h2>
-            <div class="notice-block">
-                <SchoolNotice date={selectedDate} />
+    <div class="transition-wrapper">
+        {#key $selectedDate}
+            <!-- Transition has to be split into in-out to force the animation to recompile every time -->
+            <div
+                class="data-container fancy-scrollbar"
+                in:fly|local={{ x: transitionX }}
+                out:fly|local={{ x: -transitionX }}
+            >
+                <h2 class="school-day">
+                    <SchoolDay date={$selectedDate} />
+                </h2>
+                <div class="notice-block fancy-scrollbar">
+                    <SchoolNotice date={$selectedDate} />
+                </div>
             </div>
         {/key}
     </div>
@@ -38,15 +112,62 @@
 <style lang="scss">
     @use "../lib/scss/variables.scss" as *;
     .container {
-        min-height: 50vh;
+        min-height: 60vh;
         width: 100%;
-        border: $mid-tone solid 6px;
         border-radius: 10px;
-        border-style: dashed;
+        position: relative;
 
         display: flex;
         flex-flow: column;
         height: 100%;
+        background: #151320;
+
+        $rainbow-thickness: 5px;
+
+        &::before,
+        &::after {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            width: calc(100% + $rainbow-thickness * 2);
+            height: calc(100% + $rainbow-thickness * 2);
+            top: -$rainbow-thickness;
+            left: -$rainbow-thickness;
+            border-radius: 15px;
+            background: linear-gradient(
+                45deg,
+                #fcf4c9 0%,
+                #fee3e2 15%,
+                #fbcdf2 30%,
+                #e8befa 50%,
+                #abbfff 65%,
+                #bbf3c0 85%,
+                #fcf4c9 100%
+            );
+            background-size: 300%;
+            animation: border 20s linear infinite;
+
+            @media screen and (max-width: $mobile-transition) {
+                width: calc(100%);
+                height: calc(100% + $rainbow-thickness);
+                left: 0;
+            }
+        }
+
+        &::after {
+            filter: blur(50px);
+        }
+
+        @keyframes border {
+            0%,
+            100% {
+                background-position: 0 0;
+            }
+
+            50% {
+                background-position: 300%;
+            }
+        }
 
         header {
             flex: 0 1 auto;
@@ -68,29 +189,81 @@
                 padding: 0.5rem;
                 border-radius: 5px;
                 color: $color-text;
+                transition: background-color 150ms ease-in-out;
+
                 cursor: pointer;
                 &:hover {
                     background: $mid-tone;
                 }
+                &.calendar {
+                    border: $mid-tone solid 1px;
+                }
+                &:active {
+                    background: $dark-tone;
+                }
+
+                :global(svg) {
+                    height: 1.45rem;
+                    position: relative;
+                    top: 0.15em;
+                    color: $color-text;
+                    fill: $color-text;
+                }
+
+                @media screen and (max-width: $mobile-transition) {
+                    .desktop-only {
+                        display: none;
+                    }
+                }
             }
+        }
+        .transition-wrapper {
+            height: 100%;
+            flex: 1 1 auto;
+            position: relative;
+            overflow-y: hidden;
+            overflow-x: hidden;
         }
 
         .data-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            flex: 1 1 auto;
+            overflow-y: hidden;
+
             .school-day {
                 font-size: 2rem;
+                margin: 1px;
+                padding: 0.5rem 1rem;
+                text-align: center;
+                border-bottom: $color-text solid 1px;
+                box-sizing: border-box;
+                width: 4rem;
             }
             .notice-block {
                 text-align: left;
                 padding: 1em 2em;
                 width: 100%;
                 flex: 1 1 auto;
-                display:flex;
+                display: flex;
                 box-sizing: border-box;
+                overflow-y: auto;
+            }
+        }
+        @media screen and (max-width: $mobile-transition) {
+            flex: 1;
+            border-bottom: none;
+            .data-container {
+                overflow-y: auto;
+                .notice-block {
+                    overflow-y: visible;
+                    padding: 0 1em;
+                }
             }
         }
     }

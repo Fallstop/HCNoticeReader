@@ -15,6 +15,8 @@
 </section>
 
 <style lang="scss">
+	@use "../lib/scss/variables.scss" as *;
+
 	section {
 		display: flex;
 		flex-direction: column;
@@ -31,11 +33,15 @@
 
 	}
 
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
+	@media (max-width: $mobile-transition) {
+		section {
+			justify-content: flex-start;
+			flex: 1;
+		}
+		h1 {
+			font-size: 1.5rem;
+			text-transform: none;
+			letter-spacing: normal;
+		}
 	}
 </style>

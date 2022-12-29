@@ -20,8 +20,30 @@ body {
 			rgba(56, 56, 56, 0.75) 0%,
 			rgba(255, 255, 255, 0) 100%
 		),
-		linear-gradient(180deg, $color-bg-0 0%, $color-bg-1 15%, $color-bg-2 50%);
+		linear-gradient(180deg, $color-bg-0 0%, $color-bg-1 15%, $color-bg-2 50%);	
 }
+
+// Scrollbars
+.fancy-scrollbar {
+	// Respaldo para Firefox
+	scrollbar-color: #fff rgb(255 255 255 / 10%);
+	scrollbar-width: thin;
+	
+	// Navegadores basados en webkit
+	&::-webkit-scrollbar {
+		width: 5px;
+		height: 5px;
+		&-track {
+			background-color: rgb(255 255 255 / 10%);
+			border-radius: 10px;
+		}
+		&-thumb {
+			background-color: #fff;
+			border-radius: 10px;
+		}
+	}
+}
+
 
 h1,
 h2,

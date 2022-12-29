@@ -30,13 +30,16 @@ export interface NoticeText {
 }
 
 function processNoticeText(text: string): NoticeText {
+	// Strip out <html-blob> tags, leaving the contents
+	text = text.replaceAll(/<html-blob>(.*?)<\/html-blob>/g,"$1")
+
 	text = text.replaceAll(/--+-/g,"<hr>")
 	text = text.replaceAll(/\+\++\+/g,"<hr>")
 	text = text.replaceAll(/__+_/g,"<hr>")
 	text = text.replaceAll(/~~+~/g,"<hr>")
 
 
-	text = text.replaceAll(/(?:\r\n|\r|\n)/g, '</p><br><p>');
+	text = text.replaceAll(/(?:\r\n|\r|\n)/g, '<br>');
 	
 	
 	let noticeTextBroken = false;
@@ -49,10 +52,15 @@ function processNoticeText(text: string): NoticeText {
 		text = text.replaceAll(/" +(?=[A-Z])/g,"<br>")
 	}
 
+	// Find 3+ repeated <br> or <br/> and replace with <hr>
+	text = text.replaceAll(/(<br\/?>){3,}/g,"<hr>")
+
 	// Render select markdown
 	text = text.replaceAll(/(\*\*|__)([^<>]*?)\1/g,"<b>$2</b>")
 	text = text.replaceAll(/(\*|_)([^<>]*?)\1/g,"<i>$2</i>")
 	text = text.replaceAll(/(\~\~|\*\*\*)([^<>]*?)\1/g,"<s>$2</s>")
+
+	console.log(text)
 
 	return {
 		html: text,

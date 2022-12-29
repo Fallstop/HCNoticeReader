@@ -11,10 +11,9 @@
 </div>
 
 <style lang="scss">
+	@use "../lib/scss/variables.scss" as *;
+
 	.app {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
 	}
 
 	main {
@@ -23,8 +22,17 @@
 		flex-direction: column;
 		padding: 1rem;
 		width: 100%;
-		max-width: 64rem;
+		max-width: 80rem;
 		margin: 0 auto;
 		box-sizing: border-box;
+		min-height: 100vh;
+	}
+	@media (max-width: $mobile-transition) {
+		main {
+			padding: 0;
+			max-width: none;
+			margin: 0;
+			overflow-y: scroll;
+		}
 	}
 </style>
