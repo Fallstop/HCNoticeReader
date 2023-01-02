@@ -15,18 +15,44 @@
 
     const defaultDate = dayjs(dev ? "2022-05-24" : undefined);
 
+    export let selectedDate = writable(defaultDate);
+
     let datepickerStore: Datepicker["store"];
 
     // Fancy transition logic
-    let directionForward = true;
-    let pastDate = defaultDate;
-    $: transitionX = directionForward ? 1000 : -1000;
-    $: if (pastDate !== $selectedDate) {
-        directionForward = dayjs(pastDate).isBefore($selectedDate);
-        pastDate = $selectedDate;
+    enum NoticeDirection {
+        Forward,
+        Backward,
+        Static,
     }
 
-    export let selectedDate = writable(defaultDate);
+    let directionForward = NoticeDirection.Static;
+    let transitionX = 0;
+    let pastDate = defaultDate;
+
+    $: {
+        switch (+directionForward) {
+            case NoticeDirection.Forward:
+                transitionX = 1000;
+                break;
+            case NoticeDirection.Backward:
+                transitionX = -1000;
+                break;
+            case NoticeDirection.Static:
+                transitionX = 0;
+                break;
+            default:
+                transitionX = -1;
+                break;
+        }
+    }
+
+    $: if (+pastDate.toDate() !== +$selectedDate.toDate()) {
+        directionForward = pastDate.isBefore($selectedDate)
+            ? NoticeDirection.Forward
+            : NoticeDirection.Backward;
+        pastDate = $selectedDate;
+    }
 
     onMount(() => {
         datepickerStore.subscribe(
@@ -45,16 +71,13 @@
                 activeViewDirection: number;
                 startOfWeekIndex: number;
             }) => {
-                console.log("Updating selected date");
                 let calendarDate = dayjs(value.selected);
                 if (formatDate($selectedDate) !== formatDate(calendarDate)) {
-                    console.log($selectedDate, "asd", calendarDate);
                     selectedDate.set(calendarDate);
                 }
             }
         );
     });
-
 
     let timetableDay: string;
 </script>
@@ -103,10 +126,10 @@
                 out:fly|local={{ x: -transitionX }}
             >
                 <h2 class="school-day">
-                    <SchoolDay date={$selectedDate}  bind:timetableDay/>
+                    <SchoolDay date={$selectedDate} bind:timetableDay />
                 </h2>
                 <div class="notice-block fancy-scrollbar">
-                    <SchoolNotice date={$selectedDate} {timetableDay}/>
+                    <SchoolNotice date={$selectedDate} {timetableDay} />
                 </div>
             </div>
         {/key}

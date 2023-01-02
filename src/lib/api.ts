@@ -58,8 +58,6 @@ function processNoticeText(text: string): NoticeText {
 	text = text.replaceAll(/(\*|_)([^<>]*?)\1/g,"<i>$2</i>")
 	text = text.replaceAll(/(\~\~|\*\*\*)([^<>]*?)\1/g,"<s>$2</s>")
 
-	console.log(text)
-
 	return {
 		html: text,
 		isBroken: noticeTextBroken
