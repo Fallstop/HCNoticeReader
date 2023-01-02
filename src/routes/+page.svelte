@@ -1,10 +1,16 @@
 <script>
-    import InfoSymbol from "$lib/icons/InfoSymbol.svelte";
-    import PrintSymbol from "$lib/icons/PrintSymbol.svelte";
-import NoticeBlock from "./NoticeBlock.svelte";
+	import InfoSymbol from "$lib/icons/InfoSymbol.svelte";
+	import PrintSymbol from "$lib/icons/PrintSymbol.svelte";
+	import NoticeBlock from "./NoticeBlock.svelte";
 
+	import { getContext } from "svelte";
+	import InfoPopup from "$lib/components/InfoPopup.svelte";
+
+	const { open } = getContext("simple-modal");
+	function openInfo() {
+		open(InfoPopup);
+	}
 </script>
-
 
 <svelte:head>
 	<title>HC Daily Notices</title>
@@ -24,11 +30,11 @@ import NoticeBlock from "./NoticeBlock.svelte";
 		Uses HC-Tools API found here: <a href="https://jmw.nz/projects/hc-tools" target="_blank" rel="noreferrer">jmw.nz/projects/hc-tools</a>.
 	</div> -->
 	<button>
-		<PrintSymbol/>
+		<PrintSymbol />
 		Print
 	</button>
-	<button>
-		<InfoSymbol/>
+	<button on:click={openInfo}>
+		<InfoSymbol />
 		Info
 	</button>
 </footer>
@@ -70,7 +76,7 @@ import NoticeBlock from "./NoticeBlock.svelte";
 			&:hover {
 				background: $mid-tone;
 			}
-				border: $mid-tone solid 1px;
+			border: $mid-tone solid 1px;
 			&:active {
 				background: $dark-tone;
 			}
@@ -82,13 +88,11 @@ import NoticeBlock from "./NoticeBlock.svelte";
 				color: $color-text;
 				fill: $color-text;
 			}
-
-			
 		}
 		@media screen and (max-width: $mobile-transition) {
 			gap: 0;
 			border-top: $mid-tone solid 1px;
-			background: rgba(0,0,0, 0.4);
+			background: rgba(0, 0, 0, 0.4);
 			button {
 				flex: 1;
 				border-radius: 0;
@@ -111,7 +115,6 @@ import NoticeBlock from "./NoticeBlock.svelte";
 				}
 			}
 		}
-
 	}
 
 	@media (max-width: $mobile-transition) {
@@ -124,8 +127,5 @@ import NoticeBlock from "./NoticeBlock.svelte";
 				letter-spacing: normal;
 			}
 		}
-
 	}
-
-	
 </style>

@@ -10,6 +10,7 @@
     import { Datepicker, themes } from "svelte-calendar";
     import { writable } from "svelte/store";
     import { fade, fly } from "svelte/transition";
+
     const { dark: theme } = themes;
 
     const defaultDate = dayjs(dev ? "2021-07-05" : undefined);
@@ -44,15 +45,16 @@
                 activeViewDirection: number;
                 startOfWeekIndex: number;
             }) => {
-                console.log("Updating selected date")
+                console.log("Updating selected date");
                 let calendarDate = dayjs(value.selected);
                 if (formatDate($selectedDate) !== formatDate(calendarDate)) {
-                    console.log($selectedDate,"asd", calendarDate)
+                    console.log($selectedDate, "asd", calendarDate);
                     selectedDate.set(calendarDate);
                 }
             }
         );
     });
+
 </script>
 
 <div class="container">
