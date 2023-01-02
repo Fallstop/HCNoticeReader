@@ -1,15 +1,23 @@
-<script>
+<script lang="ts">
 	import InfoSymbol from "$lib/icons/InfoSymbol.svelte";
 	import PrintSymbol from "$lib/icons/PrintSymbol.svelte";
 	import NoticeBlock from "./NoticeBlock.svelte";
 
 	import { getContext } from "svelte";
 	import InfoPopup from "$lib/components/InfoPopup.svelte";
+    import { goto } from "$app/navigation";
+    import { formatDate } from "$lib/date";
+    import type { Dayjs } from "dayjs";
+	import type { Writable } from "svelte/store";
 
-	const { open } = getContext("simple-modal");
+	const { open } = getContext("simple-modal") as any;
+
 	function openInfo() {
 		open(InfoPopup);
 	}
+
+	let selectedDate: Writable<Dayjs> | undefined;
+
 </script>
 
 <svelte:head>
@@ -19,28 +27,21 @@
 
 <section>
 	<h1>Huanui College Notices</h1>
-	<NoticeBlock />
+	<NoticeBlock bind:selectedDate={selectedDate}/>
 </section>
 <footer>
-	<!-- <div class="footer-line">Created by Jasper M-W.</div>
-	<div class="footer-line">
-		Source-code found here: <a href="https://github.com/Fallstop/HCNoticeReader" target="_blank" rel="noreferrer" >Fallstop/HCNoticeReader</a>.
-	</div>
-	<div class="footer-line">
-		Uses HC-Tools API found here: <a href="https://jmw.nz/projects/hc-tools" target="_blank" rel="noreferrer">jmw.nz/projects/hc-tools</a>.
-	</div> -->
-	<button>
+	<a href={`/print/${formatDate($selectedDate ?? new Date())}`} target="_blank" rel="noreferrer" class="footer-button">
 		<PrintSymbol />
 		Print
-	</button>
-	<button on:click={openInfo}>
+	</a>
+	<button on:click={openInfo} class="footer-button">
 		<InfoSymbol />
 		Info
 	</button>
 </footer>
 
 <style lang="scss">
-	@use "../lib/scss/variables.scss" as *;
+	@use "../../lib/scss/variables.scss" as *;
 
 	section {
 		display: flex;
@@ -53,6 +54,7 @@
 			text-transform: uppercase;
 			font-weight: bold;
 			letter-spacing: 0.75rem;
+			margin-bottom: 2em;
 		}
 	}
 
@@ -63,7 +65,7 @@
 		flex-direction: row;
 		gap: 1rem;
 
-		button {
+		.footer-button {
 			border: none;
 			background: none;
 			padding: 0.25rem 1rem;
@@ -71,6 +73,7 @@
 			color: $color-text;
 			transition: background-color 150ms ease-in-out;
 			font-size: 1.5rem;
+			text-decoration: none;
 
 			cursor: pointer;
 			&:hover {
@@ -89,29 +92,20 @@
 				fill: $color-text;
 			}
 		}
+
+
 		@media screen and (max-width: $mobile-transition) {
 			gap: 0;
 			border-top: $mid-tone solid 1px;
 			background: rgba(0, 0, 0, 0.4);
-			button {
+			.footer-button {
 				flex: 1;
 				border-radius: 0;
 				font-size: 1.2rem;
 				padding: 0.2rem;
+				text-align: center;
 				:global(svg) {
 					height: 1.2rem;
-				}
-			}
-		}
-		.footer-line {
-			margin: 0.2rem;
-			text-align: center;
-			a {
-				color: $color-text;
-				text-decoration: underline;
-				transition: color 0.15s ease-in-out;
-				&:hover {
-					color: $mid-tone;
 				}
 			}
 		}
@@ -125,7 +119,13 @@
 				font-size: 1.5rem;
 				text-transform: none;
 				letter-spacing: normal;
+				margin-bottom: 1em;
 			}
+		}
+	}
+	@media screen and (max-height: 880px) {
+		section h1 {
+			margin: 0.5em;
 		}
 	}
 </style>

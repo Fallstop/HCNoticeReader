@@ -13,7 +13,7 @@
 
     const { dark: theme } = themes;
 
-    const defaultDate = dayjs(dev ? "2021-07-05" : undefined);
+    const defaultDate = dayjs(dev ? "2022-05-24" : undefined);
 
     let datepickerStore: Datepicker["store"];
 
@@ -26,7 +26,7 @@
         pastDate = $selectedDate;
     }
 
-    let selectedDate = writable(defaultDate);
+    export let selectedDate = writable(defaultDate);
 
     onMount(() => {
         datepickerStore.subscribe(
@@ -55,6 +55,8 @@
         );
     });
 
+
+    let timetableDay: string;
 </script>
 
 <div class="container">
@@ -101,10 +103,10 @@
                 out:fly|local={{ x: -transitionX }}
             >
                 <h2 class="school-day">
-                    <SchoolDay date={$selectedDate} />
+                    <SchoolDay date={$selectedDate}  bind:timetableDay/>
                 </h2>
                 <div class="notice-block fancy-scrollbar">
-                    <SchoolNotice date={$selectedDate} />
+                    <SchoolNotice date={$selectedDate} {timetableDay}/>
                 </div>
             </div>
         {/key}
@@ -112,9 +114,9 @@
 </div>
 
 <style lang="scss">
-    @use "../lib/scss/variables.scss" as *;
+    @use "../../lib/scss/variables.scss" as *;
     .container {
-        min-height: 60vh;
+        min-height: 70vh;
         width: 100%;
         border-radius: 10px;
         position: relative;
@@ -245,11 +247,13 @@
                 text-align: center;
                 border-bottom: $color-text solid 1px;
                 box-sizing: border-box;
-                width: 4rem;
+                min-width: 4rem;
             }
+
             .notice-block {
                 text-align: left;
-                padding: 1em 2em;
+                margin: 0.5em 0;
+                padding: 0.5em 2em;
                 width: 100%;
                 flex: 1 1 auto;
                 display: flex;

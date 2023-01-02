@@ -5,6 +5,10 @@
 
     export let width: number;
     export let height: number;
+    export let styleMode: "light" | "dark" = "dark";
+
+    let primaryColor = styleMode==="dark" ? "#718394" : "#e9e9e9";
+    let secondaryColor = styleMode==="dark" ? "#C9CED1" : "#dcdcdc";
 
     interface LineSpec {
         x: number;
@@ -27,7 +31,7 @@
             let barWidth = (seededRandomGen.nextNumber() * (1.0 - 0.6) + 0.6) * width;
 
             if (i % 3 !== 0) {
-                // Subbar, so we indent and regress width
+                // Sub-bar, so we indent and regress width
                 xPost = 20;
                 const lastWidth = template[template.length - 1].width;
                 barWidth = lastWidth * ((seededRandomGen.nextNumber()/4)+0.75) - 20;
@@ -47,7 +51,7 @@
 
     $: template = calculateTemplate(width, potentialNumLines);
 </script>
-<ContentLoader primaryColor="#718394" secondaryColor="#C9CED1" primaryOpacity="0.5" {width} height={(height*2)/3} uniqueKey={"NoticeData"}>
+<ContentLoader {primaryColor} {secondaryColor} primaryOpacity="0.5" {width} height={(height*2)/3} uniqueKey={"NoticeData"}>
     {#each template as line}
         <rect x={line.x} y={line.y} rx="3" ry="3" width={line.width} height={lineHeight} />
     {/each}

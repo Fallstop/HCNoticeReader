@@ -1,8 +1,8 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const API_ROUTE = "https://hctools.jmw.nz/api/";
 
-export async function getNoticeText(noticeDateToGet: Date): Promise<NoticeText> {
+export async function getNoticeText(noticeDateToGet: Date | Dayjs): Promise<NoticeText> {
 	let response = await fetch(
 		new Request(API_ROUTE + "getdailynotice/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
@@ -14,7 +14,7 @@ export async function getNoticeText(noticeDateToGet: Date): Promise<NoticeText> 
 	return processNoticeText(data["noticeText"] ?? "Unknown Error, please try again later.");
 }
 
-export async function getTimeTableDay(noticeDateToGet: Date) {
+export async function getTimeTableDay(noticeDateToGet: Date | Dayjs) {
 	let response = await fetch(
 		new Request(API_ROUTE + "gettimetableday/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
@@ -33,10 +33,8 @@ function processNoticeText(text: string): NoticeText {
 	// Strip out <html-blob> tags, leaving the contents
 	text = text.replaceAll(/<html-blob>(.*?)<\/html-blob>/g,"$1")
 
-	text = text.replaceAll(/--+-/g,"<hr>")
-	text = text.replaceAll(/\+\++\+/g,"<hr>")
-	text = text.replaceAll(/__+_/g,"<hr>")
-	text = text.replaceAll(/~~+~/g,"<hr>")
+	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines before/after)
+	text = text.replaceAll(/(?: |\r\n|\r|\n|(?:<br\/?>))*[-+_~][-+_~]+[-+_~](?: |\r\n|\r|\n|(?:<br\/?>))*/g,"<hr>")
 
 
 	text = text.replaceAll(/(?:\r\n|\r|\n)/g, '<br>');
@@ -49,7 +47,7 @@ function processNoticeText(text: string): NoticeText {
 		// Contains no line breaks, so we should do it ourselves
 		// Punctuation outside of quotes
 		text = text.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>")
-		text = text.replaceAll(/" +(?=[A-Z])/g,"<br>")
+		text = text.replaceAll(/" {2,}(?=[A-Z])/g,"<br>")
 	}
 
 	// Find 3+ repeated <br> or <br/> and replace with <hr>

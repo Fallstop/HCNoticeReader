@@ -2,12 +2,18 @@
     import { getTimeTableDay} from "$lib/api";
     import { formatDate, type NormalisedDate } from "$lib/date";
     import { timetableDayMap } from "$lib/stores";
+    import type { Dayjs } from "dayjs";
     import { onDestroy, onMount } from "svelte";
 
+    export let timetableDay: string | null = null;
 
-    export let date: Date;
 
-    let timetableDay: string | null = null;
+    export let date: Date | Dayjs;
+    export let fancyLoader: boolean = true;
+    export let loaded = false;
+
+    $: loaded = !!timetableDay;
+
     $: brokenWarning = false;
 
     let loadingPlaceholder = 0;
@@ -28,9 +34,9 @@
         $timetableDayMap.set(formatDate(date), null);
         $timetableDayMap = $timetableDayMap;
 
-        console.log("Starting worker, claiming ", formatDate(date));
+        console.log("Starting timetable day worker, claiming ", formatDate(date));
         getTimeTableDay(date).then((data)=>{
-            console.log("Got data! ", formatDate(date));
+            console.log("Got timetable day data! ", formatDate(date));
             $timetableDayMap.set(formatDate(date), data);
             $timetableDayMap = $timetableDayMap;
         }).catch((err)=>{
@@ -59,6 +65,8 @@
 </script>
 {#if timetableDay}
 {timetableDay}
-{:else}
+{:else if fancyLoader}
 {loadingPlaceholder}
+{:else}
+Loading...
 {/if}

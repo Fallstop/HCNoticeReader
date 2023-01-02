@@ -21,9 +21,8 @@ classCloseButton="__modal-close-button"
 </div>
 </Modal>
 
-
 <style lang="scss">
-	@use "../lib/scss/variables.scss" as *;
+	@use "../../lib/scss/variables.scss" as *;
 
 	main {
 		flex: 1;

@@ -21,13 +21,11 @@
 		>.
 	</p>
 	<p>Created by <a href="https://jmw.nz" >Jasper M-W</a>, <a href="mailto:contact@jmw.nz" target="__blank" rel="noreferrer">contact@jmw.nz</a>.</p>
-	<p class="light-text">HCNotices is not affiliated with Huanui College.</p>
+	<p class="light-text">HCNotices is not endorsed by, directly affiliated with, or maintained by Huanui College.</p>
 </div>
 
 <style lang="scss">
 	@use "../scss/variables.scss" as *;
-	.content {
-	}
 	h1 {
 		font-size: 2rem;
 		text-align: left;
@@ -37,7 +35,7 @@
 
 	.light-text {
 		font-weight: lighter;
-		color: $light-tone;
+		color: $mid-tone;
 	}
 
 	a {

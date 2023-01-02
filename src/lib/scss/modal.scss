@@ -26,6 +26,9 @@
 	position: relative;
 	margin: 2rem;
 	max-height: 100%;
+	@media screen and (max-width: $mobile-transition) {
+		margin: 0;
+	}
 }
 
 .__modal-window {
@@ -40,6 +43,10 @@
 	box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.25);
 	background: linear-gradient(135deg, $color-bg-0 0%, $color-bg-1 15%, $color-bg-2 50%);
 	border: 2px solid #fff;
+	@media screen and (max-width: $mobile-transition) {
+		border-right: none;
+		border-left: none;
+	}
 }
 
 .__modal-content {
@@ -67,6 +74,7 @@
 	box-shadow: 0 0 0 1px white;
 	transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
 	appearance: none;
+	cursor: pointer;
 
 	&:before,
 	&:after {
