@@ -230,11 +230,14 @@
 
 
         &.fullFlex {
-            align-items: center;
             text-align: center;
             h2 {
                 font-size: 5em;
                 margin: 1em 0 0 0;
+                @media screen and (max-width: $mobile-transition) {
+                    font-size: 2em;
+                    margin: 0.5em 0 0 0;
+                }
             }
             h3 {
                 font-size: 1.5em;
