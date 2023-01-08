@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c && yarn run build:cloudflare-build",
+    "build:cloudflare-build": "rm -rf .svelte-kit && mkdir -p .svelte-kit/cloudflare && cp -r ./public/* .svelte-kit/cloudflare",
     "clean": "rimraf public/*",
     "dev": "yarn clean && rollup -c -w",
     "dev:nowatch": "yarn build && yarn start",
