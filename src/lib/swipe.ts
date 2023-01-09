@@ -1,5 +1,5 @@
 import { setPointerControls } from 'svelte-gestures';
-import type { Tweened } from 'svelte/motion';
+import type { Spring, Tweened } from 'svelte/motion';
 import type { Writable } from 'svelte/store';
 import { cubicOut, cubicInOut, linear } from 'svelte/easing';
 import type { TransitionConfig } from 'svelte/transition';
@@ -15,7 +15,7 @@ export function horizontalSwipe(
 		desktopElementBlockList: string[];
 		minSwipeDistance: number;
 		touchAction: string;
-		xMovementStore: Tweened<number>
+		xMovementStore: Spring<number>
 		desktopMode: Writable<boolean>
 	}
 ): { destroy: () => void } {
@@ -26,6 +26,8 @@ export function horizontalSwipe(
 	let target: EventTarget | null;
 	let validEvent: boolean;
 	let _desktop: boolean;
+
+	let deadArea = 10;
 
 	addEventListener('drag',()=>{
 		// When the user has highlighted text,
@@ -55,6 +57,7 @@ export function horizontalSwipe(
 			activeEvents.length === 0 &&
 			validEvent
 		) {
+			console.log("Moiuseup")
 			const x = event.clientX - clientX;
 			const y = event.clientY - clientY;
 			const absX = Math.abs(x);
@@ -77,16 +80,21 @@ export function horizontalSwipe(
 				);
 			}
 		}
+		console.log('asd',event)
 		parameters?.xMovementStore?.set(0);
 	}
 
+	const ForceSetSpring = {hard: true}
+
 	function onMove(activeEvents: PointerEvent[], event: PointerEvent) {
-		if (!validEvent) {
-			parameters?.xMovementStore?.set(0, {duration: 0});
+		if (!validEvent || Math.abs(event.clientX - clientX) <= deadArea) {
+			parameters?.xMovementStore?.set(0, ForceSetSpring);
 			return
 		}
-		const x = event.clientX - clientX;
-		parameters?.xMovementStore?.set(x, {duration: 0});
+		let x = event.clientX - clientX;
+		x = x>0 ? x-deadArea : x+deadArea;
+		console.log("Move",x)
+		parameters?.xMovementStore?.set(x, ForceSetSpring);
 	}
 
 	function checkValidity() {
@@ -96,6 +104,7 @@ export function horizontalSwipe(
 			let targetTag =  (target?.tagName as string);
 			valid = targetTag.toLowerCase() !== blockedElement.toLowerCase();
 		}
+		console.log("Validty Check,",valid)
 		return valid
 	}
 

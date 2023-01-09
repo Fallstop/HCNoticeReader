@@ -19,7 +19,7 @@ export async function getTimeTableDay(noticeDateToGet: Date | Dayjs) {
 		new Request(API_ROUTE + "gettimetableday/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
 	let data = await response.json();
-	let timeTableDayText = data["currentDay"] || "N/A";
+	let timeTableDayText = data["currentDay"].toString() || "N/A";
 
 	return timeTableDayText || "";
 }

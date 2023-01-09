@@ -84,6 +84,7 @@
         } else {
             currentState = CurrentState.PartialLoaded;
         }
+        console.log(currentState,timetableDay, typeof timetableDay)
     }
 </script>
 
@@ -195,7 +196,7 @@
                 border-radius: 15px;
                 position: relative;
                 z-index: 2;
-                background: #151320;
+                background: $text-area-bg;
                 padding: 1em;
                 @media print {
                     background: #fff;

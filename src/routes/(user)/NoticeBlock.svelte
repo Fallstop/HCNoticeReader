@@ -10,7 +10,7 @@
     import { Datepicker, themes } from "svelte-calendar";
     import { writable } from "svelte/store";
     import { fly } from "svelte/transition";
-    import { tweened } from "svelte/motion";
+    import { spring, tweened } from "svelte/motion";
     import { customFly, horizontalSwipe } from "$lib/swipe";
     import { mobileWidthTransition } from "$lib/stores";
 
@@ -21,8 +21,6 @@
     export let selectedDate = writable(defaultDate);
 
     let datepickerStore: Datepicker["store"];
-
-
 
     // Fancy transition logic
     enum NoticeDirection {
@@ -61,44 +59,44 @@
     }
 
     onMount(() => {
-        datepickerStore.subscribe(
-            (value: {
-                selected: Date;
-            }) => {
-                let calendarDate = dayjs(value.selected);
-                if (formatDate($selectedDate) !== formatDate(calendarDate)) {
-                    selectedDate.set(calendarDate);
-                }
+        datepickerStore.subscribe((value: { selected: Date }) => {
+            let calendarDate = dayjs(value.selected);
+            if (formatDate($selectedDate) !== formatDate(calendarDate)) {
+                selectedDate.set(calendarDate);
             }
-        );
+        });
     });
 
     let desktopMode = writable(false);
-    $: desktopMode.set(browser ? window.innerWidth > mobileWidthTransition : true)
+    let windowInnerWidth = 0;
+    $: desktopMode.set(windowInnerWidth > mobileWidthTransition);
 
     type GestureEvent = CustomEvent<{
         direction: "left" | "right" | "top" | "bottom";
         target: EventTarget | null;
     }>;
 
-    let noticeXGestureOffset = tweened(0, {duration: 400});
+    let noticeXGestureOffset = spring(0, {  });
 
     function gestureHandler(event: GestureEvent) {
         let direction = event.detail.direction;
-        console.log(event.detail.target);
-        if (direction==="right") {
+        if (direction === "right") {
             datepickerStore.add(-1, "day");
 
             noticeXGestureOffset.set(0);
-        } else if (direction==="left") {
+        } else if (direction === "left") {
             datepickerStore.add(1, "day");
             noticeXGestureOffset.set(0);
         }
     }
 
+    let leftArrowWidth = 0;
+    let rightArrowWidth = 0
+
     let timetableDay: string;
 </script>
 
+<svelte:window bind:innerWidth={windowInnerWidth} />
 <div class="container">
     <header>
         <button
@@ -136,8 +134,7 @@
             <ArrowForward />
         </button>
     </header>
-    <div class="transition-wrapper"
-    >
+    <div class="transition-wrapper">
         {#key $selectedDate}
             <!-- Transition has to be split into in-out to force the animation to recompile every time -->
 
@@ -145,27 +142,47 @@
                 class="data-container fancy-scrollbar"
                 style="transform: translate3d({$noticeXGestureOffset}px, 0px, 0)"
                 in:customFly|local={{ x: transitionX }}
-                out:fly|local={{x: -transitionX}}
-                use:horizontalSwipe={{ desktopElementBlockList: ["p"], minSwipeDistance: 100, touchAction: 'pan-y', xMovementStore: noticeXGestureOffset, desktopMode }} on:horizontalSwipe={gestureHandler}
+                out:fly|local={{ x: -transitionX }}
+                use:horizontalSwipe={{
+                    desktopElementBlockList: ["p"],
+                    minSwipeDistance: 100,
+                    touchAction: "pan-y",
+                    xMovementStore: noticeXGestureOffset,
+                    desktopMode,
+                }}
+                on:horizontalSwipe={gestureHandler}
                 bind:clientWidth={noticeBlockSize}
-            >   
+            >
                 <div class="school-day-container">
                     <h2 class="school-day">
                         <SchoolDay date={$selectedDate} bind:timetableDay />
                     </h2>
                 </div>
                 <div class="notice-block fancy-scrollbar">
-                    <SchoolNotice date={$selectedDate} {timetableDay} dateChangerAvailable/>
-                </div>
-
-                <div class="day-change-indicator left" class:hidden={$noticeXGestureOffset<=0}>
-                    <ArrowBack/>
-                </div>
-                <div class="day-change-indicator right" class:hidden={$noticeXGestureOffset>=0}>
-                    <ArrowForward/>
+                    <SchoolNotice
+                        date={$selectedDate}
+                        {timetableDay}
+                        dateChangerAvailable
+                    />
                 </div>
             </div>
         {/key}
+        <div
+            class="day-change-indicator left"
+            class:hidden={$noticeXGestureOffset <= leftArrowWidth*0.9}
+            class:highlighted={$noticeXGestureOffset >= 100}
+            bind:clientWidth={leftArrowWidth}
+        >
+            <ArrowBack />
+        </div>
+        <div
+            class="day-change-indicator right"
+            class:hidden={$noticeXGestureOffset >= -rightArrowWidth*0.9}
+            class:highlighted={$noticeXGestureOffset <= -100}
+            bind:clientWidth={rightArrowWidth}
+        >
+            <ArrowForward />
+        </div>
     </div>
 </div>
 
@@ -180,7 +197,7 @@
         display: flex;
         flex-flow: column;
         height: 100%;
-        background: #151320;
+        background: $text-area-bg;
 
         $rainbow-thickness: 5px;
 
@@ -268,6 +285,7 @@
                     top: 0.15em;
                     color: $color-text;
                     fill: $color-text;
+                    margin: 0 0.2rem;
                 }
 
                 @media screen and (max-width: $mobile-transition) {
@@ -292,10 +310,14 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
             height: 100%;
+            right: 0;
+            box-sizing: border-box;
             // overflow-y: hidden;
             overflow-x: visible;
+            background-color: $text-area-bg;
+            border-radius: 10px;
+            z-index: 2;
 
             .school-day-container {
                 cursor: ew-resize;
@@ -324,44 +346,49 @@
                 box-sizing: border-box;
                 overflow-y: auto;
             }
-            .day-change-indicator {
-                $arrow-size: 7vw;
+        }
+        .day-change-indicator {
+            $arrow-size: 3em;
 
-                position: absolute;
-                top: 0;
-                width: $arrow-size;
-                height: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                opacity: 0.5;
-                // transition: opacity 150ms ease;
+            position: absolute;
+            top: 0;
+            width: $arrow-size;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.5;
+            z-index: 3;
+            transition: opacity 250ms ease;
+            :global(svg) {
+                color: $color-text;
+                fill: $color-text;
+            }
 
-                &.hidden {
-                    opacity: 0;
-                }
+            &.hidden {
+                opacity: 0;
+            }
+            &.highlighted {
+                opacity: 1;
+            }
 
-                :global(svg) {
-                    height: 5vw;
-                    position: relative;
-                    top: 0.15em;
-                    color: $color-text;
-                    fill: $color-text;
-                }
-
-                &.left {
-                    left: -$arrow-size;
-                }
-                &.right {
-                    right: -$arrow-size;
-                }
+            &.left {
+                left: 0;
+                padding-left: 1em;
+            }
+            &.right {
+                right: 0;
+                padding-right: 1em;
             }
         }
+
         @media screen and (max-width: $mobile-transition) {
             flex: 1;
             border-bottom: none;
             .data-container {
                 overflow-y: auto;
+                overflow-x: hidden;
+                border-radius: 0 0;
                 .notice-block {
                     overflow-y: visible;
                     padding: 0 1em;

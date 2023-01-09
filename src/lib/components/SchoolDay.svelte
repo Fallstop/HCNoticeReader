@@ -22,8 +22,8 @@
         null;
 
     function updateTimetableDayData(map: Map<NormalisedDate, string | null>) {
-        let noticeData = map.get(formatDate(date));
-        timetableDay = noticeData ?? null;
+        let dateData = map.get(formatDate(date));
+        timetableDay = dateData ?? null;
         if (timetableDay && loadingPlaceholderInterval) {
             clearInterval(loadingPlaceholderInterval);
             loadingPlaceholderInterval = null;
