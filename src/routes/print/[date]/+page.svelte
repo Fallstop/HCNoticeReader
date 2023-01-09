@@ -40,6 +40,8 @@
 
 
 <style lang="scss">
+    @import '@fontsource/fira-sans';
+
     .container {
         flex: 1;
         width: 100%;
@@ -48,6 +50,7 @@
         flex-direction: column;
         justify-content: flex-start;
         box-sizing: border-box;
+        font-family: 'fira-sans';
 
         @media print {
             padding: 0;
