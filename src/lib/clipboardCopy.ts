@@ -75,7 +75,7 @@ function getPlaintextFromElement(element: HTMLElement) {
             isOnFreshLine = false;
 
             // Add the text content if this is a text node:
-            if (childNode.nodeType === 3 && childNode.textContent) {
+            if (childNode.nodeType === Node.TEXT_NODE && childNode.textContent) {
                 newValue += childNode.textContent;
             }
 
@@ -90,18 +90,12 @@ function getPlaintextFromElement(element: HTMLElement) {
 }
 
 export async function copyElementToClipboard(element: HTMLElement) {
-    if (!navigator.clipboard) {
-        fallbackCopyElementToClipboard(element);
-        return;
-    }
-
-    let backupText = getPlaintextFromElement(element);
-    var data = new ClipboardItem({
-        ["text/html"]: new Blob([element.innerHTML], { type: "text/html" }),
-        ["text/plain"]: new Blob([backupText], { type: "text/plain" })
-    });
-
     try {
+        let backupText = getPlaintextFromElement(element);
+        let data = new ClipboardItem({
+            ["text/html"]: new Blob([element.innerHTML], { type: "text/html" }),
+            ["text/plain"]: new Blob([backupText], { type: "text/plain" })
+        });
         await navigator.clipboard.write([data]);
     } catch (err) {
         console.log("Copy error, failing back now", err)

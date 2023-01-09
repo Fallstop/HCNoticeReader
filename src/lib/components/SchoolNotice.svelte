@@ -3,6 +3,7 @@
     import { formatDate, type NormalisedDate } from "$lib/date";
     import { noticeMap } from "$lib/stores";
     import type { Dayjs } from "dayjs";
+    import dayjs from "dayjs";
     import { onMount, onDestroy } from "svelte";
     import NoticeContentLoader from "./NoticeContentLoader.svelte";
 
@@ -84,7 +85,6 @@
         } else {
             currentState = CurrentState.PartialLoaded;
         }
-        console.log(currentState,timetableDay, typeof timetableDay)
     }
 </script>
 
@@ -124,9 +124,9 @@
         {:else if currentState === CurrentState.LoadedNotSchoolDay}
             <h2>Not a school day.</h2>
         {/if}
-        <h3>No notices available on {formatDate(date)}.</h3>
+        <h3>No notices available on {dayjs(date).format("dddd")}.</h3>
         {#if dateChangerAvailable}
-            <p>Click on the "{formatDate(date)}" button to select another day.</p>
+            <p>Click on the "<span class="nobr">{formatDate(date)}</span>" button to select another day.</p>
         {/if}
     {/if}
 </div>

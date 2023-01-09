@@ -57,7 +57,6 @@ export function horizontalSwipe(
 			activeEvents.length === 0 &&
 			validEvent
 		) {
-			console.log("Moiuseup")
 			const x = event.clientX - clientX;
 			const y = event.clientY - clientY;
 			const absX = Math.abs(x);
@@ -80,7 +79,6 @@ export function horizontalSwipe(
 				);
 			}
 		}
-		console.log('asd',event)
 		parameters?.xMovementStore?.set(0);
 	}
 
@@ -93,7 +91,6 @@ export function horizontalSwipe(
 		}
 		let x = event.clientX - clientX;
 		x = x>0 ? x-deadArea : x+deadArea;
-		console.log("Move",x)
 		parameters?.xMovementStore?.set(x, ForceSetSpring);
 	}
 
@@ -104,7 +101,6 @@ export function horizontalSwipe(
 			let targetTag =  (target?.tagName as string);
 			valid = targetTag.toLowerCase() !== blockedElement.toLowerCase();
 		}
-		console.log("Validty Check,",valid)
 		return valid
 	}
 

@@ -41,6 +41,10 @@ body {
 	}
 }
 
+// For sections that should never break
+.nobr {
+	white-space: nowrap;
+}
 
 h1,
 h2,

@@ -32,7 +32,8 @@
 	</p>
 
 	<p>Developed by <a href="https://jmw.nz" >Jasper M-W</a>, <a href="mailto:contact@jmw.nz" target="__blank" rel="noreferrer">contact@jmw.nz</a>.</p>
-	<p class="light-text">HCNotices is not endorsed by, directly affiliated with, or maintained by Huanui College.</p>
+	<p class="light-text">HCNotices is not endorsed by, directly affiliated with, or maintained by <a class="nobr" href="https://huanuicollege.school.nz/" target="_blank"
+		rel="noreferrer">Huanui College</a>.</p>
 </div>
 
 <style lang="scss">
@@ -41,7 +42,7 @@
 		font-size: 2rem;
 		text-align: left;
 		font-weight: bold;
-
+		margin: 0;
 	}
 
 	.light-text {
@@ -59,8 +60,8 @@
 	}
 	.block-link-container {
 		display: flex;
-		gap: 1rem;
-		margin: 0.5rem 0;
+		gap: 0.8em;
+		margin: 1em 0;
 		flex-wrap: wrap;
 		.block-link {
 			display: block;
