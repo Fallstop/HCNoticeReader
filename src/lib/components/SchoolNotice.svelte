@@ -69,6 +69,7 @@
         LoadedNotice,
         LoadedNoNotice,
         LoadedNotSchoolDay,
+        PartialLoaded
     }
     let currentState: CurrentState = CurrentState.Loading;
     $: {
@@ -78,9 +79,12 @@
             currentState = CurrentState.LoadedNotice;
         } else if (timetableDay === "N/A") {
             currentState = CurrentState.LoadedNotSchoolDay;
-        } else {
+        } else if (typeof timetableDay === "string") {
             currentState = CurrentState.LoadedNoNotice;
+        } else {
+            currentState = CurrentState.PartialLoaded;
         }
+        console.log("loading",currentState)
     }
 </script>
 
@@ -114,7 +118,7 @@
         <div class={`notice ${styleMode}`}>
             {@html noticeText}
         </div>
-    {:else}
+    {:else if currentState === CurrentState.LoadedNoNotice || currentState === CurrentState.LoadedNotSchoolDay}
         {#if currentState === CurrentState.LoadedNoNotice}
             <h2>That is a school day.</h2>
         {:else if currentState === CurrentState.LoadedNotSchoolDay}
