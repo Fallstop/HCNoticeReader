@@ -16,7 +16,8 @@
 
     const { dark: theme } = themes;
 
-    const defaultDate = dayjs(dev ? "2022-05-24" : undefined);
+    // const defaultDate = dayjs(dev ? "2022-05-24" : undefined);
+    const defaultDate = dayjs();
 
     export let selectedDate = writable(defaultDate);
 

@@ -2,8 +2,8 @@ import dayjs, { Dayjs } from "dayjs";
 
 const API_ROUTE = "https://hctools.jmw.nz/api/";
 
-export async function getNoticeText(noticeDateToGet: Date | Dayjs): Promise<NoticeText> {
-	let response = await fetch(
+export async function getNoticeText(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch): Promise<NoticeText> {
+	let response = await fetchFN(
 		new Request(API_ROUTE + "getdailynotice/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
 	let data = await response.json();
@@ -14,8 +14,8 @@ export async function getNoticeText(noticeDateToGet: Date | Dayjs): Promise<Noti
 	return processNoticeText(data["noticeText"] ?? "Unknown Error, please try again later.");
 }
 
-export async function getTimeTableDay(noticeDateToGet: Date | Dayjs) {
-	let response = await fetch(
+export async function getTimeTableDay(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch) {
+	let response = await fetchFN(
 		new Request(API_ROUTE + "gettimetableday/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
 	let data = await response.json();

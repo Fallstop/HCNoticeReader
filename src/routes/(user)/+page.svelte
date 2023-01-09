@@ -5,12 +5,12 @@
 
 	import { getContext } from "svelte";
 	import InfoPopup from "$lib/components/InfoPopup.svelte";
-    import { goto } from "$app/navigation";
-    import { formatDate } from "$lib/date";
-    import type { Dayjs } from "dayjs";
+	import { formatDate } from "$lib/date";
+	import type { Dayjs } from "dayjs";
 	import type { Writable } from "svelte/store";
-    import CopyPopup from "$lib/components/CopyPopup.svelte";
-    import CopySymbol from "$lib/icons/CopySymbol.svelte";
+	import CopyPopup from "$lib/components/CopyPopup.svelte";
+	import CopySymbol from "$lib/icons/CopySymbol.svelte";
+    import { noticeMap, timetableDayMap } from "$lib/stores";
 
 	const { open } = getContext("simple-modal") as any;
 
@@ -18,11 +18,16 @@
 		open(InfoPopup);
 	}
 	function openCopy() {
-		open(CopyPopup, {selectedDate})
+		open(CopyPopup, { selectedDate });
 	}
 
 	let selectedDate: Writable<Dayjs> | undefined;
 
+	export let data: import('./$types').PageData;
+	if (data.date && data.noticeText && data.timetableDay) {
+		$noticeMap.set(data.date, data.noticeText);
+		$timetableDayMap.set(data.date, data.timetableDay);
+	}
 </script>
 
 <svelte:head>
@@ -32,10 +37,15 @@
 
 <section>
 	<h1>Huanui College Notices</h1>
-	<NoticeBlock bind:selectedDate={selectedDate}/>
+	<NoticeBlock bind:selectedDate />
 </section>
 <footer>
-	<a href={`/print/${formatDate($selectedDate ?? new Date())}`} target="_blank" rel="noreferrer" class="footer-button">
+	<a
+		href={`/print/${formatDate($selectedDate ?? new Date())}`}
+		target="_blank"
+		rel="noreferrer"
+		class="footer-button"
+	>
 		<PrintSymbol />
 		Print
 	</a>
@@ -101,7 +111,6 @@
 				fill: $color-text;
 			}
 		}
-
 
 		@media screen and (max-width: $mobile-transition) {
 			gap: 0;
