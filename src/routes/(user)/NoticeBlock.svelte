@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { dev } from "$app/environment";
+    import { browser, dev } from "$app/environment";
     import SchoolDay from "$lib/components/SchoolDay.svelte";
     import SchoolNotice from "$lib/components/SchoolNotice.svelte";
     import { formatDate } from "$lib/date";
@@ -10,6 +10,10 @@
     import { Datepicker, themes } from "svelte-calendar";
     import { writable } from "svelte/store";
     import { fade, fly } from "svelte/transition";
+    import { swipe } from 'svelte-gestures';
+    import { tweened } from "svelte/motion";
+    import { customFly, horizontalSwipe } from "$lib/swipe";
+    import { mobileWidthTransition } from "$lib/stores";
 
     const { dark: theme } = themes;
 
@@ -18,6 +22,8 @@
     export let selectedDate = writable(defaultDate);
 
     let datepickerStore: Datepicker["store"];
+
+
 
     // Fancy transition logic
     enum NoticeDirection {
@@ -30,21 +36,22 @@
     let transitionX = 0;
     let pastDate = defaultDate;
 
+    let noticeBlockSize = 0;
+    $: animationScale = noticeBlockSize;
+
     $: {
         switch (+directionForward) {
             case NoticeDirection.Forward:
-                transitionX = 1000;
+                transitionX = animationScale;
                 break;
             case NoticeDirection.Backward:
-                transitionX = -1000;
+                transitionX = -animationScale;
                 break;
             case NoticeDirection.Static:
                 transitionX = 0;
                 break;
-            default:
-                transitionX = -1;
-                break;
         }
+        // noticeXGestureOffset.set(transitionX,{duration: 0});
     }
 
     $: if (+pastDate.toDate() !== +$selectedDate.toDate()) {
@@ -57,19 +64,7 @@
     onMount(() => {
         datepickerStore.subscribe(
             (value: {
-                open: boolean;
-                hasChosen: boolean;
                 selected: Date;
-                start: Date;
-                end: Date;
-                shouldEnlargeDay: boolean;
-                enlargeDay: boolean;
-                year: any;
-                month: any;
-                day: any;
-                activeView: string;
-                activeViewDirection: number;
-                startOfWeekIndex: number;
             }) => {
                 let calendarDate = dayjs(value.selected);
                 if (formatDate($selectedDate) !== formatDate(calendarDate)) {
@@ -78,6 +73,29 @@
             }
         );
     });
+
+    let desktopMode = writable(false);
+    $: desktopMode.set(browser ? window.innerWidth > mobileWidthTransition : true)
+
+    type GestureEvent = CustomEvent<{
+        direction: "left" | "right" | "top" | "bottom";
+        target: EventTarget | null;
+    }>;
+
+    let noticeXGestureOffset = tweened(0, {duration: 400});
+
+    function gestureHandler(event: GestureEvent) {
+        let direction = event.detail.direction;
+        console.log(event.detail.target);
+        if (direction==="right") {
+            datepickerStore.add(-1, "day");
+
+            noticeXGestureOffset.set(0);
+        } else if (direction==="left") {
+            datepickerStore.add(1, "day");
+            noticeXGestureOffset.set(0);
+        }
+    }
 
     let timetableDay: string;
 </script>
@@ -88,6 +106,7 @@
             on:click={() => {
                 datepickerStore.add(-1, "day");
             }}
+            aria-label="Previous Day"
         >
             <ArrowBack />
             <span class="desktop-only"> Previous </span>
@@ -112,24 +131,39 @@
             on:click={() => {
                 datepickerStore.add(1, "day");
             }}
+            aria-label="Next Day"
         >
             <span class="desktop-only"> Next </span>
             <ArrowForward />
         </button>
     </header>
-    <div class="transition-wrapper">
+    <div class="transition-wrapper"
+    >
         {#key $selectedDate}
             <!-- Transition has to be split into in-out to force the animation to recompile every time -->
+
             <div
                 class="data-container fancy-scrollbar"
-                in:fly|local={{ x: transitionX }}
-                out:fly|local={{ x: -transitionX }}
-            >
-                <h2 class="school-day">
-                    <SchoolDay date={$selectedDate} bind:timetableDay />
-                </h2>
+                style="transform: translate3d({$noticeXGestureOffset}px, 0px, 0)"
+                in:customFly|local={{ x: transitionX }}
+                out:fly|local={{x: -transitionX}}
+                use:horizontalSwipe={{ desktopElementBlockList: ["p"], minSwipeDistance: 100, touchAction: 'pan-y', xMovementStore: noticeXGestureOffset, desktopMode }} on:horizontalSwipe={gestureHandler}
+                bind:clientWidth={noticeBlockSize}
+            >   
+                <div class="school-day-container">
+                    <h2 class="school-day">
+                        <SchoolDay date={$selectedDate} bind:timetableDay />
+                    </h2>
+                </div>
                 <div class="notice-block fancy-scrollbar">
-                    <SchoolNotice date={$selectedDate} {timetableDay} />
+                    <SchoolNotice date={$selectedDate} {timetableDay} dateChangerAvailable/>
+                </div>
+
+                <div class="day-change-indicator left" class:hidden={$noticeXGestureOffset<=0}>
+                    <ArrowBack/>
+                </div>
+                <div class="day-change-indicator right" class:hidden={$noticeXGestureOffset>=0}>
+                    <ArrowForward/>
                 </div>
             </div>
         {/key}
@@ -261,16 +295,24 @@
             left: 0;
             width: 100%;
             height: 100%;
-            overflow-y: hidden;
+            // overflow-y: hidden;
+            overflow-x: visible;
 
-            .school-day {
-                font-size: 2rem;
-                margin: 1px;
-                padding: 0.5rem 1rem;
-                text-align: center;
-                border-bottom: $color-text solid 1px;
-                box-sizing: border-box;
-                min-width: 4rem;
+            .school-day-container {
+                cursor: ew-resize;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                .school-day {
+                    font-size: 2rem;
+                    margin: 1px;
+                    padding: 0.5rem 1rem;
+                    text-align: center;
+                    border-bottom: $color-text solid 1px;
+                    box-sizing: border-box;
+                    min-width: 4rem;
+                    width: max-content;
+                }
             }
 
             .notice-block {
@@ -282,6 +324,38 @@
                 display: flex;
                 box-sizing: border-box;
                 overflow-y: auto;
+            }
+            .day-change-indicator {
+                $arrow-size: 7vw;
+
+                position: absolute;
+                top: 0;
+                width: $arrow-size;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0.5;
+                // transition: opacity 150ms ease;
+
+                &.hidden {
+                    opacity: 0;
+                }
+
+                :global(svg) {
+                    height: 5vw;
+                    position: relative;
+                    top: 0.15em;
+                    color: $color-text;
+                    fill: $color-text;
+                }
+
+                &.left {
+                    left: -$arrow-size;
+                }
+                &.right {
+                    right: -$arrow-size;
+                }
             }
         }
         @media screen and (max-width: $mobile-transition) {

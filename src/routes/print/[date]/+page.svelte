@@ -34,7 +34,7 @@
         <SchoolNotice date={targetDate} styleMode="light" bind:loaded={noticeLoaded} {timetableDay}/>
     </div>
     <footer class="footer-text">
-        <p>You can find the daily notices and timetable day online at <b>hcnotices.jmw.nz</b></p>
+        <p>You can find daily notices and the timetable day online at <b>hcnotices.jmw.nz</b></p>
     </footer>
 </div>
 

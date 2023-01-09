@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import '$lib/scss/variables.scss';
 	import '$lib/scss/layout.scss';
 	import '$lib/scss/modal.scss';
@@ -10,14 +10,13 @@ unstyled={true}
 classBg="__modal-bg"
 classWindowWrap="__modal-window-wrap"
 classWindow="__modal-window"
-classContent="__modal-content"
+classContent="__modal-content fancy-scrollbar"
 classCloseButton="__modal-close-button"
 >
 <div class="app">
-
-		<main>
-			<slot />
-		</main>
+	<main>
+		<slot />
+	</main>
 </div>
 </Modal>
 

@@ -6,12 +6,15 @@
     import { onMount, onDestroy } from "svelte";
     import NoticeContentLoader from "./NoticeContentLoader.svelte";
 
-    let noticeText: string | null = null;
+    export let noticeText: string | null = null;
 
     export let date: Date | Dayjs;
     export let styleMode: "light" | "dark" = "dark";
     export let loaded = false;
     export let timetableDay: string;
+    export let refreshCache = true;
+    export let dateChangerAvailable = false;
+
     $: loaded = noticeText !== null;
 
     $: brokenWarning = false;
@@ -25,6 +28,10 @@
     const unsub = noticeMap.subscribe(updateNoticeData);
 
     function getNoticeData() {
+        if (!refreshCache && $noticeMap.has(formatDate(date)) && $noticeMap.get(formatDate(date)) != null) {
+            $noticeMap = $noticeMap;
+            return;
+        }
         $noticeMap.set(formatDate(date), null);
         $noticeMap = $noticeMap;
 
@@ -114,7 +121,9 @@
             <h2>Not a school day.</h2>
         {/if}
         <h3>No notices available on {formatDate(date)}.</h3>
-        <p>Click on the "{formatDate(date)}" button to select another day.</p>
+        {#if dateChangerAvailable}
+            <p>Click on the "{formatDate(date)}" button to select another day.</p>
+        {/if}
     {/if}
 </div>
 
@@ -124,6 +133,7 @@
         width: 100%;
         .notice {
             padding-bottom: 1em;
+            word-wrap: break-word;
             &.light :global(hr) {
                 background-image: linear-gradient(to right, #ccc, #333, #ccc);
             }
@@ -150,6 +160,12 @@
                     border: none;
                     border-top: solid 1px #aaa;
                 }
+            }
+            :global(p) {
+                display: inline;
+            }
+            :global(p::after) {
+                content: "\A"; white-space: pre; 
             }
 
             &.dark :global(a) {

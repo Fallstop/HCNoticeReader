@@ -9,11 +9,16 @@
     import { formatDate } from "$lib/date";
     import type { Dayjs } from "dayjs";
 	import type { Writable } from "svelte/store";
+    import CopyPopup from "$lib/components/CopyPopup.svelte";
+    import CopySymbol from "$lib/icons/CopySymbol.svelte";
 
 	const { open } = getContext("simple-modal") as any;
 
 	function openInfo() {
 		open(InfoPopup);
+	}
+	function openCopy() {
+		open(CopyPopup, {selectedDate})
 	}
 
 	let selectedDate: Writable<Dayjs> | undefined;
@@ -34,6 +39,10 @@
 		<PrintSymbol />
 		Print
 	</a>
+	<button on:click={openCopy} class="footer-button mobile-only">
+		<CopySymbol />
+		Copy
+	</button>
 	<button on:click={openInfo} class="footer-button">
 		<InfoSymbol />
 		Info
@@ -110,6 +119,9 @@
 			}
 		}
 	}
+	.mobile-only {
+		display: none;
+	}
 
 	@media (max-width: $mobile-transition) {
 		section {
@@ -121,6 +133,9 @@
 				letter-spacing: normal;
 				margin-bottom: 1em;
 			}
+		}
+		.mobile-only {
+			display: unset;
 		}
 	}
 	@media screen and (max-height: 880px) {

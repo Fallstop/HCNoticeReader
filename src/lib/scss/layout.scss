@@ -1,6 +1,6 @@
 @use "variables.scss" as *;
 
-@import '@fontsource/fira-mono';
+// @import '@fontsource/fira-mono';
 
 
 :root {
@@ -23,13 +23,12 @@ body {
 		linear-gradient(180deg, $color-bg-0 0%, $color-bg-1 15%, $color-bg-2 50%);	
 }
 
-// Scrollbars
 .fancy-scrollbar {
-	// Respaldo para Firefox
+	// Firefox
 	scrollbar-color: #fff rgb(255 255 255 / 10%);
 	scrollbar-width: thin;
 	
-	// Navegadores basados en webkit
+	// Webkit
 	&::-webkit-scrollbar {
 		width: 5px;
 		height: 5px;
@@ -119,4 +118,13 @@ button:focus:not(:focus-visible) {
 	position: absolute;
 	width: 1px;
 	white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		animation-delay: 0.01ms !important;
+	}
 }

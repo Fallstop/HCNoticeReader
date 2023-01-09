@@ -4,3 +4,5 @@ import type { NormalisedDate } from "./date";
 
 export let noticeMap = writable(new Map<NormalisedDate, NoticeText | null>());
 export let timetableDayMap = writable(new Map<NormalisedDate, string | null>());
+
+export const mobileWidthTransition = 720;
