@@ -9,8 +9,7 @@
     import { onMount } from "svelte";
     import { Datepicker, themes } from "svelte-calendar";
     import { writable } from "svelte/store";
-    import { fade, fly } from "svelte/transition";
-    import { swipe } from 'svelte-gestures';
+    import { fly } from "svelte/transition";
     import { tweened } from "svelte/motion";
     import { customFly, horizontalSwipe } from "$lib/swipe";
     import { mobileWidthTransition } from "$lib/stores";
@@ -234,7 +233,7 @@
             flex: 0 1 auto;
 
             display: grid;
-            grid: 1fr / 1fr 1fr 1fr;
+            grid: 1fr / 1fr 2fr 1fr;
             grid-auto-flow: row;
 
             padding: 1rem;

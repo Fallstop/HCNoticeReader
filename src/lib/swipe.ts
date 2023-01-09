@@ -59,7 +59,7 @@ export function horizontalSwipe(
 			const y = event.clientY - clientY;
 			const absX = Math.abs(x);
 			const absY = Math.abs(y);
-			console.log("mouse up",x,y, parameters.minSwipeDistance)
+
 			let direction: 'top' | 'right' | 'bottom' | 'left' | null = null;
 			if (absX >= 2 * absY && absX > parameters.minSwipeDistance) {
 				// horizontal (by *2 we eliminate diagonal movements)
@@ -70,7 +70,6 @@ export function horizontalSwipe(
 			}
 
 			if (direction) {
-				console.log(direction)
 				node.dispatchEvent(
 					new CustomEvent(gestureName, {
 						detail: { direction, target },
