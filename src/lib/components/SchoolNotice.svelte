@@ -84,7 +84,6 @@
         } else {
             currentState = CurrentState.PartialLoaded;
         }
-        console.log("loading",currentState)
     }
 </script>
 

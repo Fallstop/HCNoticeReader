@@ -213,6 +213,11 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
+"@popperjs/core@^2.9.2":
+  version "2.11.6"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
+  integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
+
 "@sveltejs/adapter-auto@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@sveltejs/adapter-auto/-/adapter-auto-1.0.0.tgz#0fada089d5a21b1e7e06d853f3766e3a5d128989"
@@ -1438,6 +1443,13 @@ svelte-content-loader@^1.1.3:
   resolved "https://registry.yarnpkg.com/svelte-content-loader/-/svelte-content-loader-1.1.3.tgz#58c049e4a2e60a93e1225d7d8727434a19237dcc"
   integrity sha512-hXkwyAXiZ+2uNvWUHPj9U7M+8PGqgZVFNxyOHjLUF1ng4W9P9+9wlyT/bNx5BjuqoJsfjv1IZP1/5T1LfRKtYA==
 
+svelte-easy-popover@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/svelte-easy-popover/-/svelte-easy-popover-1.0.0.tgz#bf3ea86bc9752c72766ac5df0b110b13ffb47166"
+  integrity sha512-3PFWhKYaGwd18ww7F/gX6VjFgZjABqQY385T0FduWz5WKFx+eTSF2k0x2ZcWIZ5RGuOMPqdHcGCqjLgrvtEZRg==
+  dependencies:
+    "@popperjs/core" "^2.9.2"
+
 svelte-gestures@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/svelte-gestures/-/svelte-gestures-1.4.1.tgz#8f0541e07eba1b0c779dd6015d2142ca71561a37"
@@ -1459,11 +1471,6 @@ svelte-preprocess@^4.0.0:
     magic-string "^0.25.7"
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
-
-svelte-ripple@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/svelte-ripple/-/svelte-ripple-0.1.1.tgz#2846c2481196f38585cbc6fcce10357bcef0247c"
-  integrity sha512-MW/TBYus/2k9ccTTx2LvSv+wbmGN+CYLgiCMPa5fK7DXlUUmIuGKFBtN+90rECpSOOR+W7Uhm2qJemLptS6ahw==
 
 svelte-simple-modal@^1.4.5:
   version "1.4.5"
