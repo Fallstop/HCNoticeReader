@@ -1,46 +1,39 @@
 <script lang="ts">
     import { copyElementToClipboard, copyTextToClipboard } from "$lib/clipboardCopy";
-    import Popover from 'svelte-easy-popover';
     import type { Dayjs } from "dayjs";
-    import { tweened } from "svelte/motion";
     import type { Writable } from "svelte/store";
     import SchoolDay from "./SchoolDay.svelte";
     import SchoolNotice from "./SchoolNotice.svelte";
     export let selectedDate: Writable<Dayjs>;
     import GraphPaper from "$lib/patterns/GraphPaper.svg?url";
-    import { fade, fly } from "svelte/transition";
+    import { fade, fly, scale, slide } from "svelte/transition";
     
 
     let timetableDay: string;
     let noticeElement: HTMLElement;
 
-    let copyReferenceElement;
     let copyPopoverOpen = false;
     let copyPopoverTimer: NodeJS.Timeout | null = null;
     const copyPopoverMS = 2000;
 
     function copyAll() {
-        copyElementToClipboard(noticeElement);
         copyPopoverOpen = true;
+        copyElementToClipboard(noticeElement);
         if (copyPopoverTimer) {clearTimeout(copyPopoverTimer)};
         copyPopoverTimer = setTimeout(()=>{copyPopoverOpen=false},copyPopoverMS);
     }
 </script>
 
+<!-- Popup is only used on mobile. -->
+
 <h2>Day: <SchoolDay date={$selectedDate} bind:timetableDay /></h2>
 <!-- use:Ripple={{color: '#32E875', opacity: 0.5, clearingDuration: "1.5s"}}  -->
-<button bind:this={copyReferenceElement} on:click={copyAll}> Copy All </button>
-<Popover
-  referenceElement={copyReferenceElement}
-  placement="top"
-  spaceAway={5}
-  ignoreClickWhileOpeningBuffer={100}
-  isOpen={copyPopoverOpen}
->
-    <div transition:fly={{y: 5}} class="copy-popover">
-        Copied!
-    </div>
-</Popover>
+<button on:click={copyAll} class:copied={copyPopoverOpen}>
+    {#if copyPopoverOpen }
+        <div class="copied-message" in:fade out:scale={{duration: 300, start: 1.3}}>Copied!</div>
+    {/if}
+    <span class="copy-message">Copy All</span>
+</button>
 
 <div class="notice" bind:this={noticeElement} style:background-image="url({GraphPaper})">
     <SchoolNotice date={$selectedDate} {timetableDay} styleMode="light"/>
@@ -63,10 +56,36 @@
         font-size: 1rem;
         text-decoration: none;
         border: $mid-tone solid 1px;
-
+        position: relative;
         cursor: pointer;
-        &:active {
+        &.copied {
+            border-radius: 5px;
+            .copy-message {
+                opacity: 0;
+            }
+
+        }
+    .copied-message {
             background-color: #32E87577;
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0.25rem 1rem;
+            box-sizing: border-box;
+            &::before {
+                background-color: #32E87577;
+                position: absolute;
+                $glow-size: 4px;
+                top: -$glow-size;
+                left: -$glow-size;
+                width: calc(100% + $glow-size * 2);
+                height: calc(100% + $glow-size * 2);
+                filter: blur($glow-size);
+                content: "";
+            }
         }
     }
 
