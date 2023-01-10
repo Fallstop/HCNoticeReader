@@ -132,7 +132,7 @@
 		display: none;
 	}
 
-	@media (max-width: $mobile-transition) {
+	@media screen and (max-width: $mobile-transition) {
 		section {
 			justify-content: flex-start;
 			flex: 1;

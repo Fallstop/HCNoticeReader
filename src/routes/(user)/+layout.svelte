@@ -35,7 +35,7 @@ classCloseButton="__modal-close-button"
 		min-height: 100vh;
 		justify-content: space-between;
 	}
-	@media (max-width: $mobile-transition) {
+	@media screen and (max-width: $mobile-transition) {
 		main {
 			padding: 0;
 			max-width: none;
