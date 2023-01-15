@@ -52,8 +52,9 @@ export function horizontalSwipe(
 	}
 
 	function onUp(activeEvents: PointerEvent[], event: PointerEvent) {
+		console.log(event.type)
 		if (
-			event.type === 'pointerup' &&
+			(event.type === 'pointerup' || event.type === "pointerleave") &&
 			activeEvents.length === 0 &&
 			validEvent
 		) {
