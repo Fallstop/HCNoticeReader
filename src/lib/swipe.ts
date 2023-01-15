@@ -99,7 +99,7 @@ export function horizontalSwipe(
 		let valid = true;
 		for (let blockedElement of parameters.desktopElementBlockList) {
 			let targetTag =  (target?.tagName as string);
-			valid = targetTag.toLowerCase() !== blockedElement.toLowerCase();
+			valid = targetTag.toLowerCase() !== blockedElement.toLowerCase() && valid;
 		}
 		return valid
 	}

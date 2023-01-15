@@ -145,7 +145,7 @@
                 in:customFly|local={{ x: transitionX }}
                 out:fly|local={{ x: -transitionX }}
                 use:horizontalSwipe={{
-                    desktopElementBlockList: ["p"],
+                    desktopElementBlockList: ["p","h2","h3"],
                     minSwipeDistance: 100,
                     touchAction: "pan-y",
                     xMovementStore: noticeXGestureOffset,
@@ -334,6 +334,7 @@
                     box-sizing: border-box;
                     min-width: 4rem;
                     width: max-content;
+                    user-select: none;
                 }
             }
 
@@ -390,6 +391,9 @@
                 overflow-y: auto;
                 overflow-x: hidden;
                 border-radius: 0 0;
+                .school-day {
+                    user-select: text;
+                }
                 .notice-block {
                     overflow-y: visible;
                     padding: 0 1em;
