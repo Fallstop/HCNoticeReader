@@ -6,7 +6,13 @@
 <HuanuiGlowingCenterBox>
     <h2>Daily Newsletter</h2>
     <div class="content">
-        asdasd
+        <p>
+            A daily newsletter of the notices and the timetable day is being planned, you can register your interest and pre-join.
+        </p>
+        <form method="POST" action="?/register">
+            <input type="email" placeholder="Email Address"/>
+            <button type="submit">Register</button>
+        </form>
     </div>
     <!-- <svelte:fragment slot="footer">
 		<a
@@ -26,6 +32,12 @@
     h2 {
         text-align: center;
         font-size: 2rem;
+    }
+
+    .content {
+        padding: 1rem;
+        font-size: 1.2rem;
+        text-align: center;
     }
 
     .footer-button {
