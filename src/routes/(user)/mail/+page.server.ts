@@ -1,35 +1,14 @@
-import { fail, type Actions, type RequestEvent } from "@sveltejs/kit";
-import { default as Mailjet, type Contact } from "node-mailjet";
+import type {Actions} from "@sveltejs/kit";
+import type {Contact} from "node-mailjet";
 import {v4 as uuidv4} from 'uuid';
 
-import { env } from "$env/dynamic/private";
-import { RegisterStatus } from "./common";
+import { RegisterStatus, type FormResponse } from "./common";
+import { mailjet } from "$lib/server/mailjet";
 
-const mailjet = new Mailjet({
-	apiKey: env.SECRET_MJ_API_KEY,
-	apiSecret: env.SECRET_MJ_API_Secret,
-});
-console.log('mailjet', env.SECRET_MJ_API_KEY, env.SECRET_MJ_API_Secret);
 
-// (async () => {
-// 	try {
-// 	  const newMember = await client.lists.members.createMember(DOMAIN,
-// 		{
-// 			address: 'bob@example.com',
-// 			name: 'Bob Barr',
-// 			vars: JSON.stringify({age: 27}),
-// 			subscribed: 'yes',
-// 			upsert: 'yes'
-// 		}
-// 	  );
-// 	  console.log('newMember', newMember);
-// 	} catch (error) {
-// 		console.error(error);
-// 	}
-//   })();
 
 export const actions: Actions = {
-	register: async ({ request }) => {
+	register: async ({ request }): Promise<FormResponse> => {
 		const data = await request.formData();
 		const email = data.get('email')?.toString();
 		console.log(data)
@@ -63,17 +42,17 @@ export const actions: Actions = {
 				.post("listrecipient", { 'version': 'v3' })
 				.request({
 					"ContactAlt": email,
-					"ListID": 10278356,
+					"ListID": "10278356",
 				});
 			// console.log(request.body);
 			state = RegisterStatus.Success;
 
 		} catch (error) {
-
 			let errorMessage = error?.ErrorMessage as string;
-			console.log(errorMessage)
+			console.log(errorMessage);
+
 			if (errorMessage.toLowerCase().includes("already exists")) {
-				state = RegisterStatus.AlreadyRegistered;
+				state = RegisterStatus.AlreadyCompleted;
 			} else {
 				state = RegisterStatus.ServerError;
 			}
@@ -84,4 +63,50 @@ export const actions: Actions = {
 			email,
 		};
 	},
+	deregister: async ({ request }): Promise<FormResponse> => {
+		const data = await request.formData();
+		const email = data.get('email')?.toString();
+		console.log(data);
+
+		let state: RegisterStatus = RegisterStatus.ServerError;
+
+		if (!email) {
+			return {
+				state: RegisterStatus.InvalidEmail,
+			};
+		}
+
+
+		try {
+			const request = await mailjet
+				.post("contact", { 'version': 'v3' })
+				.id(email)
+				.action("managecontactslists")			
+				.request({
+					ContactsLists: [
+						{
+							Action: "remove",
+							ListID: "10278356"	
+						}
+					]
+				});
+				console.log(request.body)
+			state = RegisterStatus.Success;
+		} catch (error) {
+			let errorMessage = error?.ErrorMessage as string;
+			console.log("Error Message",errorMessage);
+
+			if (errorMessage.toLowerCase().includes("not found")) {
+				state = RegisterStatus.AlreadyCompleted;
+			} else {
+				state = RegisterStatus.ServerError;
+			}
+		}
+
+
+		return {
+			state,
+			email
+		}
+	}
 }

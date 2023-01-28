@@ -10,7 +10,7 @@
 	import type { Writable } from "svelte/store";
 	import CopyPopup from "$lib/components/CopyPopup.svelte";
 	import CopySymbol from "$lib/icons/CopySymbol.svelte";
-    import { noticeMap, timetableDayMap } from "$lib/stores";
+    import { noticeMap, serverTime, timetableDayMap } from "$lib/stores";
     import MailSymbol from "$lib/icons/MailSymbol.svelte";
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
 
@@ -29,6 +29,9 @@
 	if (data.date && data.noticeText && data.timetableDay) {
 		$noticeMap.set(data.date, data.noticeText);
 		$timetableDayMap.set(data.date, data.timetableDay);
+	}
+	if (data.serverTime) {
+		serverTime.set(data.serverTime)
 	}
 </script>
 

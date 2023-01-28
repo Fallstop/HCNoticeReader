@@ -1,4 +1,6 @@
 <script lang="ts">
+	import {serverTime} from "$lib/stores"
+    import dayjs from "dayjs";
 </script>
 
 <div class="content">
@@ -9,13 +11,13 @@
 			Checkout HCNotices V1
 		</a>
 		<a class="block-link" href="https://status.qrl.nz/status/public#:~:text=Huanui%20College%20Services" target="_blank"
-		rel="noreferrer">
+		rel="noreferrer" title={$serverTime ? `Server Time: ${$serverTime.toLocaleString()}` : "SSR Disabled"}>
 			View server status
 		</a>
 	</div>
 	<p>
 		HCNotices is a webapp that allows students to easily view Huanui
-		College's daily notices online in a connivent and eye-pleasing form.
+		College's daily notices online in a convenient and eye-pleasing form.
 	</p>
 	<p>
 		HCNotices is built using Svelte, and is open-source under the <a href="https://github.com/Fallstop/HCNoticeReader/blob/main/LICENSE.md" target="_blank" rel="noreferrer">MIT license</a>. You can find the

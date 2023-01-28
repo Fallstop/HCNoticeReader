@@ -3,78 +3,100 @@
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
     import type { ActionData } from "../$types";
     import { enhance } from "$app/forms";
-    import { RegisterStatus } from "./common";
+    import { RegisterStatus, type FormResponse } from "../common";
     import { onMount } from "svelte";
+    import { page } from '$app/stores';
 
-    export let form: { state: RegisterStatus, email: string } | undefined;
 
-    $: state = form?.state ?? RegisterStatus.Ready;
+    let state = RegisterStatus.Ready;
 
     let emailValue: string = "";
 
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
     onMount(() => {
-        console.log("Form state",state, form)
-        if (form?.state) {
-            state = form.state;
+        // console.log("Form state",state, form)
+        // if (form?.state) {
+        //     state = form.state;
+        // }
+        const startingEmail = $page.url.searchParams.get("email");
+        if (startingEmail) {
+            emailValue = startingEmail
         }
-    })
+    });
+
+    async function formResult({
+        result,
+        update,
+    }: {
+        result: any;
+        update: any;
+    }) {
+        const data = result.data as FormResponse;
+        console.log(data);
+        state = data.state;
+        // `result` is an `ActionResult` object
+        update({ reset: false });
+    }
 </script>
 
 <HuanuiGlowingCenterBox>
     <h2>Daily Newsletter</h2>
     <div class="content">
-        <p>
-            A daily newsletter of the notices and the timetable day is being
-            planned, you can register your interest and pre-join.
-        </p>
+        <p>You can easily unsubscribe here:</p>
         <form
             method="POST"
-            action="?/register"
-            use:enhance={({ }) => {
+            action="/mail?/deregister"
+            use:enhance={({}) => {
                 state = RegisterStatus.Loading;
 
-                return async ({ result,update }) => {
-                  // `result` is an `ActionResult` object
-                  update({reset: false})
-                };
-              }}
+                return formResult;
+            }}
         >
             <input
                 class="email"
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                class:fail={state === RegisterStatus.ServerError || state === RegisterStatus.InvalidEmail}
-                class:success={state ===
-                    RegisterStatus.AlreadyCompleted ||
-                    state === RegisterStatus.Success}
+                class:fail={state === RegisterStatus.ServerError ||
+                            state === RegisterStatus.AlreadyCompleted ||
+                    state === RegisterStatus.InvalidEmail}
+                class:success={state === RegisterStatus.Success}
                 bind:value={emailValue}
             />
             {#if state === RegisterStatus.ServerError}
                 <p class="message error">
-                    There was an unknown server error, please try again.
+                    There was an unknown server error, please try again in a
+                    while.
                 </p>
             {:else if state === RegisterStatus.Success}
-                <p class="message success">You have been registered!</p>
+                <p class="message success">You have been unsubscribed!</p>
             {:else if state === RegisterStatus.AlreadyCompleted}
-                <p class="message success">You are already registered!</p>
+                <p class="message error">Email wasn't subscribed!</p>
             {:else if state === RegisterStatus.InvalidEmail}
                 <p class="message error">Email not valid</p>
             {:else if state === RegisterStatus.Loading}
-                <p class="message">Submitting....</p>
+                <p class="message">Unsubscribing....</p>
             {:else}
-                <p class="message">You can <a href="/mail/unsubscribe">unsubscribe</a> at any time</p>
+                <p class="message">
+                    You can <a href="/mail">resubscribe</a> at any time
+                </p>
             {/if}
-
-            <div class="button-wrap" class:disabled={!emailValid} class:pressed={state === RegisterStatus.Loading}>
-                <input type="submit" value="Register" disabled={!emailValid}/>
+            <div
+                class="button-wrap"
+                class:disabled={!emailValid}
+                class:pressed={state === RegisterStatus.Loading}
+            >
+                <input
+                    type="submit"
+                    value="Unsubscribe"
+                    disabled={!emailValid}
+                />
             </div>
         </form>
     </div>
     <svelte:fragment slot="footer">
-        <a href={`/`} class="footer-button">
+        <a href={`/mail`} class="footer-button">
             <ArrowBack />
             Back
         </a>
@@ -82,8 +104,8 @@
 </HuanuiGlowingCenterBox>
 
 <style lang="scss">
-    @use "../../../lib/scss/variables.scss" as *;
-    @use "../../../lib/scss/footer.scss" as *;
+    @use "../../../../lib/scss/variables.scss" as *;
+    @use "../../../../lib/scss/footer.scss" as *;
 
     h2 {
         text-align: center;

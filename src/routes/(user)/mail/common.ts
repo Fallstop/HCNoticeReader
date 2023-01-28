@@ -1,8 +1,13 @@
 export enum RegisterStatus {
     Success,
     ServerError,
-    AlreadyRegistered,
+    AlreadyCompleted,
     Loading,
     InvalidEmail,
     Ready
+}
+
+export interface FormResponse {
+    state: RegisterStatus;
+    email?: string;
 }
