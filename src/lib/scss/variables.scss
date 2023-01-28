@@ -12,5 +12,18 @@ $color-text: rgba(245, 245, 245, 0.815);
 $column-width: 42rem;
 $column-margin-top: 4rem;
 $text-area-bg: #151320;
+$pastel-gradient: linear-gradient(
+    45deg,
+    #fcf4c9 0%,
+    #fee3e2 15%,
+    #fbcdf2 30%,
+    #e8befa 50%,
+    #abbfff 65%,
+    #bbf3c0 85%,
+    #fcf4c9 100%
+);
+
+$success: #2ecc40;
+$error: #e74c3c;
 
 $mobile-transition: 720px;

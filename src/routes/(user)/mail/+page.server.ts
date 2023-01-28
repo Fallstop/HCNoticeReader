@@ -1,13 +1,15 @@
-import type { Actions, RequestEvent } from "@sveltejs/kit";
+import { fail, type Actions, type RequestEvent } from "@sveltejs/kit";
 import { default as Mailjet, type Contact } from "node-mailjet";
 import {v4 as uuidv4} from 'uuid';
 
 import { env } from "$env/dynamic/private";
+import { RegisterStatus } from "./common";
 
 const mailjet = new Mailjet({
 	apiKey: env.SECRET_MJ_API_KEY,
 	apiSecret: env.SECRET_MJ_API_Secret,
 });
+console.log('mailjet', env.SECRET_MJ_API_KEY, env.SECRET_MJ_API_Secret);
 
 // (async () => {
 // 	try {
@@ -29,38 +31,57 @@ const mailjet = new Mailjet({
 export const actions: Actions = {
 	register: async ({ request }) => {
 		const data = await request.formData();
-		const email = data.get('email');
+		const email = data.get('email')?.toString();
+		console.log(data)
 
-		let success = true;
+		if (!email || !email.match(/.+@.+\..+/)) {
+			return {
+				state: RegisterStatus.InvalidEmail,
+			};
+		}
+
+		let state: RegisterStatus = RegisterStatus.ServerError;
 
 		try {
 			const nameID = uuidv4();
+			console.log("Creating Email with", email)
 			const newMember: Contact.PostContactResponse = (await mailjet.post("contact", { version: 'v3' })
 				.request({
 					IsExcludedFromCampaigns: "false",
 					Name: nameID,	  
 					Email: email
-				})).body;
+				})).body as Contact.PostContactResponse;
 			console.log('Created member',nameID,"Response:", newMember);
-
-			let contactID = newMember["Data"][0]["ID"];
-
-			const request = mailjet
-				.post("listrecipient", { 'version': 'v3' })
-				.request({
-					"ContactID": "987654321",
-					"ContactAlt": "passenger@mailjet.com",
-					"ListID": "123456",
-					"ListAlt": "abcdef123"
-				})
 
 		} catch (error) {
 			console.error(error);
-			success = false;
+		}
+
+		try {
+			// Continue anyway
+			const request = await mailjet
+				.post("listrecipient", { 'version': 'v3' })
+				.request({
+					"ContactAlt": email,
+					"ListID": 10278356,
+				});
+			// console.log(request.body);
+			state = RegisterStatus.Success;
+
+		} catch (error) {
+
+			let errorMessage = error?.ErrorMessage as string;
+			console.log(errorMessage)
+			if (errorMessage.toLowerCase().includes("already exists")) {
+				state = RegisterStatus.AlreadyRegistered;
+			} else {
+				state = RegisterStatus.ServerError;
+			}
 		}
 
 		return {
-			success,
+			state,
+			email,
 		};
 	},
 }

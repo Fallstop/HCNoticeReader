@@ -216,16 +216,7 @@
                     top: -$rainbow-thickness;
                     left: -$rainbow-thickness;
                     border-radius: 15px;
-                    background: linear-gradient(
-                        45deg,
-                        #fcf4c9 0%,
-                        #fee3e2 15%,
-                        #fbcdf2 30%,
-                        #e8befa 50%,
-                        #abbfff 65%,
-                        #bbf3c0 85%,
-                        #fcf4c9 100%
-                    );
+                    background: $pastel-gradient;
                     background-size: 300%;
                     animation: border 20s linear infinite;
                 }
