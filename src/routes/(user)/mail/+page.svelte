@@ -1,12 +1,11 @@
 <script lang="ts">
     import ArrowBack from "$lib/icons/ArrowBack.svelte";
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
-    import type { ActionData } from "../$types";
     import { enhance } from "$app/forms";
     import { RegisterStatus } from "./common";
     import { onMount } from "svelte";
 
-    export let form: { state: RegisterStatus, email: string } | undefined;
+    export let form: { state: RegisterStatus; email: string } | undefined;
 
     $: state = form?.state ?? RegisterStatus.Ready;
 
@@ -15,40 +14,46 @@
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
     onMount(() => {
-        console.log("Form state",state, form)
+        console.log("Form state", state, form);
         if (form?.state) {
             state = form.state;
         }
-    })
+    });
 </script>
 
 <HuanuiGlowingCenterBox>
     <h2>Daily Newsletter</h2>
     <div class="content">
         <p>
-            A daily newsletter of the notices and the timetable day is being
-            planned, you can register your interest and pre-join.
+            Can't remember to check the notices every day? Want a morning
+            summary of the school's events?<br />Register for the automated
+            Daily Notice Newsletter, it's the same as the website, but in your
+            email!<br />
+            You can
+            <a href="/mail/api/sendmail" target="_blank"
+                >preview the email here</a
+            >, it'll be sent to you every school day 8am sharp.
         </p>
         <form
             method="POST"
             action="?/register"
-            use:enhance={({ }) => {
+            use:enhance={({}) => {
                 state = RegisterStatus.Loading;
 
-                return async ({ result,update }) => {
-                  // `result` is an `ActionResult` object
-                  update({reset: false})
+                return async ({ result, update }) => {
+                    // `result` is an `ActionResult` object
+                    update({ reset: false });
                 };
-              }}
+            }}
         >
             <input
                 class="email"
                 type="email"
                 name="email"
                 placeholder="Email Address"
-                class:fail={state === RegisterStatus.ServerError || state === RegisterStatus.InvalidEmail}
-                class:success={state ===
-                    RegisterStatus.AlreadyCompleted ||
+                class:fail={state === RegisterStatus.ServerError ||
+                    state === RegisterStatus.InvalidEmail}
+                class:success={state === RegisterStatus.AlreadyCompleted ||
                     state === RegisterStatus.Success}
                 bind:value={emailValue}
             />
@@ -65,13 +70,23 @@
             {:else if state === RegisterStatus.Loading}
                 <p class="message">Submitting....</p>
             {:else}
-                <p class="message">You can <a href="/mail/unsubscribe">unsubscribe</a> at any time</p>
+                <p class="message">
+                    You can <a href="/mail/unsubscribe">unsubscribe</a> at any time
+                </p>
             {/if}
 
-            <div class="button-wrap" class:disabled={!emailValid} class:pressed={state === RegisterStatus.Loading}>
-                <input type="submit" value="Register" disabled={!emailValid}/>
+            <div
+                class="button-wrap"
+                class:disabled={!emailValid}
+                class:pressed={state === RegisterStatus.Loading}
+            >
+                <input type="submit" value="Register" disabled={!emailValid} />
             </div>
         </form>
+        <p class="warning">
+            Warning: This newsletter is still in early testing, while bugs are
+            ironed out, it might not hit every morning or even send twice!
+        </p>
     </div>
     <svelte:fragment slot="footer">
         <a href={`/`} class="footer-button">
@@ -195,6 +210,9 @@
                     }
                 }
             }
+        }
+        .warning {
+            color: #b1a500;
         }
     }
 

@@ -3,16 +3,18 @@
 	import PrintSymbol from "$lib/icons/PrintSymbol.svelte";
 	import NoticeBlock from "./NoticeBlock.svelte";
 
-	import { getContext } from "svelte";
+	import { getContext, onMount } from "svelte";
 	import InfoPopup from "$lib/components/InfoPopup.svelte";
 	import { formatDate } from "$lib/date";
-	import type { Dayjs } from "dayjs";
+	import {default as dayjs, type Dayjs} from "dayjs";
 	import type { Writable } from "svelte/store";
 	import CopyPopup from "$lib/components/CopyPopup.svelte";
 	import CopySymbol from "$lib/icons/CopySymbol.svelte";
     import { noticeMap, serverTime, timetableDayMap } from "$lib/stores";
     import MailSymbol from "$lib/icons/MailSymbol.svelte";
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
+    import { page } from "$app/stores";
+    import { browser } from "$app/environment";
 
 	const { open } = getContext("simple-modal") as any;
 
@@ -22,6 +24,9 @@
 	function openCopy() {
 		open(CopyPopup, { selectedDate });
 	}
+
+	$: urlSelectedDate = browser ? dayjs($page.url.searchParams.get("date")) : dayjs(null);
+	$: defaultDate = urlSelectedDate.isValid() ? urlSelectedDate : dayjs()
 
 	let selectedDate: Writable<Dayjs> | undefined;
 
@@ -33,10 +38,14 @@
 	if (data.serverTime) {
 		serverTime.set(data.serverTime)
 	}
+
+	onMount(()=>{
+		
+	})
 </script>
 
 <HuanuiGlowingCenterBox>
-	<NoticeBlock bind:selectedDate />
+	<NoticeBlock bind:selectedDate {defaultDate}/>
 	<svelte:fragment slot="footer">
 		<a
 			href={`/print/${formatDate($selectedDate ?? new Date())}`}

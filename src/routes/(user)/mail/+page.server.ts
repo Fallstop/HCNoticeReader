@@ -3,7 +3,7 @@ import type {Contact} from "node-mailjet";
 import {v4 as uuidv4} from 'uuid';
 
 import { RegisterStatus, type FormResponse } from "./common";
-import { mailjet } from "$lib/server/mailjet";
+import { HCNOTICES_MAILING_LIST_ID, mailjet } from "$lib/server/mailjet";
 
 
 
@@ -42,7 +42,7 @@ export const actions: Actions = {
 				.post("listrecipient", { 'version': 'v3' })
 				.request({
 					"ContactAlt": email,
-					"ListID": "10278356",
+					"ListID": HCNOTICES_MAILING_LIST_ID,
 				});
 			// console.log(request.body);
 			state = RegisterStatus.Success;
@@ -86,7 +86,7 @@ export const actions: Actions = {
 					ContactsLists: [
 						{
 							Action: "remove",
-							ListID: "10278356"	
+							ListID: HCNOTICES_MAILING_LIST_ID	
 						}
 					]
 				});

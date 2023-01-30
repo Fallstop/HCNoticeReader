@@ -1,67 +1,101 @@
 import type { RequestEvent } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
-import { getNoticeText, getTimeTableDay } from "$lib/api";
 
-import NoticeEmail from "./notice.mjml?raw";
+import { generateEmail } from "$lib/server/generateEmail";
 
-import mjml2html from "mjml";
-import htmlMinifier from "html-minifier";
-import { formatDate } from "$lib/date";
-import dayjs from "dayjs";
+import cronitorConstructor from "cronitor";
+
+import { HCNOTICES_MAILING_LIST_ID, mailjet } from "$lib/server/mailjet";
+import type { DraftCampaign } from "node-mailjet";
 
 const sendAuth = env.SECRET_SEND_AUTHENTICATION;
+const cronitorAuth = env.SECRET_CRONITOR_AUTHENTICATION;
+
+let cronitor: ReturnType<typeof cronitorConstructor> | null;
+
+if (cronitorAuth) {
+    cronitor = cronitorConstructor(cronitorAuth);
+} else {
+    cronitor = null
+}
 
 
-export async function GET({ request, fetch }: RequestEvent): Promise<Response> {
+// Generate preview of email
+export async function GET({ request, fetch: serverFetch }: RequestEvent): Promise<Response> {
+    return new Response((await generateEmail(serverFetch)).text, { status: 200, headers: { 'Content-Type': 'text/html' } });
+}
+
+// Send email manager
+export async function POST(requestEvent: RequestEvent): Promise<Response> {
+    const { request } = requestEvent;
+
     if (request.headers.get('Authorization') !== sendAuth) {
         return new Response('Unauthorized', { status: 401 })
     }
 
-    // Trigger Daily Notice Newsletter
+    let asyncWorker = sendMail;
 
-    const now = new Date(new Date().toLocaleString('en', {timeZone: 'pacific/auckland'}));
-
-    // Get notice data using server-side fetch
-    let noticeText = await getNoticeText(now, fetch);
-    let timetableDay = await getTimeTableDay(now, fetch);
-
-    // Render MJML
-    let renderedEmail = mjml2html(NoticeEmail,{});
-    if (renderedEmail.errors.length > 0) {
-        console.log("MJML Errors:");
+    if (cronitor) {
+        console.log("Running with cronitor monitoring")
+        // If using cronitor, wrap the send mail function in a cronitor wrapper
+        asyncWorker = cronitor.wrap('send-newsletter', sendMail);
+    } else {
+        console.log("Running without cronitor monitoring")
     }
-    for (let error in renderedEmail.errors) {
-        console.error(error);
-    }
-    let rawHTML = renderedEmail.html;
 
-    rawHTML = implantVars(rawHTML, {
-        "NOTICE_TEXT": noticeText.html,
-        "TIMETABLE_DAY": timetableDay,
-        "DATE": formatDate(now),
-        "DAY": dayjs(now).format("dddd"),
-        "EMAIL": "{{mj:contact.email}}",
-        "HOMEPAGE": "https://hcnotices.jmw.nz"
-    });
-
-    rawHTML = htmlMinifier.minify(rawHTML, {
-        collapseWhitespace: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-    });
-
-
-    return new Response(rawHTML, { status: 200 })
+    return await asyncWorker(requestEvent)
 }
 
-function implantVars(html: string, vars: Record<string, string>) {
-    for (let key in vars) {
-        html = html.replaceAll(`\${${key}}`, vars[key]);
+async function sendMail({ fetch: serverFetch }: RequestEvent): Promise<Response> {
+    try {
+        let emailToSend = await generateEmail(serverFetch);
+
+        if (!emailToSend.send) {
+            return new Response("No email to send", { status: 200 })
+        }
+        console.log("Creating Draft Campaign");
+        // Create Campaign
+        const campaignDraft = await mailjet.post("campaigndraft").request({
+            "Locale": "en_US",
+            "Sender": "HCNotices",
+            "SenderName": "HC Notices",
+            "SenderEmail": "hcnewsletter@jmw.nz",
+            "Subject": emailToSend.subject,
+            "ContactsListID": HCNOTICES_MAILING_LIST_ID,
+            "Title": emailToSend.campaignName,
+            "EditMode": "mjml"
+        });
+    
+        let draftID = (campaignDraft.body as DraftCampaign.PostCampaignDraftResponse).Data[0].ID;
+    
+        console.log("Created compaign draft with ID: " + draftID);
+    
+        // Fill campaign with content
+        await mailjet
+            .post("campaigndraft", { 'version': 'v3' })
+            .id(draftID)
+            .action("detailcontent")
+            .request({
+                "Headers": {},
+                "Html-part": emailToSend.renderedHTML,
+                "MJMLContent": emailToSend.mjml,
+                "Text-part": emailToSend.text
+            });
+    
+        // Send campaign
+        // const result = (await mailjet
+        //     .post("campaigndraft", {'version': 'v3'})
+        //     .id(draftID)
+        //     .action("send")
+        //     .request()).body as DraftCampaign.PostCampaignDraftSend;
+        // let statusCode = result.Data[0].Status.toLowerCase();
+        // if (statusCode !== "sent" && statusCode !== "programmed") {
+        //     console.log("Potential problem sending email",result.Data[0].Status)
+        //     return new Response("Potential problem sending email", { status: 500 })
+        // }
+    
+        return new Response("OK", { status: 200 });    
+    } catch {
+        return new Response("Unknown problem sending email", { status: 500 })
     }
-    return html;
 }
