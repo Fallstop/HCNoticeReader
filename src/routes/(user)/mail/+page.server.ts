@@ -3,7 +3,7 @@ import type {Contact} from "node-mailjet";
 import {v4 as uuidv4} from 'uuid';
 
 import { RegisterStatus, type FormResponse } from "./common";
-import { HCNOTICES_MAILING_LIST_ID, mailjet } from "$lib/server/mailjet";
+import { HCNOTICES_MAILING_LIST_ID, ensureMailjet, mailjet } from "$lib/server/mailjet";
 
 
 
@@ -20,6 +20,14 @@ export const actions: Actions = {
 		}
 
 		let state: RegisterStatus = RegisterStatus.ServerError;
+
+		if (!ensureMailjet() || !mailjet) {
+			console.log("Missing mailjet credentials!")
+			return {
+				state: RegisterStatus.ServerError,
+			};
+
+        }
 
 		try {
 			const nameID = uuidv4();
@@ -76,6 +84,12 @@ export const actions: Actions = {
 			};
 		}
 
+		if (!ensureMailjet() || !mailjet) {
+			console.log("Missing mailjet credentials!")
+			return {
+				state: RegisterStatus.ServerError,
+			};
+        }
 
 		try {
 			const request = await mailjet

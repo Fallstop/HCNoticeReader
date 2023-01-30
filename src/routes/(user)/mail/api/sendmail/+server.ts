@@ -5,11 +5,11 @@ import { generateEmail } from "$lib/server/generateEmail";
 
 import cronitorConstructor from "cronitor";
 
-import { HCNOTICES_MAILING_LIST_ID, mailjet } from "$lib/server/mailjet";
+import { HCNOTICES_MAILING_LIST_ID, ensureMailjet, mailjet } from "$lib/server/mailjet";
 import type { DraftCampaign } from "node-mailjet";
 
-const sendAuth = env.SECRET_SEND_AUTHENTICATION;
-const cronitorAuth = env.SECRET_CRONITOR_AUTHENTICATION;
+const sendAuth = env['SECRET_SEND_AUTHENTICATION'];
+const cronitorAuth = env['SECRET_CRONITOR_AUTHENTICATION'];
 
 let cronitor: ReturnType<typeof cronitorConstructor> | null;
 
@@ -54,6 +54,11 @@ async function sendMail({ fetch: serverFetch }: RequestEvent): Promise<Response>
             return new Response("No email to send", { status: 200 })
         }
         console.log("Creating Draft Campaign");
+        
+        if (!ensureMailjet() || !mailjet) {
+            return new Response("Mailjet not configured", { status: 500 })
+        }
+
         // Create Campaign
         const campaignDraft = await mailjet.post("campaigndraft").request({
             "Locale": "en_US",
