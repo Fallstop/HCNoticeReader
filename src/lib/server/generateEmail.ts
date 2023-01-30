@@ -21,7 +21,7 @@ interface Email {
 
 
 export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
-    const now = new Date(new Date("2022-05-24").toLocaleString('en', { timeZone: 'pacific/auckland' }));
+    const now = new Date(new Date().toLocaleString('en', { timeZone: 'pacific/auckland' }));
 
     // Get notice data using server-side fetch
     let noticeText = await getNoticeText(now, serverFetch);
