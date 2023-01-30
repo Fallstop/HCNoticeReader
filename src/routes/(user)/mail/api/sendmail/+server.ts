@@ -3,7 +3,6 @@ import { env } from "$env/dynamic/private";
 
 import { generateEmail } from "$lib/server/generateEmail";
 
-import cronitorConstructor from "cronitor";
 
 import { HCNOTICES_MAILING_LIST_ID, mailjet } from "$lib/server/mailjet";
 import type { DraftCampaign } from "node-mailjet";
@@ -11,10 +10,11 @@ import type { DraftCampaign } from "node-mailjet";
 const sendAuth = env.SECRET_SEND_AUTHENTICATION;
 const cronitorAuth = env.SECRET_CRONITOR_AUTHENTICATION;
 
-let cronitor: ReturnType<typeof cronitorConstructor> | null;
+let cronitor: any;
 
 if (cronitorAuth) {
-    cronitor = cronitorConstructor(cronitorAuth);
+    // cronitor = cronitorConstructor(cronitorAuth);
+    cronitor = null;
 } else {
     cronitor = null
 }
