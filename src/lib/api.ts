@@ -53,7 +53,7 @@ function processNoticeText(text: string): NoticeText {
 	// Fun Fact: If somebody edits the calendar event with some unknown piece of software,
 	// it will wipe all of the formatting. Fun. So we need also display a warning for that occurrence. 
 	let noticeTextBroken = false;
-	if (text.includes("<br>") == false && text.length > 24) {
+	if (text.includes("<br>") == false && text.length > 48) {
 		noticeTextBroken = true
 		// Contains no line breaks, so we should do it ourselves
 		// Punctuation outside of quotes

@@ -107,7 +107,7 @@
                 <div class="warning">
                     <h3>Warning:</h3>
                     <p>
-                        This notice's formatting is missing, so the
+                        This notice's formatting seems to be missing, so the
                         auto-formatting has had it's best guess at what the notice is
                         supposed to look like.
                     </p>
