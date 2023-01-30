@@ -26,7 +26,8 @@ COPY --from=0 /app/yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 # copy built SvelteKit app to /app
-COPY --from=0 /app/build ./
+COPY --from=0 /app/build ./build
+COPY --from=0 /app/static ./static
 
 EXPOSE 3000
-CMD ["node", "./index.js"]
+CMD ["node", "build"]
