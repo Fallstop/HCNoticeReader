@@ -5,6 +5,12 @@
 
 	import Modal from 'svelte-simple-modal';
 </script>
+
+<svelte:head>
+	<title>HC Daily Notices</title>
+	<meta name="description" content="Huanui College Daily Notices" />
+</svelte:head>
+
 <Modal
 unstyled={true}
 classBg="__modal-bg"
@@ -13,11 +19,11 @@ classWindow="__modal-window"
 classContent="__modal-content fancy-scrollbar"
 classCloseButton="__modal-close-button"
 >
-<div class="app">
-	<main>
-		<slot />
-	</main>
-</div>
+	<div class="app">
+		<main>
+			<slot />
+		</main>
+	</div>
 </Modal>
 
 <style lang="scss">

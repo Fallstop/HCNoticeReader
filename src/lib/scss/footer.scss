@@ -1,0 +1,45 @@
+@use "variables.scss" as *;
+
+$font-size: 1.5rem;
+$padding-height: 0.25rem;
+$line-height: 1.4;
+
+@mixin footer-button {
+    border: none;
+    background: none;
+    padding: $padding-height 1rem;
+    border-radius: 5px;
+    color: $color-text;
+    transition: background-color 150ms ease-in-out;
+    font-size: $font-size;
+    text-decoration: none;
+    box-sizing: border-box;
+    line-height: $line-height;
+
+    cursor: pointer;
+    &:hover {
+        background: $mid-tone;
+    }
+    border: $mid-tone solid 1px;
+    &:active {
+        background: $dark-tone;
+    }
+
+    :global(svg) {
+        height: 1.45rem;
+        position: relative;
+        top: 0.15em;
+        color: $color-text;
+        fill: $color-text;
+    }
+    @media screen and (max-width: $mobile-transition) {
+        flex: 1;
+        border-radius: 0;
+        font-size: 1.3rem;
+        padding: 0.2rem;
+        text-align: center;
+        :global(svg) {
+            height: 1.4rem;
+        }
+    }
+}

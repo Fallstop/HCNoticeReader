@@ -1,0 +1,94 @@
+<mjml>
+	<mj-head>
+		<mj-title>HC Notice Newsletter</mj-title>
+		<mj-preview>${NOTICE_TEXT}</mj-preview>
+		<mj-attributes>
+			<mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
+			<mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
+		</mj-attributes>
+		<mj-style inline="inline">
+			.body-section {
+				-webkit-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+				-moz-box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+				box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.15);
+			}
+		</mj-style>
+		<mj-style inline="inline">
+			.text-link {
+				color: #5e6ebf;
+			}
+		</mj-style>
+		<mj-style inline="inline">
+			.footer-link {
+				color: #888888;
+			}
+		</mj-style>
+		<mj-style>
+			a {
+				color: #1b1b1b;
+			}
+		</mj-style>
+
+	</mj-head>
+	<mj-body background-color="#E7E7E7" width="600px">
+		<mj-spacer></mj-spacer>
+		<mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
+			<mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
+				<mj-column width="50%" vertical-align="middle">
+						<mj-image src="${HOMEPAGE}/images/icons/icon-512x512.png" width="50px" align="left" href="${HOMEPAGE}"></mj-image>
+				</mj-column>
+				<mj-column width="50%" vertical-align="middle">
+					<mj-text align="right" font-size="20px">${DATE}</mj-text>
+				</mj-column>
+
+			</mj-section>
+			<mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
+				<mj-column width="100%">
+					<mj-text color="#212b35" font-weight="bold" font-size="20px" align="center">
+						Huanui College Daily Notice
+					</mj-text>
+					<mj-text color="#637381" font-size="30px" align="center">
+						Day ${TIMETABLE_DAY} - ${DAY}
+					</mj-text>
+					<mj-text color="#637381" font-size="16px">
+						${NOTICE_TEXT}
+					</mj-text>
+				</mj-column>
+			</mj-section>
+
+		</mj-wrapper>
+
+		<mj-wrapper full-width="full-width">
+			<mj-section padding="0">
+				<mj-column width="100%" padding="0">
+
+					<mj-text color="#445566" font-size="11px" font-weight="bold" align="center">
+					<a href="${HOMEPAGE}/?date=${DATE}">
+						View this notice in your browser
+					</mj-text>
+					<mj-text color="#445566" font-size="11px" align="center" line-height="16px">
+						You are receiving this email beacuse you registered to recieve them daily on the <a class="footer-link" href="${HOMEPAGE}">HCNotices website</a>.
+					</mj-text>
+				</mj-column>
+			</mj-section>
+			<mj-section padding-left="15px" padding-right="15px" padding-top="0" padding-bottom="0">
+				<mj-column width="100%">
+					<mj-button border="solid 1px #2c3e50" background-color="#E7E7E7" align="center" color="#000000" font-size="15px" font-weight="bold" href="${HOMEPAGE}/mail/unsubscribe?email=${EMAIL}" width="300px">
+						Big Unsubscribe Button
+					</mj-button>
+				</mj-column>
+			</mj-section>
+			<mj-section padding-top="0">
+				<mj-group>
+					<mj-column width="100%" padding-right="0">
+						<mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
+							<a class="footer-link" href="${HOMEPAGE}/mail/unsubscribe?email=${EMAIL}">Small Unsubscribe Link</a>
+						</mj-text>
+					</mj-column>
+				</mj-group>
+
+			</mj-section>
+		</mj-wrapper>
+
+	</mj-body>
+</mjml>

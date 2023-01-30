@@ -17,7 +17,7 @@
     const { dark: theme } = themes;
 
     // const defaultDate = dayjs(dev ? "2022-05-24" : undefined);
-    const defaultDate = dayjs();
+    export let defaultDate = dayjs();
 
     export let selectedDate = writable(defaultDate);
 
@@ -98,46 +98,45 @@
 </script>
 
 <svelte:window bind:innerWidth={windowInnerWidth} />
-<div class="container">
-    <header>
+<header>
+    <button
+        on:click={() => {
+            datepickerStore.add(-1, "day");
+        }}
+        aria-label="Previous Day"
+    >
+        <ArrowBack />
+        <span class="desktop-only"> Previous </span>
+    </button>
+    <Datepicker
+        {theme}
+        bind:store={datepickerStore}
+        let:key
+        let:send
+        let:receive
+        selected={defaultDate.toDate()}
+    >
         <button
-            on:click={() => {
-                datepickerStore.add(-1, "day");
-            }}
-            aria-label="Previous Day"
+            in:receive|local={{ key }}
+            out:send|local={{ key }}
+            class="calendar"
         >
-            <ArrowBack />
-            <span class="desktop-only"> Previous </span>
+            {dayjs($selectedDate).format("YYYY-MM-DD")}
         </button>
-        <Datepicker
-            {theme}
-            bind:store={datepickerStore}
-            let:key
-            let:send
-            let:receive
-            selected={defaultDate.toDate()}
-        >
-            <button
-                in:receive|local={{ key }}
-                out:send|local={{ key }}
-                class="calendar"
-            >
-                {dayjs($selectedDate).format("YYYY-MM-DD")}
-            </button>
-        </Datepicker>
-        <button
-            on:click={() => {
-                datepickerStore.add(1, "day");
-            }}
-            aria-label="Next Day"
-        >
-            <span class="desktop-only"> Next </span>
-            <ArrowForward />
-        </button>
-    </header>
-    <div class="transition-wrapper">
-        {#key $selectedDate}
-            <!-- Transition has to be split into in-out to force the animation to recompile every time -->
+    </Datepicker>
+    <button
+        on:click={() => {
+            datepickerStore.add(1, "day");
+        }}
+        aria-label="Next Day"
+    >
+        <span class="desktop-only"> Next </span>
+        <ArrowForward />
+    </button>
+</header>
+<div class="transition-wrapper">
+    {#key $selectedDate}
+        <!-- Transition has to be split into in-out to force the animation to recompile every time -->
 
             <div
                 class="data-container fancy-scrollbar"
@@ -168,84 +167,26 @@
                 </div>
             </div>
         {/key}
-        <div
-            class="day-change-indicator left"
-            class:hidden={$noticeXGestureOffset <= leftArrowWidth*0.9}
-            class:highlighted={$noticeXGestureOffset >= 100}
-            bind:clientWidth={leftArrowWidth}
-        >
-            <ArrowBack />
-        </div>
-        <div
-            class="day-change-indicator right"
-            class:hidden={$noticeXGestureOffset >= -rightArrowWidth*0.9}
-            class:highlighted={$noticeXGestureOffset <= -100}
-            bind:clientWidth={rightArrowWidth}
-        >
-            <ArrowForward />
-        </div>
+    <div
+        class="day-change-indicator left"
+        class:hidden={$noticeXGestureOffset <= leftArrowWidth*0.9}
+        class:highlighted={$noticeXGestureOffset >= 100}
+        bind:clientWidth={leftArrowWidth}
+    >
+        <ArrowBack />
+    </div>
+    <div
+        class="day-change-indicator right"
+        class:hidden={$noticeXGestureOffset >= -rightArrowWidth*0.9}
+        class:highlighted={$noticeXGestureOffset <= -100}
+        bind:clientWidth={rightArrowWidth}
+    >
+        <ArrowForward />
     </div>
 </div>
 
 <style lang="scss">
     @use "../../lib/scss/variables.scss" as *;
-    .container {
-        min-height: 70vh;
-        width: 100%;
-        border-radius: 10px;
-        position: relative;
-
-        display: flex;
-        flex-flow: column;
-        height: 100%;
-        background: $text-area-bg;
-
-        $rainbow-thickness: 5px;
-
-        &::before,
-        &::after {
-            content: "";
-            z-index: -1;
-            position: absolute;
-            width: calc(100% + $rainbow-thickness * 2);
-            height: calc(100% + $rainbow-thickness * 2);
-            top: -$rainbow-thickness;
-            left: -$rainbow-thickness;
-            border-radius: 15px;
-            background: linear-gradient(
-                45deg,
-                #fcf4c9 0%,
-                #fee3e2 15%,
-                #fbcdf2 30%,
-                #e8befa 50%,
-                #abbfff 65%,
-                #bbf3c0 85%,
-                #fcf4c9 100%
-            );
-            background-size: 300%;
-            animation: border 20s linear infinite;
-
-            @media screen and (max-width: $mobile-transition) {
-                width: calc(100%);
-                height: calc(100% + $rainbow-thickness);
-                left: 0;
-            }
-        }
-
-        &::after {
-            filter: blur(50px);
-        }
-
-        @keyframes border {
-            0%,
-            100% {
-                background-position: 0 0;
-            }
-
-            50% {
-                background-position: 300%;
-            }
-        }
 
         header {
             flex: 0 1 auto;
@@ -385,8 +326,6 @@
         }
 
         @media screen and (max-width: $mobile-transition) {
-            flex: 1;
-            border-bottom: none;
             .data-container {
                 overflow-y: auto;
                 overflow-x: hidden;
@@ -400,5 +339,4 @@
                 }
             }
         }
-    }
 </style>

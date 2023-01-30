@@ -15,6 +15,7 @@ export async function load({fetch, params, depends}: LoadEvent) {
     return {
         date: formatDate(now),
         noticeText,
-        timetableDay
+        timetableDay,
+        serverTime: now
     };
 }

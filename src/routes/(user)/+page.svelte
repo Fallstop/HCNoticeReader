@@ -3,14 +3,18 @@
 	import PrintSymbol from "$lib/icons/PrintSymbol.svelte";
 	import NoticeBlock from "./NoticeBlock.svelte";
 
-	import { getContext } from "svelte";
+	import { getContext, onMount } from "svelte";
 	import InfoPopup from "$lib/components/InfoPopup.svelte";
 	import { formatDate } from "$lib/date";
-	import type { Dayjs } from "dayjs";
+	import {default as dayjs, type Dayjs} from "dayjs";
 	import type { Writable } from "svelte/store";
 	import CopyPopup from "$lib/components/CopyPopup.svelte";
 	import CopySymbol from "$lib/icons/CopySymbol.svelte";
-    import { noticeMap, timetableDayMap } from "$lib/stores";
+    import { noticeMap, serverTime, timetableDayMap } from "$lib/stores";
+    import MailSymbol from "$lib/icons/MailSymbol.svelte";
+    import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
+    import { page } from "$app/stores";
+    import { browser } from "$app/environment";
 
 	const { open } = getContext("simple-modal") as any;
 
@@ -21,6 +25,9 @@
 		open(CopyPopup, { selectedDate });
 	}
 
+	$: urlSelectedDate = browser ? dayjs($page.url.searchParams.get("date")) : dayjs(null);
+	$: defaultDate = urlSelectedDate.isValid() ? urlSelectedDate : dayjs()
+
 	let selectedDate: Writable<Dayjs> | undefined;
 
 	export let data: import('./$types').PageData;
@@ -28,39 +35,50 @@
 		$noticeMap.set(data.date, data.noticeText);
 		$timetableDayMap.set(data.date, data.timetableDay);
 	}
+	if (data.serverTime) {
+		serverTime.set(data.serverTime)
+	}
+
+	onMount(()=>{
+		
+	})
 </script>
 
-<svelte:head>
-	<title>HC Daily Notices</title>
-	<meta name="description" content="Huanui College Daily Notices" />
-</svelte:head>
+<HuanuiGlowingCenterBox>
+	<NoticeBlock bind:selectedDate {defaultDate}/>
+	<svelte:fragment slot="footer">
+		<a
+			href={`/print/${formatDate($selectedDate ?? new Date())}`}
+			target="_blank"
+			rel="noreferrer"
+			class="footer-button"
+		>
+			<PrintSymbol />
+			<span class="desktop-only">Print</span>
+		</a>
+		<button on:click={openCopy} class="footer-button mobile-only">
+			<CopySymbol />
+			<span class="desktop-only">Copy</span>
+		</button>
+		<a
+			href={`/mail`}
+			class="footer-button"
+		>
+			<MailSymbol />
+			<span class="desktop-only">Mail</span>
+		</a>
+		<button on:click={openInfo} class="footer-button">
+			<InfoSymbol />
+			<span class="desktop-only">Info</span>
+		</button>
+	</svelte:fragment>
+	
+</HuanuiGlowingCenterBox>
 
-<section>
-	<h1>Huanui College Notices</h1>
-	<NoticeBlock bind:selectedDate />
-</section>
-<footer>
-	<a
-		href={`/print/${formatDate($selectedDate ?? new Date())}`}
-		target="_blank"
-		rel="noreferrer"
-		class="footer-button"
-	>
-		<PrintSymbol />
-		Print
-	</a>
-	<button on:click={openCopy} class="footer-button mobile-only">
-		<CopySymbol />
-		Copy
-	</button>
-	<button on:click={openInfo} class="footer-button">
-		<InfoSymbol />
-		Info
-	</button>
-</footer>
 
 <style lang="scss">
 	@use "../../lib/scss/variables.scss" as *;
+	@use "../../lib/scss/footer.scss" as *;
 
 	section {
 		display: flex;
@@ -77,79 +95,18 @@
 		}
 	}
 
-	footer {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-direction: row;
-		gap: 1rem;
-
-		.footer-button {
-			border: none;
-			background: none;
-			padding: 0.25rem 1rem;
-			border-radius: 5px;
-			color: $color-text;
-			transition: background-color 150ms ease-in-out;
-			font-size: 1.5rem;
-			text-decoration: none;
-
-			cursor: pointer;
-			&:hover {
-				background: $mid-tone;
-			}
-			border: $mid-tone solid 1px;
-			&:active {
-				background: $dark-tone;
-			}
-
-			:global(svg) {
-				height: 1.45rem;
-				position: relative;
-				top: 0.15em;
-				color: $color-text;
-				fill: $color-text;
-			}
-		}
-
-		@media screen and (max-width: $mobile-transition) {
-			gap: 0;
-			border-top: $mid-tone solid 1px;
-			background: rgba(0, 0, 0, 0.4);
-			.footer-button {
-				flex: 1;
-				border-radius: 0;
-				font-size: 1.2rem;
-				padding: 0.2rem;
-				text-align: center;
-				:global(svg) {
-					height: 1.2rem;
-				}
-			}
-		}
-	}
 	.mobile-only {
 		display: none;
 	}
 
+	.footer-button {
+		@include footer-button;
+	}
+
 	@media screen and (max-width: $mobile-transition) {
-		section {
-			justify-content: flex-start;
-			flex: 1;
-			h1 {
-				font-size: 1.5rem;
-				text-transform: none;
-				letter-spacing: normal;
-				margin-bottom: 1em;
-			}
-		}
 		.mobile-only {
 			display: unset;
 		}
 	}
-	@media screen and (max-height: 880px) {
-		section h1 {
-			margin: 0.5em;
-		}
-	}
+
 </style>

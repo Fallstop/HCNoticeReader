@@ -14,7 +14,7 @@ export async function getNoticeText(noticeDateToGet: Date | Dayjs, fetchFN: type
 	return processNoticeText(data["noticeText"] ?? "Unknown Error, please try again later.");
 }
 
-export async function getTimeTableDay(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch) {
+export async function getTimeTableDay(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch): Promise<string> {
 	let response = await fetchFN(
 		new Request(API_ROUTE + "gettimetableday/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
 	)
