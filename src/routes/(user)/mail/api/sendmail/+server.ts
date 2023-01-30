@@ -22,7 +22,7 @@ if (cronitorAuth) {
 
 // Generate preview of email
 export async function GET({ request, fetch: serverFetch }: RequestEvent): Promise<Response> {
-    return new Response((await generateEmail(serverFetch)).text, { status: 200, headers: { 'Content-Type': 'text/html' } });
+    return new Response((await generateEmail(serverFetch)).renderedHTML, { status: 200, headers: { 'Content-Type': 'text/html' } });
 }
 
 // Send email manager
@@ -83,16 +83,16 @@ async function sendMail({ fetch: serverFetch }: RequestEvent): Promise<Response>
             });
     
         // Send campaign
-        // const result = (await mailjet
-        //     .post("campaigndraft", {'version': 'v3'})
-        //     .id(draftID)
-        //     .action("send")
-        //     .request()).body as DraftCampaign.PostCampaignDraftSend;
-        // let statusCode = result.Data[0].Status.toLowerCase();
-        // if (statusCode !== "sent" && statusCode !== "programmed") {
-        //     console.log("Potential problem sending email",result.Data[0].Status)
-        //     return new Response("Potential problem sending email", { status: 500 })
-        // }
+        const result = (await mailjet
+            .post("campaigndraft", {'version': 'v3'})
+            .id(draftID)
+            .action("send")
+            .request()).body as DraftCampaign.PostCampaignDraftSend;
+        let statusCode = result.Data[0].Status.toLowerCase();
+        if (statusCode !== "sent" && statusCode !== "programmed") {
+            console.log("Potential problem sending email",result.Data[0].Status)
+            return new Response("Potential problem sending email", { status: 500 })
+        }
     
         return new Response("OK", { status: 200 });    
     } catch {

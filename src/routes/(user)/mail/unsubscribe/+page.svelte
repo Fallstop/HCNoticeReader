@@ -15,12 +15,9 @@
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
     onMount(() => {
-        // console.log("Form state",state, form)
-        // if (form?.state) {
-        //     state = form.state;
-        // }
         const startingEmail = $page.url.searchParams.get("email");
-        if (startingEmail) {
+        // Check not {{mj:contact.email}} temporarily, until I work out why Mailjet is not substituting it
+        if (startingEmail && startingEmail !== "{{mj:contact.email}}") {
             emailValue = startingEmail
         }
     });

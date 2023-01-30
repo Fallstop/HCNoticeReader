@@ -34,9 +34,15 @@
 		<mj-spacer></mj-spacer>
 		<mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
 			<mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
-				<mj-column width="100%" >
-					<mj-text align="right" padding="0">${DATE}</mj-text>
+				<mj-column width="50%" vertical-align="middle">
+						<mj-image src="${HOMEPAGE}/images/icons/icon-512x512.png" width="50px" align="left" href="${HOMEPAGE}"></mj-image>
 				</mj-column>
+				<mj-column width="50%" vertical-align="middle">
+					<mj-text align="right" font-size="20px">${DATE}</mj-text>
+				</mj-column>
+
+			</mj-section>
+			<mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
 				<mj-column width="100%">
 					<mj-text color="#212b35" font-weight="bold" font-size="20px" align="center">
 						Huanui College Daily Notice
