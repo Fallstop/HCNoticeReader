@@ -46,14 +46,14 @@ function processNoticeText(text: string): NoticeText {
 	// So, we must convert to html using the power of pain and suffering.
 	text = text.replaceAll(/(?:\r\n|\r|\n)/g, '<br>');
 
-	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines before/after)
-	text = text.replaceAll(/(?:\s|(?:<br\/?>))*[-+_~]{3,}(?:\s|(?:<br\/?>))*/g,"<hr>")
-
-
 	// Fun Fact: If somebody edits the calendar event with some unknown piece of software,
 	// it will wipe all of the formatting. Fun. So we need also display a warning for that occurrence. 
 	let noticeTextBroken = false;
-	if (text.includes("<br>") == false && text.length > 48) {
+	
+	// Checks if has breaks, or has <p></p> tags
+	let noticeHasNewLines = text.match(/<\/?br\/?>/g) || text.match(/<\s*\/p>\s*<p[^<>]*>/g)
+
+	if (!noticeHasNewLines && text.length > 48) {
 		noticeTextBroken = true
 		// Contains no line breaks, so we should do it ourselves
 		// Punctuation outside of quotes
@@ -61,8 +61,11 @@ function processNoticeText(text: string): NoticeText {
 		text = text.replaceAll(/" {2,}(?=[A-Z])/g,"<br>")
 	}
 
+	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines before/after)
+	text = text.replaceAll(/(?:\s|(?:<\/?br\/?>))*[-+_~]{3,}(?:\s|(?:<br\/?>))*/g,"<hr>")
+
 	// Find 3+ repeated <br> or <br/> and replace with <hr>
-	text = text.replaceAll(/(<br\/?>){3,}/g,"<hr>")
+	text = text.replaceAll(/(<\/?br\/?>){3,}/g,"<hr>")
 
 	// Render select markdown
 	text = text.replaceAll(/(\*\*|__)([^<>]*?)\1/g,"<b>$2</b>")
@@ -85,7 +88,7 @@ function processNoticeText(text: string): NoticeText {
 	// </div>
 	// This is mostly to support the swipe gesture element filtering
 	text = `<p>${text}</p>`
-	text = text.replaceAll(/<br\/?>/g,"</p><p>");
+	text = text.replaceAll(/<\/?br\/?>/g,"</p><p>");
 
 
 	// Clear up empty <p></p> back into <br>
