@@ -2,7 +2,6 @@ import { getNoticeText, getTimeTableDay } from "$lib/api";
 import { formatDate } from "$lib/date";
 import dayjs from "dayjs";
 import mjml2html from "mjml";
-import htmlMinifier from "html-minifier";
 
 import { stripHtml } from "string-strip-html";
 
@@ -41,23 +40,14 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
 
     // Render MJML
     const renderedEmail = mjml2html(mjmlTemplate, {});
-    if (renderedEmail.errors.length > 0) {
+    if (renderedEmail.errors.length > 0 && typeof renderedEmail.errors[0] === "object") {
         console.log("MJML Errors:");
-    }
-    for (let error in renderedEmail.errors) {
-        console.error(error);
+        for (let error in renderedEmail.errors) {
+            console.error(error);
+        }
     }
 
-    const renderedHTML = htmlMinifier.minify(renderedEmail.html, {
-        collapseWhitespace: true,
-        minifyCSS: true,
-        minifyJS: true,
-        removeComments: true,
-        removeEmptyAttributes: true,
-        removeRedundantAttributes: true,
-        removeScriptTypeAttributes: true,
-        removeStyleLinkTypeAttributes: true,
-    });
+    const renderedHTML = renderedEmail.html;
 
     let send = !!timetableDay && timetableDay != "N/A"
     send = send && noticeText.html.length > 10;
