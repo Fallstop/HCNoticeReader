@@ -54,11 +54,14 @@ function processNoticeText(text: string): NoticeText {
 	let noticeHasNewLines = text.match(/<\/?br\/?>/g) || text.match(/<\s*\/p>\s*<p[^<>]*>/g)
 
 	if (!noticeHasNewLines && text.length > 48) {
-		noticeTextBroken = true
 		// Contains no line breaks, so we should do it ourselves
 		// Punctuation outside of quotes
-		text = text.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>")
-		text = text.replaceAll(/" {2,}(?=[A-Z])/g,"<br>")
+		let reformattedText = text.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>");
+		reformattedText = reformattedText.replaceAll(/" {2,}(?=[A-Z])/g,"<br>");
+		if (reformattedText !== text) {
+			text = reformattedText;
+			noticeTextBroken = true;
+		}
 	}
 
 	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines before/after)
