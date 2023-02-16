@@ -41,6 +41,10 @@
                 state = RegisterStatus.Loading;
 
                 return async ({ result, update }) => {
+                    if (!result.hasOwnProperty('data')) {
+                        state = RegisterStatus.ServerError;
+                    }
+
                     // `result` is an `ActionResult` object
                     update({ reset: false });
                 };

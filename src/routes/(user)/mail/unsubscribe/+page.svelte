@@ -31,7 +31,11 @@
     }) {
         const data = result.data as FormResponse;
         console.log(data);
-        state = data.state;
+        if (!data) {
+            state = RegisterStatus.ServerError;
+        } else {
+            state = data.state;
+        }
         // `result` is an `ActionResult` object
         update({ reset: false });
     }

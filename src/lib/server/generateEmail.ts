@@ -40,12 +40,6 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
 
     // Render MJML
     const renderedEmail = mjml2html(mjmlTemplate, {});
-    if (renderedEmail.errors.length > 0 && typeof renderedEmail.errors[0] === "object") {
-        console.log("MJML Errors:");
-        for (let error in renderedEmail.errors) {
-            console.error(error);
-        }
-    }
 
     const renderedHTML = renderedEmail.html;
 
