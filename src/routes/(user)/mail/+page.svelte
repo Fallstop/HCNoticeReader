@@ -87,10 +87,10 @@
                 <input type="submit" value="Register" disabled={!emailValid} />
             </div>
         </form>
-        <p class="warning">
+        <!-- <p class="warning">
             Warning: This newsletter is still in early testing, while bugs are
             ironed out, it might not hit every morning or even send twice!
-        </p>
+        </p> -->
     </div>
     <svelte:fragment slot="footer">
         <a href={`/`} class="footer-button">
