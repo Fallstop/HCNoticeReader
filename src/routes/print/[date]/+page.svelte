@@ -5,6 +5,8 @@
     import { page } from '$app/stores';
     import SchoolDay from "$lib/components/SchoolDay.svelte";
 
+    import "@fontsource/fira-sans"; 
+
     let targetDate = new Date($page.params.date);
 
     let schoolDayLoaded: boolean;
@@ -40,7 +42,6 @@
 
 
 <style lang="scss">
-    @import '@fontsource/fira-sans';
 
     .container {
         flex: 1;
@@ -50,7 +51,7 @@
         flex-direction: column;
         justify-content: flex-start;
         box-sizing: border-box;
-        font-family: 'fira-sans';
+        font-family: 'Fira Sans';
 
         @media print {
             padding: 0;
@@ -78,6 +79,12 @@
             flex: 0 0 auto;
             color: #555;
             border-top: #bdbdbd solid 0.1rem;
+            @media print {
+                position: static; /* <-- Key line */
+                bottom: 0;
+                left: 0;
+                width: 100%;
+            }
         }
     }
     :global(body) {
