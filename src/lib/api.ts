@@ -53,7 +53,7 @@ function processNoticeText(text: string): NoticeText {
 	// Checks if has breaks, or has <p></p> tags
 	let noticeHasNewLines = text.match(/<\/?br\/?>/g) || text.match(/<\s*\/p>\s*<p[^<>]*>/g)
 
-	if (!noticeHasNewLines && text.length > 48) {
+	if (!noticeHasNewLines && text.length > 128) {
 		// Contains no line breaks, so we should do it ourselves
 		// Punctuation outside of quotes
 		let reformattedText = text.replaceAll(/[!?.]+(?=([^"]*"[^"]*")*[^"]*$)(?=( *[^=]))/g,"$&<br>");
