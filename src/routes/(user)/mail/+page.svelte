@@ -74,9 +74,13 @@
             {:else if state === RegisterStatus.Loading}
                 <p class="message">Submitting....</p>
             {:else}
-                <p class="message">
-                    You can <a href="/mail/unsubscribe">unsubscribe</a> at any time
+                <p class="message mobile">
+                    You can <a href="/mail/unsubscribe">unsubscribe</a> at any time.<br/>We will never share your email.
                 </p>
+                <p class="message desktop">
+                    You can <a href="/mail/unsubscribe">unsubscribe</a> at any time, we will never share your email.
+                </p>
+
             {/if}
 
             <div
@@ -154,6 +158,20 @@
                     color: $error;
                 }
                 margin-top: 0;
+
+
+                &.mobile {
+                    display: none;
+                }
+
+                @media screen and (max-width: $mobile-transition) {
+                    &.desktop {
+                        display: none;
+                    }
+                    &.mobile {
+                        display: block;
+                    }
+                }
             }
             .button-wrap {
                 $border-radius: 6px;
