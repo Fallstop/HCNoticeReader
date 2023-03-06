@@ -18,4 +18,4 @@ export function ensureMailjet() {
 	}
 }
 
-export const HCNOTICES_MAILING_LIST_ID = "10278356";
+export const HCNOTICES_MAILING_LIST_ID = env['SECRET_MJ_MAILING_LIST_ID'] || "10290601";

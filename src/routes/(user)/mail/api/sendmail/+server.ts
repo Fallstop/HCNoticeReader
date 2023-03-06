@@ -81,7 +81,9 @@ async function sendMail({ fetch: serverFetch }: RequestEvent): Promise<Response>
             .id(draftID)
             .action("detailcontent")
             .request({
-                "Headers": {},
+                "Headers": {
+                    "MJ-TemplateLanguage": "True",
+                },
                 "Html-part": emailToSend.renderedHTML,
                 "MJMLContent": emailToSend.mjml,
                 "Text-part": emailToSend.text

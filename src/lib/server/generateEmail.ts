@@ -31,7 +31,7 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
         "TIMETABLE_DAY": timetableDay,
         "DATE": formatDate(now),
         "DAY": dayjs(now).format("dddd"),
-        "EMAIL": "{{mj:contact.email}}",
+        "EMAIL": "[[EMAIL_TO]]",
         "HOMEPAGE": "https://hcnotices.jmw.nz"
     }
 
