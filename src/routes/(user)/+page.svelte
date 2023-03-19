@@ -44,6 +44,10 @@
 	})
 </script>
 
+<svelte:head>
+	<meta name="description" content="Easily view Huanui College Daily Notice's in a convenient and eye-pleasing form. Check old notices, and skip forward to future notices to get a snapshot of the school's happenings."/>
+</svelte:head>
+
 <HuanuiGlowingCenterBox>
 	<NoticeBlock bind:selectedDate {defaultDate}/>
 	<svelte:fragment slot="footer">

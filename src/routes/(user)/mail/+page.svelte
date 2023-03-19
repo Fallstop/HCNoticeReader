@@ -21,6 +21,10 @@
     });
 </script>
 
+<svelte:head>
+	<meta name="description" content="Can't remember to check Huanui College's Daily Notices every day? Want a morning summary of the school's events? Register for the automated Daily Notice Newsletter, it's the same as the website, but in your email!"/>
+</svelte:head>
+
 <HuanuiGlowingCenterBox>
     <h2>Daily Newsletter</h2>
     <div class="content">
