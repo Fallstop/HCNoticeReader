@@ -14,7 +14,7 @@
 
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
-    let mailSentMonth = 1000;
+    let mailSentMonth = 100;
     let percentCapacity = 0;
 
     let loadingTimers: NodeJS.Timer[] = [];
@@ -26,7 +26,7 @@
             state = form.state;
         }
         loadingTimers.push(setInterval(() => {
-            mailSentMonth = Math.round((Math.random() * 8998) + 1000)
+            mailSentMonth = Math.round((Math.random() * 898) + 100)
         }, 40));
 
         loadingTimers.push(setInterval(() => {

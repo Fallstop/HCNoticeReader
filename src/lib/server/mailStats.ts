@@ -2,12 +2,13 @@ import { HCNOTICES_MAILING_LIST_ID, ensureMailjet, mailjet } from "$lib/server/m
 
 import type { Statistic, ContactList } from "node-mailjet";
 import { memCache } from "./cache";
+import { dev } from "$app/environment";
 
 const cacheTTL = 60*30; // 1 hour
 
 export async function getContactListLength(): Promise<number> {
     const cacheResponse: number | undefined = memCache.get("contactListLength");
-    if (typeof cacheResponse !== "undefined") {
+    if (typeof cacheResponse !== "undefined" && !dev) {
         console.log("Using cached contact contactListLength", cacheResponse)
         return cacheResponse;
     }
@@ -30,7 +31,7 @@ export async function getContactListLength(): Promise<number> {
 
 export async function getEmailsLastMonth(): Promise<number> {
     const cacheResponse: number | undefined = memCache.get("emailsLastMonth");
-    if (typeof cacheResponse !== "undefined") {
+    if (typeof cacheResponse !== "undefined" && !dev) {
         console.log("Using cached contact emailsLastMonth", cacheResponse)
         return cacheResponse;
     }
@@ -43,7 +44,7 @@ export async function getEmailsLastMonth(): Promise<number> {
 
     // Pretend all months are 31 days long
     const interval = 31 * 24 * 60 * 60;
-    const currentTime = new Date().getTime();
+    const currentTime = (new Date().getTime()) / 1000; // UTC Timestamp in seconds
 
     const request = await mailjet
         .get("campaignoverview", {'version': 'v3'}).request({},{
@@ -52,6 +53,7 @@ export async function getEmailsLastMonth(): Promise<number> {
         });
     const fullStats = (request.body as Statistic.GetCampaignOverviewResponse);
     // Count number of processed emails in campaigns with a start time in the last month
+
     const sentMailLastMonth = fullStats.Data.reduce((acc, cur) => acc + (((currentTime - cur.SendTimeStart) < interval) ? cur.ProcessedCount : 0), 0);
     
     memCache.set("emailsLastMonth", sentMailLastMonth, cacheTTL);
