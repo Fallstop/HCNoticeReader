@@ -47,10 +47,10 @@
 					<mj-text color="#212b35" font-weight="bold" font-size="20px" align="center">
 						Huanui College Daily Notice
 					</mj-text>
-					<mj-text color="#637381" font-size="30px" align="center">
+					<mj-text color="#262b30" font-size="30px" align="center">
 						Day ${TIMETABLE_DAY} - ${DAY}
 					</mj-text>
-					<mj-text color="#637381" font-size="16px">
+					<mj-text color="#262b30" font-size="16px">
 						${NOTICE_TEXT}
 					</mj-text>
 				</mj-column>
