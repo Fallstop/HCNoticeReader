@@ -4,7 +4,8 @@
     import { enhance } from "$app/forms";
     import { RegisterStatus } from "./common";
     import { onMount } from "svelte";
-    import { getMailStats } from "$lib/api";
+    import { getMailStats, type MailStats } from "$lib/api";
+    import { fade } from "svelte/transition";
 
     export let form: { state: RegisterStatus; email: string } | undefined;
 
@@ -14,8 +15,7 @@
 
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
-    let mailSentMonth = 100;
-    let percentCapacity = 0;
+    let statsData: MailStats = null;
 
     let loadingTimers: NodeJS.Timer[] = [];
 
@@ -25,22 +25,7 @@
         if (form?.state) {
             state = form.state;
         }
-        loadingTimers.push(setInterval(() => {
-            mailSentMonth = Math.round((Math.random() * 898) + 100)
-        }, 40));
-
-        loadingTimers.push(setInterval(() => {
-            percentCapacity = Math.random()*0.99;
-        }, 40));
-
-
-        getMailStats().then((stats) => {
-            
-            loadingTimers.map((timer)=>clearInterval(timer));
-
-            mailSentMonth = stats.sentEmailsLastMonth;
-            percentCapacity = stats.capacityPercentage;
-        });
+        statsData = await getMailStats();
     });
 </script>
 
@@ -120,9 +105,12 @@
                 <input type="submit" value="Register" disabled={!emailValid} />
             </div>
         </form>
-        <p class="stats">
-            <span class="mono">{mailSentMonth}</span> emails sent this month, <span class="mono">{String(Math.round(percentCapacity*100)).padStart(2, '0')}%</span> of capacity.
-        </p>
+        {#if statsData}
+            <p class="stats" in:fade|local>
+                {statsData.sentEmailsLastMonth} emails sent this month, {Math.round(statsData.capacityPercentage*100)}% of capacity.
+            </p>
+        {/if}
+
     </div>
     <svelte:fragment slot="footer">
         <a href={`/`} class="footer-button">
@@ -269,10 +257,7 @@
             color: $mid-tone;
             margin-top: 2rem;
             font-size: 1.0rem;
-            font-weight: lighter;
-            .mono {
-                font-family: $font-mono;
-            }
+            font-weight: bold;
         }
     }
 
