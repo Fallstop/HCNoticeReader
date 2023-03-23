@@ -102,3 +102,15 @@ function processNoticeText(text: string): NoticeText {
 		isBroken: noticeTextBroken
 	}
 }
+
+export interface MailStats {
+	sentEmailsLastMonth: number;
+	contactListLength: number;
+	capacityPercentage: number;
+	signupKillSwitchPercentage: number;
+}
+export async function getMailStats(fetchFN: typeof fetch = fetch): Promise<MailStats> {
+	let response = await fetchFN("/mail/api/stats")
+	let data = await response.json();
+	return data;
+}

@@ -4,6 +4,7 @@
     import { enhance } from "$app/forms";
     import { RegisterStatus } from "./common";
     import { onMount } from "svelte";
+    import { getMailStats } from "$lib/api";
 
     export let form: { state: RegisterStatus; email: string } | undefined;
 
@@ -13,11 +14,33 @@
 
     $: emailValid = emailValue?.match(/.+@.+\..+/);
 
-    onMount(() => {
+    let mailSentMonth = 1000;
+    let percentCapacity = 0;
+
+    let loadingTimers: NodeJS.Timer[] = [];
+
+
+    onMount(async () => {
         console.log("Form state", state, form);
         if (form?.state) {
             state = form.state;
         }
+        loadingTimers.push(setInterval(() => {
+            mailSentMonth = Math.round((Math.random() * 8998) + 1000)
+        }, 40));
+
+        loadingTimers.push(setInterval(() => {
+            percentCapacity = Math.random()*0.99;
+        }, 40));
+
+
+        getMailStats().then((stats) => {
+            
+            loadingTimers.map((timer)=>clearInterval(timer));
+
+            mailSentMonth = stats.sentEmailsLastMonth;
+            percentCapacity = stats.capacityPercentage;
+        });
     });
 </script>
 
@@ -75,6 +98,8 @@
                 <p class="message success">You are already registered!</p>
             {:else if state === RegisterStatus.InvalidEmail}
                 <p class="message error">Email not valid</p>
+            {:else if state === RegisterStatus.OverSignupLimit}
+                <p class="message error">Sorry, too many people have signed up!</p>
             {:else if state === RegisterStatus.Loading}
                 <p class="message">Submitting....</p>
             {:else}
@@ -95,10 +120,9 @@
                 <input type="submit" value="Register" disabled={!emailValid} />
             </div>
         </form>
-        <!-- <p class="warning">
-            Warning: This newsletter is still in early testing, while bugs are
-            ironed out, it might not hit every morning or even send twice!
-        </p> -->
+        <p class="stats">
+            <span class="mono">{mailSentMonth}</span> emails sent this month, <span class="mono">{String(Math.round(percentCapacity*100)).padStart(2, '0')}%</span> of capacity.
+        </p>
     </div>
     <svelte:fragment slot="footer">
         <a href={`/`} class="footer-button">
@@ -119,7 +143,7 @@
 
     .content {
         padding: 1rem;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         text-align: center;
 
         form {
@@ -239,6 +263,16 @@
         }
         .warning {
             color: #b1a500;
+        }
+
+        .stats {
+            color: $mid-tone;
+            margin-top: 2rem;
+            font-size: 1.0rem;
+            font-weight: lighter;
+            .mono {
+                font-family: $font-mono;
+            }
         }
     }
 

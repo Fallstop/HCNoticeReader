@@ -115,7 +115,7 @@
 
     .content {
         padding: 1rem;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         text-align: center;
 
         form {

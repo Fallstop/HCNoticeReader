@@ -4,6 +4,7 @@ export enum RegisterStatus {
     AlreadyCompleted,
     Loading,
     InvalidEmail,
+    OverSignupLimit,
     Ready
 }
 

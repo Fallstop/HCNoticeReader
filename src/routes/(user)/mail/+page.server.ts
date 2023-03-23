@@ -3,7 +3,8 @@ import type {Contact} from "node-mailjet";
 import {v4 as uuidv4} from 'uuid';
 
 import { RegisterStatus, type FormResponse } from "./common";
-import { HCNOTICES_MAILING_LIST_ID, ensureMailjet, mailjet } from "$lib/server/mailjet";
+import { EMAIL_DAILY_CAPACITY, HCNOTICES_MAILING_LIST_ID, SIGNUP_KILL_SWITCH_PERCENTAGE, ensureMailjet, mailjet } from "$lib/server/mailjet";
+import { getContactListLength } from "$lib/server/mailStats";
 
 
 
@@ -26,8 +27,22 @@ export const actions: Actions = {
 			return {
 				state: RegisterStatus.ServerError,
 			};
-
         }
+
+		// Check the contact list length isn't over the set threshold
+		let signupOverQuota = false;
+		try {
+			signupOverQuota = (await getContactListLength() / EMAIL_DAILY_CAPACITY) > SIGNUP_KILL_SWITCH_PERCENTAGE;
+		} catch (error) {
+			// COntinue anyway
+			console.error(error);
+		}
+
+		if (signupOverQuota) {
+			return {
+				state: RegisterStatus.OverSignupLimit,
+			};
+		}
 
 		try {
 			const nameID = uuidv4();
@@ -56,7 +71,7 @@ export const actions: Actions = {
 			state = RegisterStatus.Success;
 
 		} catch (error) {
-			let errorMessage = error?.ErrorMessage as string;
+			let errorMessage = (error as any)?.ErrorMessage as string;
 			console.log(errorMessage);
 
 			if (errorMessage.toLowerCase().includes("already exists")) {
@@ -107,7 +122,7 @@ export const actions: Actions = {
 				console.log(request.body)
 			state = RegisterStatus.Success;
 		} catch (error) {
-			let errorMessage = error?.ErrorMessage as string;
+			let errorMessage = (error as any)?.ErrorMessage as string;
 			console.log("Error Message",errorMessage);
 
 			if (errorMessage.toLowerCase().includes("not found")) {

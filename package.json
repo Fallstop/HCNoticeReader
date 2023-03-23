@@ -32,6 +32,7 @@
 		"eslint": "^8.33.0",
 		"eslint-plugin-svelte3": "^4.0.0",
 		"mjml": "^4.13.0",
+		"node-cache": "^5.1.2",
 		"node-mailjet": "^6.0.2",
 		"sass": "^1.58.0",
 		"string-strip-html": "^13.1.0",

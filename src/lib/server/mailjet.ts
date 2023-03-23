@@ -18,4 +18,10 @@ export function ensureMailjet() {
 	}
 }
 
+// Defaults to dev mail list
 export const HCNOTICES_MAILING_LIST_ID = env['SECRET_MJ_MAILING_LIST_ID'] || "10290601";
+
+export const EMAIL_MONTHLY_CAPACITY = 6000;
+export const EMAIL_DAILY_CAPACITY = 200;
+
+export const SIGNUP_KILL_SWITCH_PERCENTAGE = 0.95;
