@@ -144,7 +144,7 @@
                 in:customFly|local={{ x: transitionX }}
                 out:fly|local={{ x: -transitionX }}
                 use:horizontalSwipe={{
-                    desktopElementBlockList: ["p","h2","h3"],
+                    desktopElementBlockList: ["p","h2","h3","strong","span","a","b"],
                     minSwipeDistance: 100,
                     touchAction: "pan-y",
                     xMovementStore: noticeXGestureOffset,
@@ -303,6 +303,9 @@
             opacity: 0.5;
             z-index: 3;
             transition: opacity 250ms ease;
+
+            pointer-events: none;
+
             :global(svg) {
                 color: $color-text;
                 fill: $color-text;
