@@ -243,11 +243,11 @@
             $rainbow-thickness: 2px;
             z-index: 0;
             .info {
-                border-radius: 15px;
                 position: relative;
                 z-index: 2;
                 background: $text-area-bg;
                 padding: 1em;
+                border-radius: 13px;
                 
                 text-align: left;
 

@@ -10,7 +10,7 @@
 	import type { Writable } from "svelte/store";
 	import CopyPopup from "$lib/components/CopyPopup.svelte";
 	import CopySymbol from "$lib/icons/CopySymbol.svelte";
-    import { noticeMap, serverTime, timetableDayMap } from "$lib/stores";
+    import { lunchtimeActivityMap, noticeMap, serverTime, timetableDayMap } from "$lib/stores";
     import MailSymbol from "$lib/icons/MailSymbol.svelte";
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
     import { page } from "$app/stores";
@@ -31,9 +31,10 @@
 	let selectedDate: Writable<Dayjs> | undefined;
 
 	export let data: import('./$types').PageData;
-	if (data.date && data.noticeText && data.timetableDay) {
+	if (data.date && data.noticeText && data.timetableDay && data.lunchtimeActivity) {
 		$noticeMap.set(data.date, data.noticeText);
 		$timetableDayMap.set(data.date, data.timetableDay);
+		$lunchtimeActivityMap.set(data.date, data.lunchtimeActivity);
 	}
 	if (data.serverTime) {
 		serverTime.set(data.serverTime)
