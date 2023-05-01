@@ -15,7 +15,9 @@
     function print(ready: boolean) {
         console.log("Printing", schoolDayLoaded, noticeLoaded)
         if (ready) {
-            window.print();
+            setTimeout(() => {
+                window.print();
+            }, 250);
         }
     }
 
