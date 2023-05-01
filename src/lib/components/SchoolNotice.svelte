@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { getNoticeText, type NoticeText } from "$lib/api";
+    import { getLunchtimeActivity, getNoticeText, type LunchtimeActivityIndex, type NoticeText } from "$lib/api";
     import { formatDate, type NormalisedDate } from "$lib/date";
-    import { noticeMap } from "$lib/stores";
+    import { lunchtimeActivityMap, noticeMap } from "$lib/stores";
     import type { Dayjs } from "dayjs";
     import dayjs from "dayjs";
     import { onMount, onDestroy } from "svelte";
     import NoticeContentLoader from "./NoticeContentLoader.svelte";
+    import { lookupLunchtimeActivity, type LunchtimeActivity } from "../../LunchTimeActivities";
 
     export let noticeText: string | null = null;
 
@@ -16,17 +17,29 @@
     export let refreshCache = true;
     export let dateChangerAvailable = false;
 
-    $: loaded = noticeText !== null;
+    let lunchTimeActivity: LunchtimeActivity | null = null;
+    let lunchTimeActivityIndex: LunchtimeActivityIndex | null = null;
+
+
+    $: loaded = noticeText !== null && lunchTimeActivityIndex !== null;
 
     $: brokenWarning = false;
+
 
     function updateNoticeData(map: Map<NormalisedDate, NoticeText | null>) {
         let noticeData = map.get(formatDate(date));
         noticeText = noticeData?.html ?? null;
         brokenWarning = noticeData?.isBroken ?? false;
     }
+    
+    function updateLunchtimeActivityData(map: Map<NormalisedDate, LunchtimeActivityIndex | null>) {
+        lunchTimeActivityIndex = map.get(formatDate(date)) ?? null;
+        lunchTimeActivity = lookupLunchtimeActivity(lunchTimeActivityIndex) ?? null;
+        console.log(lunchTimeActivity, lunchTimeActivityIndex)
+    }
 
     const unsub = noticeMap.subscribe(updateNoticeData);
+    const unsub2 = lunchtimeActivityMap.subscribe(updateLunchtimeActivityData);
 
     function getNoticeData() {
         if (!refreshCache && $noticeMap.has(formatDate(date)) && $noticeMap.get(formatDate(date)) != null) {
@@ -46,18 +59,45 @@
             .catch((err) => {
                 console.error(err);
                 setTimeout(getNoticeData, 1000);
-            });
+        });
+    }
+
+    function getLunchtimeActivityData() {
+        if (!refreshCache && $lunchtimeActivityMap.has(formatDate(date)) && $lunchtimeActivityMap.get(formatDate(date)) != null) {
+            $lunchtimeActivityMap = $lunchtimeActivityMap;
+            return;
+        }
+        $lunchtimeActivityMap.set(formatDate(date), null);
+        $lunchtimeActivityMap = $lunchtimeActivityMap;
+
+        console.log("Starting lunchtime activity worker, claiming ", formatDate(date));
+        getLunchtimeActivity(date)
+            .then((data) => {
+                console.log("Got lunchtime data! ", formatDate(date), data);
+                $lunchtimeActivityMap.set(formatDate(date), data);
+                $lunchtimeActivityMap = $lunchtimeActivityMap;
+            })
+            .catch((err) => {
+                console.error(err);
+                setTimeout(getLunchtimeActivityData, 1000);
+        });
+
     }
 
     onMount(async () => {
         if (!$noticeMap.has(formatDate(date))) {
             getNoticeData();
         }
+        if (!$lunchtimeActivityMap.has(formatDate(date))) {
+            getLunchtimeActivityData();
+        }
         updateNoticeData($noticeMap);
+        updateLunchtimeActivityData($lunchtimeActivityMap);
     });
 
     onDestroy(() => {
         unsub();
+        unsub2();
     });
 
     $: outerContainerWidth = 0;
@@ -103,8 +143,8 @@
         />
     {:else if currentState === CurrentState.LoadedNotice}
         {#if brokenWarning}
-            <div class="warning-wrapper">
-                <div class="warning">
+            <div class="info-wrapper">
+                <div class="info">
                     <h3>Warning:</h3>
                     <p>
                         This notice's formatting seems to be missing, so the
@@ -128,6 +168,16 @@
         {#if dateChangerAvailable}
             <p>Click on the "<span class="nobr">{formatDate(date)}</span>" button to select another day.</p>
         {/if}
+    {/if}
+    {#if lunchTimeActivity}
+        <div class="info-wrapper">
+            <div class="info">
+                <h3>Lunchtime Activity: {lunchTimeActivity.title}</h3>
+                <p>
+                    Today's lunchtime activity is run by <span class="activity-names">{lunchTimeActivity.names.join(", ")}</span> in <span class="activity-room"></span>{lunchTimeActivity.room ?? "an unknown room"}.
+                </p>
+            </div>
+        </div>
     {/if}
 </div>
 
@@ -185,25 +235,36 @@
                 }
             }
         }
-        .warning-wrapper {
+        .info-wrapper {
             border-radius: 10px;
             position: relative;
             color: #ffffff;
             margin: 0.5em 0;
             $rainbow-thickness: 2px;
             z-index: 0;
-            .warning {
+            .info {
                 border-radius: 15px;
                 position: relative;
                 z-index: 2;
                 background: $text-area-bg;
                 padding: 1em;
+                
+                text-align: left;
+
                 @media print {
                     background: #fff;
                 }
+
                 p,
                 h3 {
                     margin: 0;
+                }
+                h3 {
+                    font-size: 1rem;
+                    margin-bottom: 0.5em;
+                }
+                .activity-names, .activity-room {
+                    font-weight: bold;
                 }
             }
             @media screen {

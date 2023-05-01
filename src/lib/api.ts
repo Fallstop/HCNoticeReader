@@ -2,6 +2,11 @@ import dayjs, { Dayjs } from "dayjs";
 
 const API_ROUTE = "https://hctools.jmw.nz/api/";
 
+export interface NoticeText {
+	html: string;
+	isBroken: boolean;
+}
+
 export async function getNoticeText(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch): Promise<NoticeText> {
 	let response = await fetchFN(
 		new Request(API_ROUTE + "getdailynotice/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
@@ -24,10 +29,23 @@ export async function getTimeTableDay(noticeDateToGet: Date | Dayjs, fetchFN: ty
 	return timeTableDayText || "";
 }
 
-export interface NoticeText {
-	html: string;
-	isBroken: boolean;
+export interface LunchtimeActivityIndex {
+	weekDay: number,
+	weekRotation: number
+}  
+
+export async function getLunchtimeActivity(noticeDateToGet: Date | Dayjs, fetchFN: typeof fetch = fetch): Promise<LunchtimeActivityIndex> {
+	let response = await fetchFN(
+		new Request(API_ROUTE + "getlunchtimeactivity/" + dayjs(noticeDateToGet).format("YYYY-MM-DD"))
+	)
+	let data = await response.json();
+	if (data["error"]) {
+		throw new Error(data["error"]);
+	}
+	return data;
 }
+
+
 
 function processNoticeText(text: string): NoticeText {
 	if (!text) {

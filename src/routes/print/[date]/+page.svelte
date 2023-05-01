@@ -26,7 +26,7 @@
 <div class="container">
     <div class="date-info-container">
         <div>
-            {dayjs(targetDate).format("YYYY-MM-DD, dddd")}
+            {dayjs(targetDate).format("YYYY-MM-DD | dddd")}
         </div>
         <div>
             Timetable Day: <SchoolDay date={targetDate} fancyLoader={false} bind:loaded={schoolDayLoaded} bind:timetableDay/>
