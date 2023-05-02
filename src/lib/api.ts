@@ -82,8 +82,9 @@ function processNoticeText(text: string): NoticeText {
 		}
 	}
 
-	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines before/after)
-	text = text.replaceAll(/(?:\s|(?:<\/?br\/?>))*[-+_~]{3,}(?:\s|(?:<br\/?>))*/g,"<hr>")
+
+	// Find 3+ repeated -,_,+,~ and replace with <hr> (also wipes out any spaces/newlines/p tags before/after)
+	text = text.replaceAll(/(?:(?:<\s*p\s*>)|\s|(?:<\/?br\/?>))*[-+_~]{3,}(?:\s|(?:<br\/?>)|(?:<\s*\/\s*p\s*>))*/g,"<hr>")
 
 	// Find 3+ repeated <br> or <br/> and replace with <hr>
 	text = text.replaceAll(/(<\/?br\/?>){3,}/g,"<hr>")
@@ -108,9 +109,18 @@ function processNoticeText(text: string): NoticeText {
 	//  	</p>
 	// </div>
 	// This is mostly to support the swipe gesture element filtering
-	text = `<p>${text}</p>`
+
 	text = text.replaceAll(/<\/?br\/?>/g,"</p><p>");
 
+	// Clear any starting or ending p tags, we will add them back if needed
+	text = text.replaceAll(/^\s*<\/?p>/g,"").replaceAll(/<\/?p>\s*$/g,"");
+
+	// Checks if last/first p tag needs completing
+	let needsStartOpeningTag = text.indexOf("</p>") > -1 ? text.indexOf("</p>")<text.indexOf("<p>") : false;
+	let needsEndClosingTag = text.lastIndexOf("<p>")>text.lastIndexOf("</p>");
+
+	// Then add them back
+	text = `${needsStartOpeningTag ? "<p>" : ""}${text}${needsEndClosingTag ? "</p>" : ""}`
 
 	// Clear up empty <p></p> back into <br>
 	text = text.replaceAll(/<p>(:?\s|(:?[^<](^|>)+))*<\/p>/g,"<br/>");
