@@ -17,7 +17,7 @@
     export let refreshCache = true;
     export let dateChangerAvailable = false;
 
-    let lunchTimeActivity: LunchtimeActivity | null = null;
+    let lunchTimeActivity: LunchtimeActivity[] | null = null;
     let lunchTimeActivityIndex: LunchtimeActivityIndex | null = null;
 
 
@@ -170,23 +170,27 @@
         {/if}
     {/if}
     {#if lunchTimeActivity}
-        <div class="info-wrapper">
-            <div class="info">
-                <h3>Lunchtime Activity: {lunchTimeActivity.title}</h3>
-                <p>
-                    Today's lunchtime activity is run by <span class="activity-names">{lunchTimeActivity.names.join(", ")}</span> in <span class="activity-room"></span>{lunchTimeActivity.room ?? "an unknown room"}.
-                </p>
+        {#each lunchTimeActivity as activity}
+            <div class="info-wrapper">
+                <div class="info">
+                    <h3>Lunchtime Activity: {activity.title}</h3>
+                    <p>
+                        Today's lunchtime activity is run by <span class="activity-names">{activity.names.join(", ")}</span> in <span class="activity-room"></span>{activity.room || "an unknown room"}.
+                    </p>
+                </div>
             </div>
-        </div>
+        {/each}
     {/if}
+    <!-- Break is needed to fix random lack of margin -->
+    <br/>
 </div>
 
 <style lang="scss">
     @use "../../lib/scss/variables.scss" as *;
     .outer-container {
         width: 100%;
+        padding-bottom: 1rem;
         .notice {
-            padding-bottom: 1em;
             word-wrap: break-word;
             &.light :global(hr) {
                 background-image: linear-gradient(to right, #ccc, #333, #ccc);
@@ -239,7 +243,7 @@
             border-radius: 10px;
             position: relative;
             color: #ffffff;
-            margin: 0.5em 0;
+            margin: 1.5rem 0;
             $rainbow-thickness: 2px;
             z-index: 0;
             .info {

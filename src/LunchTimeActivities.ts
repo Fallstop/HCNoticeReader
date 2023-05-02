@@ -20,74 +20,81 @@ export interface LunchtimeActivity {
 // Friday,Games in gym ,,Craven Whithead,Eunwoo Lee,Niko Firth,Justus Huneke
 // Friday,Film,,Ariya Naidoo,Esther Wiegesma,Daniel Barton,
 
-let lunchtimeActivities: LunchtimeActivity[][] = [
+let lunchtimeActivities: LunchtimeActivity[][][] = [
     [
-        {
+        [{
             title: "Quiz/Music",
             names: ["Rohit Rajaraman", "Nate Owens", "Alex Horwood", "Evan Hostad"],
-            room: "OB's room"
-        },
-        {
+            room: "OB's room (H6)"
+        }],
+        [{
             title: "Games in gym",
             names: ["Carl Mauer-Mclaine", "Zac Groshinski", "Riley Syers"],
             room: "the Gym"
-        },
-        {
+        }],
+        [{
             title: "Quiz/Films",
             names: ["Runyararo Manjala", "Danae Segessenmann", "Abby Lunn"],
-            room: "Mrs Koning's room"  
-        },
-        {
-            title: "Film",
-            names: ["Helena Newman", "Taron Snowsill", "Emily Merry", "Seamus Howard"],
-            room: ""
-        },
-        {
-            title: "Quiz/Films",
-            names: ["Lucy Nichols", "Sinead Gordon", "Oliver Heswall"],
-            room: ""
-        },
-        {
-            title: "Boardgames/Crafts",
-            names: ["Ayana Dagan", "Mutsawashe Mugutso", "Clara Isles", "Isabela Cameron"],
-            room: ""
-        }
+            room: "Mrs Koning's room (U2)"
+        }],
+        [
+            {
+                title: "Film",
+                names: ["Helena Newman", "Taron Snowsill", "Emily Merry", "Seamus Howard"],
+                room: "Mr OB's Room (H6)"
+            },
+            {
+                title: "Quiz/Films",
+                names: ["Lucy Nichols", "Sinead Gordon", "Oliver Heswall"],
+                room: ""
+            }
+        ],
+        [
+            {
+                title: "Boardgames/Crafts",
+                names: ["Ayana Dagan", "Mutsawashe Mugutso", "Clara Isles", "Isabela Cameron"],
+                room: "Mr OB's Room (H6)"
+            }
+        ]
     ],
     [
-        {
+        [{
             title: "Chess",
             names: ["Ryan Jones", "Rome Hepi", "Isaac Xie", "Ethan Williams"],
             room: ""
-        },
-        {
+        }],
+        [{
             title: "Boardgames/Crafts",
             names: ["Junghyun Lim", "Isabella Welford", "Madison Diamond"],
-            room: "A1"
-        },
-        {
+            room: "Mrs Evan's room (A1)"
+        }],
+        [{
             title: "Music Sessions",
             names: ["Tobias Grove", "Mataariki Aplin", "Rohit Rajaraman", "Evan Hostad"],
-            room: "the Music Room"
-        },
-        {
+            room: "the Music room"
+        }],
+        [{
             title: "Film",
             names: ["Giverney Miedema", "Takaimaania Ngata-henare", "Hannah Campi"],
             room: ""
-        },
-        {
-            title: "Games in gym",
-            names: ["Craven Whithead", "Eunwoo Lee", "Niko Firth", "Justus Huneke"],
-            room: ""
-        },
-        {
-            title: "Film",
-            names: ["Ariya Naidoo", "Esther Wiegesma", "Daniel Barton"],
-            room: ""
-        }
+        }],
+        [
+            {
+                title: "Games in gym",
+                names: ["Craven Whithead", "Eunwoo Lee", "Niko Firth", "Justus Huneke"],
+                room: "the Gym"
+            },
+            {
+                title: "Film",
+                names: ["Ariya Naidoo", "Esther Wiegesma", "Daniel Barton"],
+                room: ""
+            }
+        ]
     ]
 ];
 
-export function lookupLunchtimeActivity(index: LunchtimeActivityIndex | null): LunchtimeActivity | null {
-    if (!index || index.weekDay === null || index.weekDay === null) {return null}
-    return lunchtimeActivities[index.weekRotation][index.weekDay];
+export function lookupLunchtimeActivity(index: LunchtimeActivityIndex | null): LunchtimeActivity[] | null {
+    if (!index) { return null }
+    if (index.weekDay === null || index.weekDay === null) return []
+    return lunchtimeActivities[index.weekRotation][index.weekDay] || [];
 }
