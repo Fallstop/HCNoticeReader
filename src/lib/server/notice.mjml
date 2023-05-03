@@ -1,7 +1,7 @@
 <mjml>
 	<mj-head>
 		<mj-title>HC Notice Newsletter</mj-title>
-		<mj-preview>${NOTICE_TEXT}</mj-preview>
+		<mj-preview>{{NOTICE_TEXT}}</mj-preview>
 		<mj-attributes>
 			<mj-all font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-all>
 			<mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"></mj-text>
@@ -35,10 +35,10 @@
 		<mj-wrapper padding-top="0" padding-bottom="0" css-class="body-section">
 			<mj-section background-color="#ffffff" padding-left="15px" padding-right="15px">
 				<mj-column width="50%" vertical-align="middle">
-						<mj-image src="${HOMEPAGE}/images/icons/icon-512x512.png" width="50px" align="left" href="${HOMEPAGE}"></mj-image>
+						<mj-image src="{{HOMEPAGE}}/images/icons/icon-512x512.png" width="50px" align="left" href="{{HOMEPAGE}}"></mj-image>
 				</mj-column>
 				<mj-column width="50%" vertical-align="middle">
-					<mj-text align="right" font-size="20px">${DATE}</mj-text>
+					<mj-text align="right" font-size="20px">{{DATE}}</mj-text>
 				</mj-column>
 
 			</mj-section>
@@ -48,12 +48,36 @@
 						Huanui College Daily Notice
 					</mj-text>
 					<mj-text color="#262b30" font-size="30px" align="center">
-						Day ${TIMETABLE_DAY} - ${DAY}
+						Day {{TIMETABLE_DAY}} - {{DAY}}
 					</mj-text>
 					<mj-text color="#262b30" font-size="16px">
-						${NOTICE_TEXT}
+						{{NOTICE_TEXT}}
 					</mj-text>
 				</mj-column>
+				{{#each LUNCHTIME_ACTIVITIES}}
+				<mj-column width="100%">
+					<mj-divider border-color="#DFE3E8" border-width="1px" />
+					<mj-text color="#262b30" font-size="16px">
+						<b>Lunchtime Activity - {{this.title}}</b>
+					</mj-text>
+					<mj-text color="#262b30" font-size="16px">
+						{{#if ../LUNCHTIME_ACTIVITIES.[1]}}
+							One of today's
+						{{else}}
+							Today's
+						{{/if}}
+						lunchtime activity is run by 
+						<i>{{#each this.names}}
+							{{this}},
+						{{/each}}</i>
+						{{#if this.room}}
+							in {{this.room}}
+						{{else}}
+							in an unknown room
+						{{/if}}.
+					</mj-text>
+				</mj-column>
+				{{/each}}
 			</mj-section>
 
 		</mj-wrapper>
@@ -73,7 +97,7 @@
 			</mj-section>
 			<mj-section padding-left="15px" padding-right="15px" padding-top="0" padding-bottom="0">
 				<mj-column width="100%">
-					<mj-button border="solid 1px #2c3e50" background-color="#E7E7E7" align="center" color="#000000" font-size="15px" font-weight="bold" href="${HOMEPAGE}/mail/unsubscribe?email=${EMAIL}" width="300px">
+					<mj-button border="solid 1px #2c3e50" background-color="#E7E7E7" align="center" color="#000000" font-size="15px" font-weight="bold" href="{{HOMEPAGE}}/mail/unsubscribe?email={{EMAIL}}" width="300px">
 						Big Unsubscribe Button
 					</mj-button>
 				</mj-column>
@@ -82,7 +106,7 @@
 				<mj-group>
 					<mj-column width="100%" padding-right="0">
 						<mj-text color="#445566" font-size="11px" align="center" line-height="16px" font-weight="bold">
-							<a class="footer-link" href="${HOMEPAGE}/mail/unsubscribe?email=${EMAIL}">Small Unsubscribe Link</a>
+							<a class="footer-link" href="{{HOMEPAGE}}/mail/unsubscribe?email={{EMAIL}}">Small Unsubscribe Link</a>
 						</mj-text>
 					</mj-column>
 				</mj-group>

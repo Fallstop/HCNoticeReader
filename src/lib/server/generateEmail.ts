@@ -1,11 +1,14 @@
-import { getNoticeText, getTimeTableDay } from "$lib/api";
+import { getLunchtimeActivity, getNoticeText, getTimeTableDay } from "$lib/api";
 import { formatDate } from "$lib/date";
 import dayjs from "dayjs";
 import mjml2html from "mjml";
 
 import { stripHtml } from "string-strip-html";
 
-import NoticeEmailTemplate from "./notice.mjml?raw";
+import NoticeEmailRawTemplate from "./notice.mjml?raw";
+
+import Handlebars from "handlebars";
+import { lookupLunchtimeActivity } from "../../LunchTimeActivities";
 
 
 interface Email {
@@ -17,14 +20,16 @@ interface Email {
     campaignName: string;
 }
 
-
+const noticeCompiledTemplate = Handlebars.compile(NoticeEmailRawTemplate,{noEscape: true})
 
 export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
-    const now = new Date(new Date().toLocaleString('en', { timeZone: 'pacific/auckland' }));
+    const now = new Date(new Date("2023-05-04").toLocaleString('en', { timeZone: 'pacific/auckland' }));
 
     // Get notice data using server-side fetch
     let noticeText = await getNoticeText(now, serverFetch);
     let timetableDay = await getTimeTableDay(now, serverFetch);
+    let lunchtimeActivitiesIndex = await getLunchtimeActivity(now, serverFetch);
+    let lunchtimeActivities = lookupLunchtimeActivity(lunchtimeActivitiesIndex);
 
     const EMAIL_VARS = {
         "NOTICE_TEXT": noticeText.html || "No notice text found",
@@ -32,10 +37,12 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
         "DATE": formatDate(now),
         "DAY": dayjs(now).format("dddd"),
         "EMAIL": "[[EMAIL_TO]]",
-        "HOMEPAGE": "https://hcnotices.jmw.nz"
+        "HOMEPAGE": "https://hcnotices.jmw.nz",
+        "LUNCHTIME_ACTIVITIES": lunchtimeActivities || []
     }
 
-    const mjmlTemplate = implantVars(NoticeEmailTemplate, EMAIL_VARS);
+    // const mjmlTemplate = implantVars(NoticeEmailRawTemplate, EMAIL_VARS);
+    const mjmlTemplate = noticeCompiledTemplate(EMAIL_VARS)
 
 
     // Render MJML
@@ -57,25 +64,28 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
 `${subject}
 ${textOnlyNotice.result}
 
-~~~~
-This is a newsletter sent by the HC Notices website (\${HOMEPAGE}). You can unsubscribe at any time by clicking the link at the bottom of this email.
-\${HOMEPAGE}/mail/unsubscribe?email=\${EMAIL}`;
+{{#each LUNCHTIME_ACTIVITIES}}
+~~~ Lunchtime Activity - {{this.title}} ~~~
+{{#if ../LUNCHTIME_ACTIVITIES.[1]}}
+One of today's{{else}}Today's{{/if}} lunchtime activity is run by {{#each this.names}}{{this}}, {{/each}}{{#if this.room}}in {{this.room}}{{else}}in an unknown room{{/if}}.
 
-    textOnlyEmail = implantVars(textOnlyEmail, EMAIL_VARS);
+{{/each}}
+
+~~~~
+This is a newsletter sent by the HC Notices website ({{HOMEPAGE}}). You can unsubscribe at any time by clicking the link at the bottom of this email.
+{{HOMEPAGE}}/mail/unsubscribe?email={{EMAIL}}`;
+
+    const textOnlyEmailCompiled = Handlebars.compile(textOnlyEmail)
+
+    const textOnlyEmailSubbed = textOnlyEmailCompiled(EMAIL_VARS);
+    console.log(textOnlyEmailSubbed);
 
     return {
         renderedHTML,
-        text: textOnlyEmail,
+        text: textOnlyEmailSubbed,
         send,
         subject,
         campaignName,
         mjml: mjmlTemplate
     };
-}
-
-function implantVars(html: string, vars: Record<string, string>) {
-    for (let key in vars) {
-        html = html.replaceAll(`\${${key}}`, vars[key]);
-    }
-    return html;
 }
