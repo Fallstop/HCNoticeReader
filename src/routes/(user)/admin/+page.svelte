@@ -1,13 +1,9 @@
 <script lang="ts">
     import ArrowBack from "$lib/icons/ArrowBack.svelte";
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
-    import { enhance } from "$app/forms";
-    import { onMount } from "svelte";
-    import { getMailStats, postRefreshCache, type MailStats } from "$lib/api";
-    import { fade } from "svelte/transition";
+    import { postRefreshCache } from "$lib/api";
     import { adminToken } from "$lib/stores";
     import { ClearCacheStatus } from "./common";
-    import { prevent_default } from "svelte/internal";
 
     let clearCacheStatus: ClearCacheStatus;
 

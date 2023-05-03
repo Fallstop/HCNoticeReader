@@ -300,6 +300,7 @@
             @media print {
                 color: black;
                 border: solid 0.2rem #aaa;
+                break-inside: avoid;
             }
         }
 
