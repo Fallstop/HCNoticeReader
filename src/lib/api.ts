@@ -1,5 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
+import { ClearCacheStatus } from "../routes/(user)/admin/common";
 
+// const API_ROUTE = "http://localhost:8080/api/";
 const API_ROUTE = "https://hctools.jmw.nz/api/";
 
 export interface NoticeText {
@@ -27,6 +29,25 @@ export async function getTimeTableDay(noticeDateToGet: Date | Dayjs, fetchFN: ty
 	let timeTableDayText = data["currentDay"]?.toString() || "N/A";
 
 	return timeTableDayText || "";
+}
+
+export async function postRefreshCache(adminToken: string, fetchFN: typeof fetch = fetch): Promise<ClearCacheStatus> {
+	let response = await fetchFN(
+		new Request(API_ROUTE + "refreshcache/",{
+			method: "POST",
+			headers: {
+				"admintoken": adminToken
+			}
+		})
+	);
+	let roughStatus = Math.round(response.status/100)
+	if (roughStatus==2) {
+		return ClearCacheStatus.Success;
+	} else if (roughStatus==4) {
+		return ClearCacheStatus.WrongPassword;
+	} else {
+		return ClearCacheStatus.ServerError;
+	}
 }
 
 export interface LunchtimeActivityIndex {
