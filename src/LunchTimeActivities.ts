@@ -46,7 +46,7 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
             {
                 title: "Quiz/Films",
                 names: ["Lucy Nichols", "Sinead Gordon", "Oliver Heswall"],
-                room: ""
+                room: "Mrs Koning's Room"
             }
         ],
         [
