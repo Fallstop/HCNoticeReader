@@ -23,7 +23,7 @@ interface Email {
 const noticeCompiledTemplate = Handlebars.compile(NoticeEmailRawTemplate,{noEscape: true})
 
 export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
-    const now = new Date(new Date("2023-05-04").toLocaleString('en', { timeZone: 'pacific/auckland' }));
+    const now = new Date(new Date().toLocaleString('en', { timeZone: 'pacific/auckland' }));
 
     // Get notice data using server-side fetch
     let noticeText = await getNoticeText(now, serverFetch);
@@ -43,7 +43,6 @@ export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
 
     // const mjmlTemplate = implantVars(NoticeEmailRawTemplate, EMAIL_VARS);
     const mjmlTemplate = noticeCompiledTemplate(EMAIL_VARS)
-
 
     // Render MJML
     const renderedEmail = mjml2html(mjmlTemplate, {});
@@ -78,7 +77,6 @@ This is a newsletter sent by the HC Notices website ({{HOMEPAGE}}). You can unsu
     const textOnlyEmailCompiled = Handlebars.compile(textOnlyEmail)
 
     const textOnlyEmailSubbed = textOnlyEmailCompiled(EMAIL_VARS);
-    console.log(textOnlyEmailSubbed);
 
     return {
         renderedHTML,

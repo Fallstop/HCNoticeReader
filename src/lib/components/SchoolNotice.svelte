@@ -175,7 +175,12 @@
                 <div class="info">
                     <h3>Lunchtime Activity: {activity.title}</h3>
                     <p>
-                        Today's lunchtime activity is run by <span class="activity-names">{activity.names.join(", ")}</span> in <span class="activity-room"></span>{activity.room || "an unknown room"}.
+                        {#if lunchTimeActivity.length>1}
+                            One of today's
+                        {:else}
+                            Today's 
+                        {/if}
+                        lunchtime activity is run by <span class="activity-names">{activity.names.join(", ")}</span> in <span class="activity-room"></span>{activity.room || "an unknown room"}.
                     </p>
                 </div>
             </div>
