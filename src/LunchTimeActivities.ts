@@ -61,12 +61,12 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
         [{
             title: "Chess",
             names: ["Ryan Jones", "Rome Hepi", "Isaac Xie", "Ethan Williams"],
-            room: ""
+            room: "Mr Pollard's Room (U6)"
         }],
         [{
             title: "Boardgames/Crafts",
             names: ["Junghyun Lim", "Isabella Welford", "Madison Diamond"],
-            room: "Mrs Evan's room (A1)"
+            room: "Mrs Churcher's room (H13)"
         }],
         [{
             title: "Music Sessions",
@@ -76,7 +76,7 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
         [{
             title: "Film",
             names: ["Giverney Miedema", "Takaimaania Ngata-henare", "Hannah Campi"],
-            room: ""
+            room: "Mrs Cook's room (H1)"
         }],
         [
             {
