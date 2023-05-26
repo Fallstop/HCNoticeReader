@@ -47,8 +47,7 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
                 title: "Quiz/Films",
                 names: ["Lucy Nichols", "Sinead Gordon", "Oliver Heswall"],
                 room: "Mrs Koning's Room"
-            }
-        ],
+            }],
         [
             {
                 title: "Boardgames/Crafts",
@@ -63,37 +62,20 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
             names: ["Ryan Jones", "Rome Hepi", "Isaac Xie", "Ethan Williams"],
             room: "Mr Pollard's Room (U6)"
         }],
-        [
-            {
-                title: "Boardgames/Crafts",
-                names: ["Junghyun Lim", "Isabella Welford", "Madison Diamond"],
-                room: "Mrs Churcher's room (H13)"
-            },
-            {
-                title: "Acting Class",
-                names: ["The Arts Committee"],
-                room: "Mrs Hunt's room (H4)"
-            },
-        ],
+        [{
+            title: "Boardgames/Crafts",
+            names: ["Junghyun Lim", "Isabella Welford", "Madison Diamond"],
+            room: "Mrs Churcher's room (H13)"
+        },],
         [{
             title: "Music Sessions",
             names: ["Tobias Grove", "Mataariki Aplin", "Rohit Rajaraman", "Evan Hostad"],
             room: "the Music room"
-        },
-        {
-            title: "Colouring in + Origami",
-            names: ["The Arts Committee"],
-            room: "the Art room (A1)"
-        },],
+        }],
         [{
             title: "Film",
             names: ["Giverney Miedema", "Takaimaania Ngata-henare", "Hannah Campi"],
             room: "Mrs Cook's room (H1)"
-        },
-        {
-            title: "Karaoke",
-            names: ["The Arts Committee"],
-            room: "Matua Henry's (H4)"
         },
     ],
         [
@@ -105,12 +87,7 @@ let lunchtimeActivities: LunchtimeActivity[][][] = [
             {
                 title: "Film",
                 names: ["Ariya Naidoo", "Esther Wiegesma", "Daniel Barton"],
-                room: ""
-            },
-            {
-                title: "Tie-dying (BYO white shirt)",
-                names: ["The Arts Committee"],
-                room: "Matua Henry's (H4)"
+                room: "Mr OB's (H6)"
             },
             
         ]
