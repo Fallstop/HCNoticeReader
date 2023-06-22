@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getLunchtimeActivity, getNoticeText, type LunchtimeActivityIndex, type NoticeText } from "$lib/api";
     import { formatDate, type NormalisedDate } from "$lib/date";
-    import { lunchtimeActivityMap, noticeMap } from "$lib/stores";
+    import { lunchtimeActivityMap, noticeMap, schoolPublicCalendar } from "$lib/stores";
     import type { Dayjs } from "dayjs";
     import dayjs from "dayjs";
     import { onMount, onDestroy } from "svelte";
@@ -160,13 +160,22 @@
         </div>
     {:else if currentState === CurrentState.LoadedNoNotice || currentState === CurrentState.LoadedNotSchoolDay}
         {#if currentState === CurrentState.LoadedNoNotice}
-            <h2>That is a school day.</h2>
+            {#if timetableDay === "0"}
+                <h2>No classes scheduled.</h2>
+            {:else}
+                <h2>That's a school day.</h2>
+            {/if}
         {:else if currentState === CurrentState.LoadedNotSchoolDay}
             <h2>Not a school day.</h2>
         {/if}
         <h3>No notices available on {dayjs(date).format("dddd")}.</h3>
         {#if dateChangerAvailable}
-            <p>Click on the "<span class="nobr">{formatDate(date)}</span>" button to select another day.</p>
+            {#if timetableDay === "0"}
+                <p>Click on the "<span class="nobr">{formatDate(date)}</span>" button to select another day,<br/>
+                <a href={schoolPublicCalendar} target="_blank" rel="noreferrer">You might be able to find today's event here</a></p>
+            {:else}
+                <p>Click on the "<span class="nobr">{formatDate(date)}</span>" button to select another day.</p>
+            {/if}
         {/if}
     {/if}
     {#if lunchTimeActivity}
@@ -314,7 +323,7 @@
         &.fullFlex {
             text-align: center;
             h2 {
-                font-size: 5em;
+                font-size: 4em;
                 margin: 1em 0 0 0;
                 @media screen and (max-width: $mobile-transition) {
                     font-size: 2em;

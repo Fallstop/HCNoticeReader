@@ -8,6 +8,8 @@ export let timetableDayMap = writable(new Map<NormalisedDate, string | null>());
 
 export const mobileWidthTransition = 720;
 
+export const schoolPublicCalendar = "https://calendar.google.com/calendar/u/0/embed?src=hcwebsite@hc.school.nz&ctz=Pacific/Auckland";
+
 export let serverTime: Writable<Date | null> = writable(null);
 
 
