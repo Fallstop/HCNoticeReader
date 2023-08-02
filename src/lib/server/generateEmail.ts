@@ -1,4 +1,4 @@
-import { getLunchtimeActivity, getNoticeText, getTimeTableDay } from "$lib/api";
+import { getLunchtimeActivity, getNoticeText, getTimeTableDay, postRefreshCache } from "$lib/api";
 import { formatDate } from "$lib/date";
 import dayjs from "dayjs";
 import mjml2html from "mjml";
@@ -22,8 +22,16 @@ interface Email {
 
 const noticeCompiledTemplate = Handlebars.compile(NoticeEmailRawTemplate,{noEscape: true})
 
-export async function generateEmail(serverFetch: typeof fetch): Promise<Email> {
+export async function generateEmail(serverFetch: typeof fetch, apiAuthCode: string): Promise<Email> {
     const now = new Date(new Date().toLocaleString('en', { timeZone: 'pacific/auckland' }));
+
+    if (apiAuthCode) {
+        console.log("Refreshing cache for email send");
+        // Clearing cache
+        await postRefreshCache(apiAuthCode, serverFetch);
+    } else {
+        console.log("No API Auth Code provided, not refreshing cache for email send")
+    }
 
     // Get notice data using server-side fetch
     let noticeText = await getNoticeText(now, serverFetch);

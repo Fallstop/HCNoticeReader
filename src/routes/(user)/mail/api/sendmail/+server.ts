@@ -22,7 +22,7 @@ if (cronitorAuth) {
 
 // Generate preview of email
 export async function GET({ request, fetch: serverFetch }: RequestEvent): Promise<Response> {
-    return new Response((await generateEmail(serverFetch)).renderedHTML, { status: 200, headers: { 'Content-Type': 'text/html' } });
+    return new Response((await generateEmail(serverFetch, "")).renderedHTML, { status: 200, headers: { 'Content-Type': 'text/html' } });
 }
 
 // Send email manager
@@ -43,12 +43,12 @@ export async function POST(requestEvent: RequestEvent): Promise<Response> {
         console.log("Running without cronitor monitoring")
     }
 
-    return await asyncWorker(requestEvent)
+    return await asyncWorker(requestEvent, request.headers.get('X-Api-Auth') || "");
 }
 
-async function sendMail({ fetch: serverFetch }: RequestEvent): Promise<Response> {
+async function sendMail({ fetch: serverFetch }: RequestEvent, apiAuthCode: string = ""): Promise<Response> {
     try {
-        let emailToSend = await generateEmail(serverFetch);
+        let emailToSend = await generateEmail(serverFetch, apiAuthCode);
 
         if (!emailToSend.send) {
             return new Response("No email to send", { status: 200 })

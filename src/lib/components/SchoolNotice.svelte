@@ -35,7 +35,6 @@
     function updateLunchtimeActivityData(map: Map<NormalisedDate, LunchtimeActivityIndex | null>) {
         lunchTimeActivityIndex = map.get(formatDate(date)) ?? null;
         lunchTimeActivity = lookupLunchtimeActivity(lunchTimeActivityIndex) ?? null;
-        console.log(lunchTimeActivity, lunchTimeActivityIndex)
     }
 
     const unsub = noticeMap.subscribe(updateNoticeData);
