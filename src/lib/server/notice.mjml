@@ -87,11 +87,12 @@
 				<mj-column width="100%" padding="0">
 
 					<mj-text color="#445566" font-size="11px" font-weight="bold" align="center">
-					<a href="${HOMEPAGE}/?date=${DATE}">
-						View this notice in your browser
+						<a href="{{HOMEPAGE}}/?date=${DATE}">
+							View this notice in your browser
+						</a>
 					</mj-text>
 					<mj-text color="#445566" font-size="11px" align="center" line-height="16px">
-						You are receiving this email beacuse you registered to recieve them daily on the <a class="footer-link" href="${HOMEPAGE}">HCNotices website</a>.
+						You are receiving this email beacuse you registered to recieve them daily on the <a class="footer-link" href="{{HOMEPAGE}}">HCNotices website</a>.
 					</mj-text>
 				</mj-column>
 			</mj-section>
