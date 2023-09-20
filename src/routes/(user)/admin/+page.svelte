@@ -10,7 +10,7 @@
     async function submitRefreshCache() {
         clearCacheStatus = ClearCacheStatus.Loading;
         if ($adminToken) {
-            clearCacheStatus = await postRefreshCache($adminToken)
+            clearCacheStatus = await postRefreshCache($adminToken);
         } else {
             clearCacheStatus = ClearCacheStatus.WrongPassword;
         }
@@ -70,7 +70,7 @@
         </form>
     </div>
     <svelte:fragment slot="footer">
-        <a href={`/`} class="footer-button">
+        <a href={`/`} data-sveltekit-reload class="footer-button">
             <ArrowBack />
             Back
         </a>
