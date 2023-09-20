@@ -179,7 +179,7 @@
     {/if}
     {#if lunchTimeActivity}
         {#each lunchTimeActivity as activity}
-            <div class="info-wrapper">
+            <div class={`info-wrapper ${styleMode}`}>
                 <div class="info">
                     <h3>Lunchtime Activity: {activity.title}</h3>
                     <p>
@@ -215,6 +215,9 @@
                     #858585,
                     #868686
                 );
+            }
+            :global(span.header) {
+                font-size: 1.5rem;
             }
             :global(hr) {
                 border: 0;
@@ -268,10 +271,6 @@
                 
                 text-align: left;
 
-                @media print {
-                    background: #fff;
-                }
-
                 p,
                 h3 {
                     margin: 0;
@@ -284,7 +283,7 @@
                     font-weight: bold;
                 }
             }
-            @media screen {
+            &.dark {
                 &::before {
                     content: "";
                     z-index: 1;
@@ -310,10 +309,13 @@
                     }
                 }
             }
-            @media print {
+            &.light {
                 color: black;
                 border: solid 0.2rem #aaa;
                 break-inside: avoid;
+                .info {
+                    background: #fff;
+                }
             }
         }
 

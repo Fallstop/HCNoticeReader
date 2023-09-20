@@ -42,7 +42,7 @@ export async function generateEmail(serverFetch: typeof fetch, apiAuthCode: stri
     const EMAIL_VARS = {
         "NOTICE_TEXT": noticeText.html || "No notice text found",
         "TIMETABLE_DAY": timetableDay,
-        "DATE": formatDate(now),
+        "DATE": dayjs(now).format("DD/MM/YYYY"),
         "DAY": dayjs(now).format("dddd"),
         "EMAIL": "[[EMAIL_TO]]",
         "HOMEPAGE": "https://hcnotices.jmw.nz",

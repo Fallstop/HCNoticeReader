@@ -108,13 +108,16 @@ function processNoticeText(text: string): NoticeText {
 	text = text.replaceAll(/(?:(?:<\s*p\s*>)|\s|(?:<\/?br\/?>))*[-+_~]{3,}(?:\s|(?:<br\/?>)|(?:<\s*\/\s*p\s*>))*/g,"<hr>")
 
 	// Find 3+ repeated <br> or <br/> and replace with <hr>
-	text = text.replaceAll(/(<\/?br\/?>){3,}/g,"<hr>")
+	text = text.replaceAll(/(<\/?br\/?>){3,}/g,"<hr>");
 
 	// Render select markdown
-	text = text.replaceAll(/(\*\*|__)([^<>]*?)\1/g,"<b>$2</b>")
-	text = text.replaceAll(/(\*|_)([^<>]*?)\1/g,"<i>$2</i>")
-	text = text.replaceAll(/(\~\~|\*\*\*)([^<>]*?)\1/g,"<s>$2</s>")
+	text = text.replaceAll(/(\*\*|__)([^<>]*?)\1/g,"<b>$2</b>");
+	text = text.replaceAll(/(\*|_)([^<>]*?)\1/g,"<i>$2</i>");
+	text = text.replaceAll(/(\~\~|\*\*\*)([^<>]*?)\1/g,"<s>$2</s>");
+	text = text.replaceAll(/># ([\w\s]*)</g,"><span class='header'>$1</span><");
 
+
+	
 	// Now we can convert into a bit more semantic HTML
 	// Right now it's:
 	// <div wrapper>
@@ -130,7 +133,6 @@ function processNoticeText(text: string): NoticeText {
 	//  	</p>
 	// </div>
 	// This is mostly to support the swipe gesture element filtering
-
 	text = text.replaceAll(/<\/?br\/?>/g,"</p><p>");
 
 	// Clear any starting or ending p tags, we will add them back if needed

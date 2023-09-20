@@ -27,12 +27,14 @@
 </script>
 <div class="container">
     <div class="date-info-container">
-        <div>
-            {dayjs(targetDate).format("YYYY-MM-DD | dddd")}
-        </div>
-        <div>
+        <span>
+            {dayjs(targetDate).format("dddd")}<br/>
+            {dayjs(targetDate).format("DD/MM/YYYY")}
+        </span>
+        <span>
             Timetable Day: <SchoolDay date={targetDate} fancyLoader={false} bind:loaded={schoolDayLoaded} bind:timetableDay/>
-        </div>
+        </span>
+        <img src="/images/HCLogoLong.png" alt="Huanui College Logo"/>
     </div>
     <div class="notice-wrapper">
         <SchoolNotice date={targetDate} styleMode="light" bind:loaded={noticeLoaded} {timetableDay}/>
@@ -68,14 +70,29 @@
             display: flex;
         }
         .date-info-container {
-            flex: 0 0 auto;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            width: 100%;
             font-size: 1.5rem;
             font-weight: 600;
             padding: 0.2rem;
             margin: 1rem 0;
             border-bottom: #333 solid 2px;
+            align-items: center;
+            img {
+                object-fit: contain;
+                box-sizing: border-box;
+                height: 70%;
+            }
+            * {
+                height: min-content;
+            }
+            :nth-child(2) {
+                text-align: center;
+            }
+            :nth-child(3) {
+                justify-self: right;
+            }
         }
         .footer-text {
             flex: 0 0 auto;

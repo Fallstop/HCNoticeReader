@@ -41,7 +41,17 @@
 	}
 
 	onMount(()=>{
-		
+		function overridePrint(event: KeyboardEvent) {
+
+			if (event.ctrlKey && event.key=="p")
+			{
+				window.open(`/print/${formatDate($selectedDate ?? new Date())}`);
+				return false;
+			}
+		}
+
+		document.onkeydown = overridePrint;
+
 	})
 </script>
 
