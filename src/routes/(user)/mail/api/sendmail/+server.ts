@@ -68,7 +68,8 @@ async function sendMail({ fetch: serverFetch }: RequestEvent, apiAuthCode: strin
             "Subject": emailToSend.subject,
             "ContactsListID": HCNOTICES_MAILING_LIST_ID,
             "Title": emailToSend.campaignName,
-            "EditMode": "mjml"
+            "EditMode": "mjml",
+            "ReplyEmail": "office@hc.school.nz"
         });
     
         let draftID = (campaignDraft.body as DraftCampaign.PostCampaignDraftResponse).Data[0].ID;
