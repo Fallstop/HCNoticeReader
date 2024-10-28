@@ -6,6 +6,7 @@
     import { RegisterStatus, type FormResponse } from "../common";
     import { onMount } from "svelte";
     import { page } from '$app/stores';
+    import posthog from "posthog-js";
 
 
     let state = RegisterStatus.Ready;
@@ -50,6 +51,8 @@
             action="/mail?/deregister"
             use:enhance={({}) => {
                 state = RegisterStatus.Loading;
+                posthog.capture('newsletter-deregister', { email: emailValue })
+
 
                 return formResult;
             }}

@@ -51,6 +51,7 @@
 	"dependencies": {
 		"form-data": "^4.0.0",
 		"handlebars": "^4.7.7",
-		"mailgun.js": "^8.0.6"
+		"mailgun.js": "^8.0.6",
+		"posthog-js": "^1.176.0"
 	}
 }

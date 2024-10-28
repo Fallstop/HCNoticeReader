@@ -6,6 +6,7 @@
     import { onMount } from "svelte";
     import { getMailStats, type MailStats } from "$lib/api";
     import { fade } from "svelte/transition";
+    import { posthog } from "posthog-js";
 
     export let form: { state: RegisterStatus; email: string } | undefined;
 
@@ -59,6 +60,7 @@
 
                     // `result` is an `ActionResult` object
                     update({ reset: false });
+                    posthog.capture('newsletter-register', { email: emailValue })
                 };
             }}
         >

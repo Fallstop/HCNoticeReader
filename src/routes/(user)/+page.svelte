@@ -15,13 +15,16 @@
     import HuanuiGlowingCenterBox from "$lib/layouts/HuanuiGlowingCenterBox.svelte";
     import { page } from "$app/stores";
     import { browser } from "$app/environment";
+    import posthog from "posthog-js";
 
 	const { open } = getContext("simple-modal") as any;
 
 	function openInfo() {
+		posthog.capture('info-popup');
 		open(InfoPopup);
 	}
 	function openCopy() {
+		posthog.capture('copy-popup');
 		open(CopyPopup, { selectedDate });
 	}
 

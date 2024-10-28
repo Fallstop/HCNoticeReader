@@ -23,7 +23,7 @@ interface Email {
 const noticeCompiledTemplate = Handlebars.compile(NoticeEmailRawTemplate,{noEscape: true})
 
 export async function generateEmail(serverFetch: typeof fetch, apiAuthCode: string): Promise<Email> {
-    const now = new Date(new Date().toLocaleString('en', { timeZone: 'pacific/auckland' }));
+    const now = new Date(new Date("2023-08-28").toLocaleString('en', { timeZone: 'pacific/auckland' }));
 
     if (apiAuthCode) {
         console.log("Refreshing cache for email send");
