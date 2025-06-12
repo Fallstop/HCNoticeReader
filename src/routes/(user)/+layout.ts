@@ -4,12 +4,15 @@ import { browser } from '$app/environment';
 export const load = async () => {
 
   if (browser) {
-    console.log("Loading analytics... (not-evil analytics I promise)")
+    console.log("Loading analytics... (not-evil analytics I pinky promise)")
     posthog.init(
-      'phc_jKcMjkhAdcd19nxck3R5sXWFyRSAPj3RxCKon8Ded2O',
+      'phc_PFuZraY8PjDIKtYBp9kjrLq1B3TrFRQCtzemAorlHKw',
       { 
-        api_host: 'https://analytics.qinnovate.nz',
-        person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+        // Proxy connection through SvelteKit server
+        api_host: '/ingest',
+        ui_host: 'https://us.posthog.com',
+        person_profiles: 'always',
+        persistence: 'localStorage',
       }
     )
   }

@@ -7,6 +7,7 @@
     import { onMount, onDestroy } from "svelte";
     import NoticeContentLoader from "./NoticeContentLoader.svelte";
     import { lookupLunchtimeActivity, type LunchtimeActivity } from "../../LunchTimeActivities";
+  import posthog from "posthog-js";
 
     export let noticeText: string | null = null;
 
@@ -54,6 +55,12 @@
                 console.log("Got notice data! ", formatDate(date), data);
                 $noticeMap.set(formatDate(date), data);
                 $noticeMap = $noticeMap;
+
+                posthog.capture('loaded-notice', {
+                    date: formatDate(date),
+                    timetableDay: timetableDay
+                });
+
             })
             .catch((err) => {
                 console.error(err);
